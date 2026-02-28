@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2958103991357850680
 Transform:
@@ -26,8 +26,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.2828, y: 2.4696, z: -4.3484}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 4.6978145, y: 4.6978145, z: 4.6978145}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6122814046837029196}
   - {fileID: 5555555861122759400}
@@ -50,12 +50,12 @@ GameObject:
   - component: {fileID: 6122814046837029196}
   - component: {fileID: 1847193625387970780}
   - component: {fileID: 5774289559866606291}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6122814046837029196
 Transform:
@@ -141,7 +141,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5555555861122759400
 Transform:
@@ -251,7 +251,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &3543411995408284814
 Transform:
@@ -361,7 +361,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &7670731391310736924
 Transform:
@@ -395,7 +395,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -426,7 +426,7 @@ Light:
   m_RenderMode: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 51
+    m_Bits: 4294967295
   m_RenderingLayerMask: 1
   m_Lightmapping: 2
   m_LightShadowCasterMode: 0
@@ -478,11 +478,11 @@ GameObject:
   - component: {fileID: 8070168175721599052}
   - component: {fileID: 203434032318457256}
   m_Layer: 0
-  m_Name: Point Light
+  m_Name: RedLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &574000645309410731
 Transform:
@@ -492,13 +492,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6264994076217710609}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.010004651, y: 0.14836688, z: 0.087487444}
+  m_LocalRotation: {x: -0.16439247, y: -0.9670828, z: -0.050776128, w: -0.18747732}
+  m_LocalPosition: {x: -0.221, y: 0.079, z: 0.418}
   m_LocalScale: {x: 0.21286495, y: 0.21286495, z: 0.21286495}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2958103991357850680}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -2.096, y: -202.306, z: 19.708}
 --- !u!108 &8070168175721599052
 Light:
   m_ObjectHideFlags: 0
@@ -508,15 +508,15 @@ Light:
   m_GameObject: {fileID: 6264994076217710609}
   m_Enabled: 1
   serializedVersion: 11
-  m_Type: 2
-  m_Color: {r: 0.8050314, g: 0.53422093, b: 0.26074904, a: 1}
-  m_Intensity: 3
-  m_Range: 1.54
+  m_Type: 0
+  m_Color: {r: 0.8207547, g: 0.29350358, b: 0.019357419, a: 1}
+  m_Intensity: 21.1
+  m_Range: 3.48
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -552,7 +552,7 @@ Light:
   m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 4
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -603,7 +603,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &3964462130652029411
 Transform:
@@ -709,11 +709,11 @@ GameObject:
   - component: {fileID: 448387896851657269}
   - component: {fileID: 3291867194426053339}
   m_Layer: 0
-  m_Name: Fire
+  m_Name: Fire_DeepestBlack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2843310107583668052
 Transform:
@@ -725,7 +725,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
   m_LocalPosition: {x: -0.014, y: 0.1262289, z: 0.011}
-  m_LocalScale: {x: 0.00737581, y: 0.00737581, z: 0.00737581}
+  m_LocalScale: {x: 0.009461689, y: 0.009461689, z: 0.009461689}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2958103991357850680}
@@ -773,9 +773,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -3
   m_Sprite: {fileID: 2016882768, guid: 78e402f13a022444584e5b2e172e8884, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -823,8 +823,8 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 0
 --- !u!4 &6910195977786330825
 Transform:
   m_ObjectHideFlags: 0

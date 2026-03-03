@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Outlines
+  m_Name: WhiteOutline
   m_Shader: {fileID: -6465566751694194690, guid: f3ef119ed68dc4040861187b8cd66806, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -41,8 +41,8 @@ Material:
     - _Color_Treshold: 10
     - _Normal_Threshold: 1.44
     - _OVERLAY: 1
-    - _Outline_Thickness: 3.46
+    - _Outline_Thickness: 3.44
     m_Colors:
-    - _Outline_Color: {r: 0, g: 0, b: 0, a: 1}
+    - _Outline_Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

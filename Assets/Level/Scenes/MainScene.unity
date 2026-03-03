@@ -6581,7 +6581,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -5
   m_Sprite: {fileID: 21300000, guid: 10bfb8ce856202c42aa15292d9f3af1e, type: 3}
-  m_Color: {r: 0.3301887, g: 0.212212, b: 0, a: 1}
+  m_Color: {r: 0.18867922, g: 0.12129378, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -18438,7 +18438,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: a77c81662cb3d904196e24eb7e1c9af0, type: 3}
-  m_Color: {r: 0.21948738, g: 0.5, b: 0.13915095, a: 1}
+  m_Color: {r: 0.10013894, g: 0.3018868, b: 0.041295845, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -20992,6 +20992,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 19dbfe8cb6c1a294799e4a9be589a8ca, type: 3}
       propertyPath: m_Name
       value: RightHalf
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412956449414989936, guid: 19dbfe8cb6c1a294799e4a9be589a8ca, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

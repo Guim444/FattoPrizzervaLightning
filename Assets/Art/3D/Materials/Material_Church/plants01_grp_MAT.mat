@@ -16,7 +16,11 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
+<<<<<<< HEAD
   m_CustomRenderQueue: 2000
+=======
+  m_CustomRenderQueue: -1
+>>>>>>> origin/main
   stringTagMap:
     RenderType: Opaque
   disabledShaderPasses:
@@ -112,7 +116,11 @@ Material:
     - _CastShadows: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
+<<<<<<< HEAD
     - _Cull: 0
+=======
+    - _Cull: 2
+>>>>>>> origin/main
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1

@@ -1,16 +1,12 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Art/2D/Riotutte/Riotutte_Frontal.png.meta
-guid: aef4ad3cae785dd4886e11a0a46a2c49
-========
-guid: d981fc1a399bbe949a87f717e0cd3d16
->>>>>>>> origin/main:Assets/Art/3D/Textures/Church_TEX/BrokenWall_orn/BrokenWall_orn_Metallic.png.meta
+guid: a8365a07216cc4d438d1f82ae963bcde
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 0
+    enableMipMap: 1
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -41,13 +37,13 @@ TextureImporter:
     filterMode: 1
     aniso: 1
     mipBias: 0
-    wrapU: 1
-    wrapV: 1
+    wrapU: 0
+    wrapV: 0
     wrapW: 0
-  nPOTScale: 0
+  nPOTScale: 1
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 0
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -56,9 +52,9 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 1
+  alphaIsTransparency: 0
   spriteTessellationDetail: -1
-  textureType: 8
+  textureType: 0
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -99,34 +95,12 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: rio_0
-      rect:
-        serializedVersion: 2
-        x: 648
-        y: 102
-        width: 316
-        height: 986
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 24b2ed0da5775d44ca612c9fe4c258ee
-      internalID: 1039739634
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 6e7ca7ce592b96c4abbeef0724c72f7a
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,8 +109,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      rio_0: 1039739634
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

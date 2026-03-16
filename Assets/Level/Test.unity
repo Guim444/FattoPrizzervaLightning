@@ -417,7 +417,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -534,7 +534,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1403727060757231947, guid: 684dfcbd69d1f064284c6579f2d22cf2, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2039400617804133022, guid: 684dfcbd69d1f064284c6579f2d22cf2, type: 3}
       propertyPath: m_Enabled
@@ -978,6 +978,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 0276fdb5c809faa488e25912aad88d5a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1016,7 +1017,7 @@ Transform:
   m_GameObject: {fileID: 1074823061}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.628, y: 1.985, z: 3.593}
+  m_LocalPosition: {x: 1, y: 2.3, z: -2.39}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1424,7 +1425,6 @@ SceneRoots:
   - {fileID: 1938721091}
   - {fileID: 1885468100}
   - {fileID: 1074823065}
-  - {fileID: 3805563400137491060}
   - {fileID: 6061491780281670104}
   - {fileID: 482681445}
   - {fileID: 878556305}

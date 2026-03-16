@@ -39,10 +39,10 @@ MonoBehaviour:
   m_Name: Outlines
   m_EditorClassIdentifier: 
   m_Active: 1
-  injectionPoint: 450
+  injectionPoint: 550
   fetchColorBuffer: 1
-  requirements: 6
-  passMaterial: {fileID: 2100000, guid: b45620d8e5687464cad19ca7f2cb797b, type: 2}
+  requirements: 0
+  passMaterial: {fileID: 2100000, guid: 1801ce0ed11b1bd4f9c64d3237e61f93, type: 2}
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 927576baecea04a5aa8be06dc57e6d9e, type: 3}
   m_Name: Volumetric Fog 2
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   blurShader: {fileID: 4800000, guid: c9391e295126842e589edc35e6cfa61a, type: 3}
   renderPassEvent: 450
   renderPassEventOrder: 0
@@ -94,11 +94,11 @@ MonoBehaviour:
     probeSamplingDebugTexture: {fileID: 0}
     probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
-  - {fileID: -3409835923088045136}
-  - {fileID: -6711887466690451476}
   - {fileID: -8247004397655237812}
   - {fileID: 1640286581210976144}
-  m_RendererFeatureMap: b08bf8454bd4add0ece784ffe895daa24cdbace031c18c8d908feb7af477c316
+  - {fileID: -3409835923088045136}
+  - {fileID: -6711887466690451476}
+  m_RendererFeatureMap: 4cdbace031c18c8d908feb7af477c316b08bf8454bd4add0ece784ffe895daa2
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}

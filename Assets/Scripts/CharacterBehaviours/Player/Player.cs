@@ -4,13 +4,14 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour
 {
-    private GeneralMovement movement;
-    private Rigidbody rb;
+    public GeneralMovement movement;
+    public Rigidbody rb;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        movement = new GeneralMovement(rb);
+        movement = GetComponent<GeneralMovement>();
+        movement.rb = rb;
     }
     public void OnMovement(InputValue inputValue)
     {

@@ -1,10 +1,10 @@
 using UnityEngine;
 
 [System.Serializable]
-public class GeneralMovement
+public class GeneralMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    private Rigidbody rb;
+    public float moveSpeed;
+    public Rigidbody rb;
 
     public GeneralMovement(Rigidbody rigidbody)
     {

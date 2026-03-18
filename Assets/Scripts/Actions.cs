@@ -184,7 +184,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                     ""name"": ""Movement"",
                     ""type"": ""Value"",
                     ""id"": ""e8b908ac-4ef3-4311-8951-cce7f0a46161"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -193,7 +193,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": ""2D Vector"",
-                    ""id"": ""64f68e30-d1e4-43b0-a059-e27195550fa4"",
+                    ""id"": ""c9770ae4-94a8-4dfa-bf9d-6c6a5e818dc4"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -204,7 +204,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""e552354a-d3a2-460c-b905-b3cf21e6d969"",
+                    ""id"": ""24604a8e-3647-4fba-80ca-7dd06e176d3d"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -215,7 +215,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""e6ef3131-6489-4fc1-aa82-173e604e01d8"",
+                    ""id"": ""4c5a5f4f-7c10-479d-ab57-cf41358bbd41"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -226,7 +226,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""c179d990-7020-4753-8620-93207d5519a5"",
+                    ""id"": ""386bfbe1-ab1b-43da-90ad-325e9fb0f2dd"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -237,7 +237,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""b904a76f-3a62-4852-b5f1-de8c46224a27"",
+                    ""id"": ""7d531bdf-399a-48a7-9289-afda9264e56d"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -248,7 +248,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""2D Vector"",
-                    ""id"": ""caa46c9b-7b25-449c-81a8-670df1a82e73"",
+                    ""id"": ""47b2c231-97d7-46e0-bcbc-bfe58f313b7d"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -259,7 +259,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""b7f454c8-2789-49df-9e3a-8c570b728bd6"",
+                    ""id"": ""7902de55-2e96-4ccb-ba20-e31eeb1ff778"",
                     ""path"": ""<Keyboard>/upArrow"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -270,7 +270,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""c2de6053-b13d-4fe1-bcc0-16687a0609b7"",
+                    ""id"": ""814f5d22-b4e5-4439-b297-f47f54f36ad0"",
                     ""path"": ""<Keyboard>/downArrow"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -281,7 +281,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""0d55bd81-9c1e-417b-aea6-76bfbb9699ce"",
+                    ""id"": ""a35eb3bb-ab37-4fdc-90ad-19777776b521"",
                     ""path"": ""<Keyboard>/leftArrow"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -292,7 +292,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""b78eba10-2676-4411-8984-c23eff296b45"",
+                    ""id"": ""c6677e61-de8b-48b9-b7ec-43f17d9c2b0f"",
                     ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
                     ""processors"": """",

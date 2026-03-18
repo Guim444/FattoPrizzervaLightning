@@ -9,8 +9,6 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        rb = GetComponent<Rigidbody>();
-        movement = GetComponent<GeneralMovement>();
         movement.rb = rb;
     }
     public void OnMovement(InputValue inputValue)

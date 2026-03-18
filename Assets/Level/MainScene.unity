@@ -17716,7 +17716,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9137b167e1b1a8146b10598a437365ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movement: {fileID: 0}
+  movement: {fileID: 1134129253}
   rb: {fileID: 1134129251}
 --- !u!54 &1134129251
 Rigidbody:
@@ -17727,7 +17727,7 @@ Rigidbody:
   m_GameObject: {fileID: 1134129246}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 0.05
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -17770,8 +17770,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: Keyboard&Mouse
+  m_NeverAutoSwitchControlSchemes: 1
+  m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
@@ -17788,7 +17788,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  rb: {fileID: 0}
+  rb: {fileID: 1134129251}
 --- !u!21 &1136249630
 Material:
   serializedVersion: 8

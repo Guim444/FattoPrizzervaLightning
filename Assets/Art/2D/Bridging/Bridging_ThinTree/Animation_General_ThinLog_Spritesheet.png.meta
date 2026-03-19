@@ -1,0 +1,807 @@
+fileFormatVersion: 2
+guid: a3594b2f9b29cf8479696edc2cfdacb0
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1932
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 686a0e7722cc3b34aacbfb1f488a334d
+      internalID: 1605077978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_1
+      rect:
+        serializedVersion: 2
+        x: 630
+        y: 1932
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ad553e0c9a460140ba5e7e9e1ad6702
+      internalID: -1583479177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_2
+      rect:
+        serializedVersion: 2
+        x: 1260
+        y: 1932
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f7842968a96e1a49b93be3d906051f1
+      internalID: -611011637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_3
+      rect:
+        serializedVersion: 2
+        x: 1890
+        y: 1932
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0f3a9c456e6c40b4589d0635ccd60f58
+      internalID: 1435896787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_4
+      rect:
+        serializedVersion: 2
+        x: 2520
+        y: 1932
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1b17fa078d4312f48b1dde6e20c04acf
+      internalID: -156983033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_5
+      rect:
+        serializedVersion: 2
+        x: 3150
+        y: 1932
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94c5674f737c4df4f80ad4e0d39335ab
+      internalID: -868703956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_6
+      rect:
+        serializedVersion: 2
+        x: 3780
+        y: 1932
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ca90f4bc346b8f449dd7614e57f7a5e
+      internalID: -1937891624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 4410
+        y: 1932
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb52963c5ad6e854eaaef5e7a712317f
+      internalID: 1057589391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_8
+      rect:
+        serializedVersion: 2
+        x: 5040
+        y: 1932
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b48073763dcad2d4b947b9b3004d803b
+      internalID: 436395403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_9
+      rect:
+        serializedVersion: 2
+        x: 5670
+        y: 1932
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4c74762d38a8f945b3b48715e5c4716
+      internalID: -152257577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 966
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1e53b6c1f1e5e34baf92898b2ebd2ed
+      internalID: 600325234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_11
+      rect:
+        serializedVersion: 2
+        x: 630
+        y: 966
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c61c37e8ebde319419c7c910c8af7b7b
+      internalID: 1529145283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_12
+      rect:
+        serializedVersion: 2
+        x: 1260
+        y: 966
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ffea2288a3219049abd58cd50de4261
+      internalID: -752605219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_13
+      rect:
+        serializedVersion: 2
+        x: 1890
+        y: 966
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ae39d69a03b2ab143b0e182da3d4f6c3
+      internalID: -391893761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_14
+      rect:
+        serializedVersion: 2
+        x: 2520
+        y: 966
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b649f4445ce498469c4c66f135829ef
+      internalID: -1545111714
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_15
+      rect:
+        serializedVersion: 2
+        x: 3150
+        y: 966
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44b6ca80c3ef0f045ace1fb323abe83d
+      internalID: -275731685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_16
+      rect:
+        serializedVersion: 2
+        x: 3780
+        y: 966
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 146d67d4e34fe0a438e485fd031ddec7
+      internalID: 1610730356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_17
+      rect:
+        serializedVersion: 2
+        x: 4410
+        y: 966
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3048bf3ba5317ad419f231b90a56e53e
+      internalID: 677612424
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_18
+      rect:
+        serializedVersion: 2
+        x: 5040
+        y: 966
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ecd28da97bca4c649a232601a236c19c
+      internalID: -449271362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_19
+      rect:
+        serializedVersion: 2
+        x: 5670
+        y: 966
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 80077668bf4ddcc4eb9776362d750e7b
+      internalID: 1358154983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7056b126f9a951744b4c84425ab33855
+      internalID: -870492059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_21
+      rect:
+        serializedVersion: 2
+        x: 630
+        y: 0
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c842b09cc9c4f2b498156ac049308fc0
+      internalID: 771589217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_22
+      rect:
+        serializedVersion: 2
+        x: 1260
+        y: 0
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f3b3cad8f08d9747a304d2dc57dc7bd
+      internalID: 1576545607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_23
+      rect:
+        serializedVersion: 2
+        x: 1890
+        y: 0
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 214876b639c7cba499fe49e87cb9cf80
+      internalID: -1320227381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_24
+      rect:
+        serializedVersion: 2
+        x: 2520
+        y: 0
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 085268d336bd7c84bb3c81a9d8e17870
+      internalID: -772941823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_25
+      rect:
+        serializedVersion: 2
+        x: 3150
+        y: 0
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a514032871e30c746b05b072264c5056
+      internalID: 1592131433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_26
+      rect:
+        serializedVersion: 2
+        x: 3780
+        y: 0
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ebaef0a87a636804898d8a7211f7ac66
+      internalID: 1762585728
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_27
+      rect:
+        serializedVersion: 2
+        x: 4410
+        y: 0
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65f24c5c52505d7408450ba554c5d94a
+      internalID: 481035510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_28
+      rect:
+        serializedVersion: 2
+        x: 5040
+        y: 0
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e8084ce30a1cab43bef21e0ec418364
+      internalID: 2035657334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_ThinLog_Spritesheet_29
+      rect:
+        serializedVersion: 2
+        x: 5670
+        y: 0
+        width: 630
+        height: 966
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06ac6ba5b353e6547aef10366561235e
+      internalID: -783565682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 2d7b7439743319843bb9bd5f6526fb23
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Animation_General_ThinLog_Spritesheet_0: 1605077978
+      Animation_General_ThinLog_Spritesheet_1: -1583479177
+      Animation_General_ThinLog_Spritesheet_10: 600325234
+      Animation_General_ThinLog_Spritesheet_11: 1529145283
+      Animation_General_ThinLog_Spritesheet_12: -752605219
+      Animation_General_ThinLog_Spritesheet_13: -391893761
+      Animation_General_ThinLog_Spritesheet_14: -1545111714
+      Animation_General_ThinLog_Spritesheet_15: -275731685
+      Animation_General_ThinLog_Spritesheet_16: 1610730356
+      Animation_General_ThinLog_Spritesheet_17: 677612424
+      Animation_General_ThinLog_Spritesheet_18: -449271362
+      Animation_General_ThinLog_Spritesheet_19: 1358154983
+      Animation_General_ThinLog_Spritesheet_2: -611011637
+      Animation_General_ThinLog_Spritesheet_20: -870492059
+      Animation_General_ThinLog_Spritesheet_21: 771589217
+      Animation_General_ThinLog_Spritesheet_22: 1576545607
+      Animation_General_ThinLog_Spritesheet_23: -1320227381
+      Animation_General_ThinLog_Spritesheet_24: -772941823
+      Animation_General_ThinLog_Spritesheet_25: 1592131433
+      Animation_General_ThinLog_Spritesheet_26: 1762585728
+      Animation_General_ThinLog_Spritesheet_27: 481035510
+      Animation_General_ThinLog_Spritesheet_28: 2035657334
+      Animation_General_ThinLog_Spritesheet_29: -783565682
+      Animation_General_ThinLog_Spritesheet_3: 1435896787
+      Animation_General_ThinLog_Spritesheet_4: -156983033
+      Animation_General_ThinLog_Spritesheet_5: -868703956
+      Animation_General_ThinLog_Spritesheet_6: -1937891624
+      Animation_General_ThinLog_Spritesheet_7: 1057589391
+      Animation_General_ThinLog_Spritesheet_8: 436395403
+      Animation_General_ThinLog_Spritesheet_9: -152257577
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

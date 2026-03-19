@@ -1,0 +1,1474 @@
+fileFormatVersion: 2
+guid: 8b87d3c412ad3ed47a51a9dabcd5730a
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 3983
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c458f4aac572f2b42bca9e3e6ae2a67d
+      internalID: -1920483796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_1
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 3983
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff2178cd0e1af9743a7e25083e138f48
+      internalID: -709233753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_2
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 3983
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c0cd0ab7756c9a41b637c83ab9f6216
+      internalID: 1936896904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_3
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 3983
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3d13a3b8ea67e4498d6094023e47dba
+      internalID: 752247499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_4
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 3983
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba2905091d285a14a976fd45089c6a23
+      internalID: -65854260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_5
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 3983
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61a2df0464b0f06499f43aa5b6be3c37
+      internalID: 395197318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_6
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 3983
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a63cf5dbf3d7f544ab0be756f18db2d6
+      internalID: -1505941192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 4200
+        y: 3983
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47c6514171648284c871d87824529679
+      internalID: 935410269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 3414
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee028f32c165e024c93f1ac972d5eb35
+      internalID: -1007096159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_9
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 3414
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67d92027123b5c34f917fda39431c113
+      internalID: 1112935061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_10
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 3414
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16d545861d918d6488e3b2d3a10a3dd4
+      internalID: 1525160238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_11
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 3414
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db2a7c5760dc98b4984ba973dbf52029
+      internalID: -1466950801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_12
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 3414
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b068735d1c4b54541a0e570c39e09564
+      internalID: -1906651656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_13
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 3414
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0e9ae181825bf1469bdba7c3cf908a2
+      internalID: -2111383069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_14
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 3414
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9853c3e6de76a4a4187aa67de3e09114
+      internalID: -1001079717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_15
+      rect:
+        serializedVersion: 2
+        x: 4200
+        y: 3414
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7dd57183c72a9af4ebd367a6b3134e6c
+      internalID: -1548004438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2845
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0a914b9c1736df4ba21fbf82a15915c
+      internalID: 1930794608
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_17
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 2845
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65c6dcbd103007d47b6676dcc0f38fd6
+      internalID: 899616664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_18
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 2845
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 269343bbdb229aa43af0a70353cdc0f6
+      internalID: 282509421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_19
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 2845
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62f2a7292cfebf14c9038ac861f220ef
+      internalID: -948391626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_20
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 2845
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22927f738b807ec4f889b08dccd559dd
+      internalID: -1329638691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_21
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 2845
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d096e30f9d3a2654ba5761d0f3356d18
+      internalID: -977370016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_22
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 2845
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 809491bf5453f074f95d3b6a9ea95792
+      internalID: -2141402185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_23
+      rect:
+        serializedVersion: 2
+        x: 4200
+        y: 2845
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc75c6669f3071644a5ed0af0ab27dfe
+      internalID: -916913503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2276
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6746c9a0751268d478d41f1ca1c379bf
+      internalID: -2064546192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_25
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 2276
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 036e847cf3cb5394eabdbf42c4f1d787
+      internalID: 1409182085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_26
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 2276
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1271506003353340ac410774ac7ffe8
+      internalID: 1126301683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_27
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 2276
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2fe4ab964cd8cc747ac12d464cd22b4b
+      internalID: 188394777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_28
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 2276
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30078ff4971f0324b90371e4ac436ce9
+      internalID: -65003661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_29
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 2276
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c768eca97f7ee50478b2ab88d7a60fa3
+      internalID: 137632101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_30
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 2276
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f0484631bae35946b6013fdfa84f577
+      internalID: 1597007066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_31
+      rect:
+        serializedVersion: 2
+        x: 4200
+        y: 2276
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f311959534281f4ebf7576f9743e8e4
+      internalID: 1375535300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_32
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1707
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ebdac1e7f3fffb34fbb74da2541677e2
+      internalID: -1575522057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_33
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 1707
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fcf4a509096c9194a98b30892cd83e53
+      internalID: -1149491253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_34
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 1707
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c27f4a10cb2ad44db9f577d41dd7f14
+      internalID: -763948069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_35
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 1707
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13385ee87402b0646ac4c6cba46efb02
+      internalID: -1362464626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_36
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 1707
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4d2677220e7b31947a2a013d340bdda8
+      internalID: 664536084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_37
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 1707
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15980f264dcfc784cbcb14a07422e493
+      internalID: 1499074866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_38
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 1707
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22bceb81e44af5a48a1d08db788b8aee
+      internalID: -309778213
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_39
+      rect:
+        serializedVersion: 2
+        x: 4200
+        y: 1707
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8075b5d8e56d794284df893ce51c3b0
+      internalID: 2076025967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1138
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1f8812fe3591d144885bfaddf4abbcb
+      internalID: -807930523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_41
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 1138
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e43f4fd4d2f7a7f4faeecd25f7af5283
+      internalID: -146937585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_42
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 1138
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c700f878fb8a0a447a1da43f7483a5f6
+      internalID: 1173893879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_43
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 1138
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e85b946be336b144bc86c462ba6b4f2
+      internalID: -1820927997
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_44
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 1138
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24dd0c5e8555ee748825746477535146
+      internalID: -898746339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_45
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 1138
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 14d7cbe4177364240a5bb48d977e01f7
+      internalID: -2078215355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_46
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 1138
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 501a173dc1336d441a540c88b21acbd0
+      internalID: -1434965997
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_47
+      rect:
+        serializedVersion: 2
+        x: 4200
+        y: 1138
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62148acd46e78c5438fc00172e5602de
+      internalID: -1389327889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 569
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c9699789166fd0149b4d2b7ef2984614
+      internalID: 482529023
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_49
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 569
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94f1958932c96c5438aa52428ced5c1e
+      internalID: 1027603889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_50
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 569
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 859733f91d567ca40bde46e6d752508e
+      internalID: 641581980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_51
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 569
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2bf4a73f4461ffc43be54a78961d6575
+      internalID: -505095320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_52
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 569
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 45be2d27a4b8fd3448580f55912872c4
+      internalID: 1507894675
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_53
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 569
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 25c866417d32cf9408af56a7d72e0631
+      internalID: 1382105336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_54
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 569
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a6d53ceef30cd6408b37a8319d595e0
+      internalID: -244334433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_55
+      rect:
+        serializedVersion: 2
+        x: 4200
+        y: 569
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e86164cfe7120794eb96e4671d1f3ac0
+      internalID: 512896207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_56
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e4f318460ed7b14c9e2b78178596e50
+      internalID: -1072863526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_57
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 0
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f55d999407f5dba4f9e0cb7d027f88e8
+      internalID: -207340840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_GenericPlant_IdleFlip_Spritesheet_58
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 0
+        width: 600
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e52d91dd4b86c748bac41ad63f0da38
+      internalID: 1036720901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 9cc11cb3fab6559449696bb3557f773a
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_0: -1920483796
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_1: -709233753
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_10: 1525160238
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_11: -1466950801
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_12: -1906651656
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_13: -2111383069
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_14: -1001079717
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_15: -1548004438
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_16: 1930794608
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_17: 899616664
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_18: 282509421
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_19: -948391626
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_2: 1936896904
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_20: -1329638691
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_21: -977370016
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_22: -2141402185
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_23: -916913503
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_24: -2064546192
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_25: 1409182085
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_26: 1126301683
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_27: 188394777
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_28: -65003661
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_29: 137632101
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_3: 752247499
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_30: 1597007066
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_31: 1375535300
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_32: -1575522057
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_33: -1149491253
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_34: -763948069
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_35: -1362464626
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_36: 664536084
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_37: 1499074866
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_38: -309778213
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_39: 2076025967
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_4: -65854260
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_40: -807930523
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_41: -146937585
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_42: 1173893879
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_43: -1820927997
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_44: -898746339
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_45: -2078215355
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_46: -1434965997
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_47: -1389327889
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_48: 482529023
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_49: 1027603889
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_5: 395197318
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_50: 641581980
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_51: -505095320
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_52: 1507894675
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_53: 1382105336
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_54: -244334433
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_55: 512896207
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_56: -1072863526
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_57: -207340840
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_58: 1036720901
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_6: -1505941192
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_7: 935410269
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_8: -1007096159
+      Animation_General_GenericPlant_IdleFlip_Spritesheet_9: 1112935061
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

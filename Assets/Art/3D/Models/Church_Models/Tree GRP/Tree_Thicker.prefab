@@ -9,16 +9,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 2fda9b22a0c8b604781ebc05b386d3ed, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2fda9b22a0c8b604781ebc05b386d3ed, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2fda9b22a0c8b604781ebc05b386d3ed, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2fda9b22a0c8b604781ebc05b386d3ed, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.6813374
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2fda9b22a0c8b604781ebc05b386d3ed, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.9708027
+      value: 1.3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2fda9b22a0c8b604781ebc05b386d3ed, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.0028698444
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2fda9b22a0c8b604781ebc05b386d3ed, type: 3}
       propertyPath: m_LocalRotation.w
@@ -48,13 +60,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2fda9b22a0c8b604781ebc05b386d3ed, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 2fda9b22a0c8b604781ebc05b386d3ed, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: a589fe36e1cdcaf41b587751095dae12, type: 2}
     - target: {fileID: 919132149155446097, guid: 2fda9b22a0c8b604781ebc05b386d3ed, type: 3}
       propertyPath: m_Name
-      value: tree02
+      value: Tree_Thicker
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

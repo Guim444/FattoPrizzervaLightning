@@ -9,16 +9,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: e94735c93bac6b7408128080102b33aa, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e94735c93bac6b7408128080102b33aa, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.0607
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e94735c93bac6b7408128080102b33aa, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.0607
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e94735c93bac6b7408128080102b33aa, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.870247
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e94735c93bac6b7408128080102b33aa, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.0112962
+      value: 1.3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e94735c93bac6b7408128080102b33aa, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.1947234
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e94735c93bac6b7408128080102b33aa, type: 3}
       propertyPath: m_LocalRotation.w
@@ -58,7 +70,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 8fb681ba96e4de047b0bf57b3b1b4961, type: 2}
     - target: {fileID: 919132149155446097, guid: e94735c93bac6b7408128080102b33aa, type: 3}
       propertyPath: m_Name
-      value: FP_tree01_v01
+      value: Tree_Thickest
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

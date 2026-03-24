@@ -36,13 +36,18 @@ public class PlayerStateMachineController : MonoBehaviour
 
     private void InitializeStateMachine()
     {
+        StateMachine.Reset();
         var sm = _player.staminaManager;
         var cc = _player.cc;
         var p = _player;
 
         var idle = new IdleState(sm) { player = p, controller = cc };
         var moving = new MovingState(sm) { player = p, controller = cc };
-        var running = new RunningState(sm) { player = p, controller = cc };
+        var running = new RunningState(sm)
+        {
+            player = p, controller = cc, baseSpeed = p.movement.runningBaseSpeed,
+            staminaCostPerSecond = runningStaminaCost[0]
+        };
         var tired = new TiredState(sm) { player = p, controller = cc };
 
         var punching = new PunchingState(sm)

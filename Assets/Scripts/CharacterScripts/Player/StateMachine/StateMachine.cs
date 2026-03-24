@@ -5,7 +5,11 @@ public static class StateMachine
 {
     private static Dictionary<State, IStateActions> _states = new Dictionary<State, IStateActions>();
     private static IStateActions _currentState;
-
+    public static void Reset()
+    {
+        _states.Clear();
+        _currentState = null;
+    }
     public static void AddState(State key, IStateActions state)
     {
         _states[key] = state;

@@ -18,8 +18,20 @@ public class PlayerAnimations : MonoBehaviour
     {
         if (player == null || animator == null) return;
 
-        animator.SetBool("isMoving", player.currentState == State.Moving);
-        animator.SetBool("isRunning", player.currentState == State.Running);
+        float speed = player.currentState switch
+        {
+            State.Idle => 0f,
+            State.Moving => .5f,
+            State.Running => 1f,
+            State.Tired => 0.25f,
+            _ => 0f
+        };
+
+        animator.SetFloat("Speed", speed);
+        animator.SetBool("isMoving",  player.currentState == State.Moving
+                                      || player.currentState == State.Running
+                                      || player.currentState == State.Tired);
+        animator.SetBool("isRunning",   player.currentState == State.Running);
         animator.SetBool("isPunching", player.currentState == State.Punching
                                        || player.currentState == State.PunchRunning);
         animator.SetBool("isTired", player.currentState == State.Tired);

@@ -83,9 +83,6 @@ public class RunningState : IStateActions
             currentThrustPhase    = 1;
             combat.damageBoost    = 0;
             player.animator.speed = 1;
-
-            if (PlayerAnimations.instance != null)
-                PlayerAnimations.instance.animator.SetBool("isRunning", false);
         }
         else
         {

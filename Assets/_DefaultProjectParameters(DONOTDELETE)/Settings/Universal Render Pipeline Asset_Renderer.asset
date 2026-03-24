@@ -38,11 +38,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
   m_Name: White Outline
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 450
   fetchColorBuffer: 1
   requirements: 0
-  passMaterial: {fileID: 2100000, guid: 1801ce0ed11b1bd4f9c64d3237e61f93, type: 2}
+  passMaterial: {fileID: 2100000, guid: 0276fdb5c809faa488e25912aad88d5a, type: 2}
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: Black Outline
   m_EditorClassIdentifier: 
   m_Active: 1
-  injectionPoint: 450
+  injectionPoint: 600
   fetchColorBuffer: 1
   requirements: 0
   passMaterial: {fileID: 2100000, guid: b45620d8e5687464cad19ca7f2cb797b, type: 2}

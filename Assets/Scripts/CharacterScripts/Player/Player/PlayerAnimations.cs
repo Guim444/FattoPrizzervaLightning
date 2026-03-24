@@ -26,7 +26,6 @@ public class PlayerAnimations : MonoBehaviour
             State.Tired => 0.25f,
             _ => 0f
         };
-
         animator.SetFloat("Speed", speed);
         animator.SetBool("isMoving",  player.currentState == State.Moving
                                       || player.currentState == State.Running
@@ -36,5 +35,7 @@ public class PlayerAnimations : MonoBehaviour
                                        || player.currentState == State.PunchRunning);
         animator.SetBool("isTired", player.currentState == State.Tired);
         animator.SetBool("isGliding", player.currentState == State.Gliding);
+        animator.SetBool("isKnockedback", player.currentState == State.Knockedback);
+        animator.SetBool("isDead", player.combat.HP <= 0);
     }
 }

@@ -6,6 +6,7 @@ public class TiredState : IStateActions
     public PlayerController player;
     public CharacterController controller;
     public PlayerStaminaManager stamina;
+    private Coroutine _staminaCoroutine;
 
     private int savedEndurance;
 
@@ -17,8 +18,8 @@ public class TiredState : IStateActions
     public void Enter()
     {
         // Fuerza al jugador a ser empujado con la máxima facilidad mientras está cansado
-        savedEndurance           = player.combat.endurance;
-        player.combat.endurance  = -2;
+        savedEndurance = player.combat.endurance;
+        player.combat.endurance = -2;
 
         stamina.StopAllRegenDrain();
         float length = player.animator.GetCurrentAnimatorStateInfo(0).length;
@@ -29,7 +30,7 @@ public class TiredState : IStateActions
     {
         var movement = player.movement;
 
-        Vector3 input  = movement.GetDirectionalInput();
+        Vector3 input = movement.GetDirectionalInput();
         Vector3 toMove = movement.ApplyInertia(input, Time.deltaTime, movement.tiredTurnSpeed);
 
         if (toMove != Vector3.zero && controller.enabled)
@@ -39,6 +40,11 @@ public class TiredState : IStateActions
     public void Exit()
     {
         player.combat.endurance = savedEndurance;
+        if (_staminaCoroutine != null)
+        {
+            player.StopCoroutine(_staminaCoroutine);
+            _staminaCoroutine = null;
+        }
     }
 
     IEnumerator StartStaminaDrop(float length)

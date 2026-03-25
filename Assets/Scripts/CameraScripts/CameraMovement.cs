@@ -4,47 +4,28 @@ public class CameraMovement : MonoBehaviour
 {
     [Header("Target")]
     public Transform player;
-    public Transform center;
-
-    float xZoom;
-    public bool zoomed;
-
+    [Header("Offsets")]
+    public float yOffset = 2f;
     [Header("Smoothness")]
-    public Vector3 smoothSpeed;
     public float smoothTime;
+    private Vector3 velocity = Vector3.zero;
 
     [Header("Clamps")]
     public float minZ;
     public float maxZ;
-    public float zoomDistance;
+    [Header("Zoom")]
+    public float xOffset = -3f;    // distancia fija de la cámara al jugador en X
+    public float xMin;             // límite mínimo de X de la cámara
+    public float xMax;   
+    
 
-    private void Awake()
-    {
-        xZoom = transform.position.x;
-    }
-    void Update()
-    {
-        float targetZ = Mathf.Clamp(player.position.z, minZ, maxZ);
-
-        Vector3 targetPos = new Vector3(xZoom, transform.position.y, targetZ);
-
-        transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref smoothSpeed, smoothTime);
-    }
     private void LateUpdate()
     {
-        if (player.position.x > center.position.x + 0.5f && !zoomed)
-        {
-            Zoom(1);
-        }
-        else if (player.position.x < center.position.x - 0.5f && zoomed)
-        {
-            Zoom(-1);
-        }
+        float targetX = Mathf.Clamp(player.position.x + xOffset, xMin, xMax);
+        float targetZ = Mathf.Clamp(player.position.z, minZ, maxZ);
+
+        Vector3 targetPos = new Vector3(targetX, player.position.y + yOffset, targetZ);
+        transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref velocity, smoothTime);
     }
 
-    public void Zoom(int zoom)
-    {
-        xZoom = transform.position.x + zoomDistance * zoom;
-        zoomed = zoom == 1;
-    }
 }

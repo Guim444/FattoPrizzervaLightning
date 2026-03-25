@@ -102,6 +102,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Run",
+                    "type": "Button",
+                    "id": "350fb1ab-a508-443a-83f0-dbacec0b8098",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -119,7 +128,7 @@
                 {
                     "name": "up",
                     "id": "24604a8e-3647-4fba-80ca-7dd06e176d3d",
-                    "path": "<Keyboard>/w",
+                    "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -130,7 +139,7 @@
                 {
                     "name": "down",
                     "id": "4c5a5f4f-7c10-479d-ab57-cf41358bbd41",
-                    "path": "<Keyboard>/s",
+                    "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -141,7 +150,7 @@
                 {
                     "name": "left",
                     "id": "386bfbe1-ab1b-43da-90ad-325e9fb0f2dd",
-                    "path": "<Keyboard>/a",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -152,7 +161,7 @@
                 {
                     "name": "right",
                     "id": "7d531bdf-399a-48a7-9289-afda9264e56d",
-                    "path": "<Keyboard>/d",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -214,6 +223,17 @@
                     "action": "Movement",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "ec24f6e7-4e20-431d-9645-8c5b0dfc3941",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

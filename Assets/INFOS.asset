@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf7219bab7fe46a1ad266029b2fee19, type: 3}
+  m_Name: INFOS
+  m_EditorClassIdentifier: 
+  icon: {fileID: 0}
+  title: INFO WELCOME
+  prevReadme: {fileID: 0}
+  nextReadme: {fileID: 0}
+  sections:
+  - name: Header -Introduction
+    heading: Introduction
+    text: "Welcome to the unity trailer game vision. \n\nHere you will have access
+      to 2 scenes, one is the main and the other is for testing, you can find them
+      in the LEVEL's folder.\n\nPLEASE , be responsible and place your creations
+      in the right folder , if you need to create a folder, you can as long it is
+      place porperly in the project .\n\nThank you for participating to this project
+      :)\n\nGuim Games's Team"
+    linkText: 
+    url: 
+  isRoot: 1

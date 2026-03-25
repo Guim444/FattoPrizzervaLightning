@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 8270984661748368045}
   - component: {fileID: 3709248149287103799}
   - component: {fileID: 7386570220840936665}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Protagonist_Lateral
   m_TagString: 2D
   m_Icon: {fileID: 0}
@@ -68,7 +68,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0e186a990f9f0f14a865098c5be4dc59, type: 2}
+  - {fileID: 2100000, guid: 88043db52bd846e4dadf2b36571eec06, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -90,7 +90,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -2132068934, guid: f12a7aad23e547c4ba8b6d48f716fe87, type: 3}
-  m_Color: {r: 0.5698112, g: 0.5698112, b: 0.5698112, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

@@ -26,6 +26,7 @@ MonoBehaviour:
     BlurQuality: 0
     Falloff: 100
     SampleCount: -1
+<<<<<<< HEAD:Assets/System/_DefaultProjectParameters/Settings/Universal Render Pipeline Asset_Renderer.asset
 --- !u!114 &-6711887466690451476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46,6 +47,8 @@ MonoBehaviour:
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
+=======
+>>>>>>> 7184b3f4b32e487b39ac709d31adbc99d0cf8707:Assets/_DefaultProjectParameters(DONOTDELETE)/Settings/Universal Render Pipeline Asset_Renderer.asset
 --- !u!114 &-3409835923088045136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,9 +100,8 @@ MonoBehaviour:
   - {fileID: -8247004397655237812}
   - {fileID: 1640286581210976144}
   - {fileID: -3409835923088045136}
-  - {fileID: -6711887466690451476}
   - {fileID: 5993250553209430498}
-  m_RendererFeatureMap: 4cdbace031c18c8d908feb7af477c316b08bf8454bd4add0ece784ffe895daa2e221f6e19f4d2c53
+  m_RendererFeatureMap: 4cdbace031c18c8d908feb7af477c316b08bf8454bd4add0e221f6e19f4d2c53
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -153,7 +155,7 @@ MonoBehaviour:
   m_Name: Black Outline
   m_EditorClassIdentifier: 
   m_Active: 1
-  injectionPoint: 450
+  injectionPoint: 600
   fetchColorBuffer: 1
   requirements: -1
   passMaterial: {fileID: 2100000, guid: b45620d8e5687464cad19ca7f2cb797b, type: 2}

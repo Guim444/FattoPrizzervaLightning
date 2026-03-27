@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eee2a662fafd884ca5c5eeb24eb4a1e, type: 3}
+  m_Name: KnockbackResolverConfig
+  m_EditorClassIdentifier: 
+  targetForces:
+  - clash: 18
+    punch: 22
+    punchRunning: 20
+  - clash: 14
+    punch: 16
+    punchRunning: 13
+  - clash: 10
+    punch: 11
+    punchRunning: 9
+  - clash: 20
+    punch: 4
+    punchRunning: 5
+  - clash: 3
+    punch: 3
+    punchRunning: 5
+  - clash: 5
+    punch: 12
+    punchRunning: 18
+  - clash: 12
+    punch: 20
+    punchRunning: 28
+  selfForces:
+  - clash: 0
+    punch: 0
+    punchRunning: 0
+  - clash: 2
+    punch: 1
+    punchRunning: 0
+  - clash: 5
+    punch: 4
+    punchRunning: 6
+  - clash: 5
+    punch: 3
+    punchRunning: 3
+  - clash: 3
+    punch: 3
+    punchRunning: 2
+  - clash: 1
+    punch: 1
+    punchRunning: 0
+  - clash: 0
+    punch: 0
+    punchRunning: 0
+  animTriggers:
+  - clash: ClashStagger
+    punch: HitStagger
+    punchRunning: HitStagger
+  - clash: ClashStagger
+    punch: HitStagger
+    punchRunning: HitStagger
+  - clash: ClashRecoil
+    punch: PunchRecoil
+    punchRunning: PunchRecoil
+  - clash: ClashRecoil
+    punch: PunchRecoil
+    punchRunning: PunchRecoil
+  - clash: 
+    punch: 
+    punchRunning: 
+  - clash: 
+    punch: 
+    punchRunning: 
+  - clash: 
+    punch: 
+    punchRunning: 

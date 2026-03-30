@@ -34,16 +34,13 @@ public class TutorialRingManager : MonoBehaviour
     // ==================================================
     [Header("Fighters")]
     public PlayerController player;
+
     public RioTutteEnemy enemy;
 
     // ==================================================
     // CONFIGURATION
     // ==================================================
     [Header("Configuration")]
-    [Tooltip("¿El enemigo empieza en el lado DERECHO del ring?\n" +
-             "Afecta desde qué dirección se calcula el threshold de 3/4.")]
-    public bool enemyStartsOnRight = true;
-
     [Tooltip("Valor de Endurance al que sube el enemigo cuando alcanza 3/4.")]
     public int enemyEnduranceUpgradeValue = 1;
 
@@ -64,12 +61,12 @@ public class TutorialRingManager : MonoBehaviour
     // PRIVATE STATE
     // ==================================================
     private bool _enemyThresholdTriggered = false;
-    private bool _resultTriggered         = false;
+    private bool _resultTriggered = false;
 
     // ==================================================
     // SHORTCUTS
     // ==================================================
-    float RingLeft  => leftBound.position.x;
+    float RingLeft => leftBound.position.x;
     float RingRight => rightBound.position.x;
     float RingWidth => RingRight - RingLeft;
 
@@ -89,21 +86,17 @@ public class TutorialRingManager : MonoBehaviour
     // THRESHOLD CHECK (3/4)
     // ==================================================
 
+    // TutorialRingManager.cs — CheckEnemyThreshold completo
     void CheckEnemyThreshold()
     {
         if (_enemyThresholdTriggered) return;
 
-        // Posición normalizada del enemigo dentro del ring (0 = left, 1 = right)
         float normalizedPos = (enemy.transform.position.x - RingLeft) / RingWidth;
         normalizedPos = Mathf.Clamp01(normalizedPos);
 
-        // Si empieza a la derecha: ha sido empujado 3/4 cuando está en el 25% izquierdo
-        // Si empieza a la izquierda: ha sido empujado 3/4 cuando está en el 75% derecho
-        bool crossed = enemyStartsOnRight
-            ? normalizedPos <= 0.25f
-            : normalizedPos >= 0.75f;
-
-        if (crossed)
+        // Enemigo empieza a la izquierda → ha sido empujado 3/4
+        // cuando alcanza el 75% derecho del ring
+        if (normalizedPos >= 0.75f)
         {
             _enemyThresholdTriggered = true;
             enemy.endurance = enemyEnduranceUpgradeValue;
@@ -143,7 +136,7 @@ public class TutorialRingManager : MonoBehaviour
     public void ResetRing()
     {
         _enemyThresholdTriggered = false;
-        _resultTriggered         = false;
+        _resultTriggered = false;
         Debug.Log("[TutorialRing] Ring reiniciado.");
     }
 
@@ -164,18 +157,17 @@ public class TutorialRingManager : MonoBehaviour
         Gizmos.DrawWireCube(center, new Vector3(RingWidth, halfH * 2f, 1f));
 
         // Línea de límites
-        Gizmos.DrawLine(leftBound.position  + Vector3.up * halfH, leftBound.position  - Vector3.up * halfH);
+        Gizmos.DrawLine(leftBound.position + Vector3.up * halfH, leftBound.position - Vector3.up * halfH);
         Gizmos.DrawLine(rightBound.position + Vector3.up * halfH, rightBound.position - Vector3.up * halfH);
 
-        // Marca de 3/4 (rojo)
-        float thresholdX = enemyStartsOnRight
-            ? RingLeft + RingWidth * 0.25f
-            : RingLeft + RingWidth * 0.75f;
+        // TutorialRingManager.cs — dentro de OnDrawGizmos(), marca de 3/4
+        float thresholdX = RingLeft + RingWidth * 0.75f;
 
         Gizmos.color = Color.red;
         Vector3 markBottom = new Vector3(thresholdX, center.y - halfH, center.z);
-        Vector3 markTop    = new Vector3(thresholdX, center.y + halfH, center.z);
+        Vector3 markTop = new Vector3(thresholdX, center.y + halfH, center.z);
         Gizmos.DrawLine(markBottom, markTop);
+        UnityEditor.Handles.Label(markTop + Vector3.up * 0.2f, "3/4 Threshold");
 
         // Label "3/4"
         UnityEditor.Handles.Label(markTop + Vector3.up * 0.2f, "3/4 Threshold");

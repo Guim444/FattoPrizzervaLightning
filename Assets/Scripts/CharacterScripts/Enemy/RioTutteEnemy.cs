@@ -20,8 +20,9 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
 
     [Header("Stats")]
     public float HP { get; set; } = 10f;
-    public int   endurance = 0;
-    public int   damage    = 1;
+
+    public int endurance = 0;
+    public int damage = 1;
 
     // --------------------------------------------------------
     //  MOVEMENT (IA)
@@ -29,25 +30,28 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
 
     [Header("Game Design: Movement")]
     public float walkSpeed = 2.5f;
-    public bool  activeAI  = true;
+
+    public bool activeAI = true;
 
     // --------------------------------------------------------
     //  PHYSICS
     // --------------------------------------------------------
 
     [Header("Physics")]
-    public float gravity          = -20f;
-    public float groundFriction   = 9f;
-    public float airFriction      = 1.5f;
-    public float stopThreshold    = 0.15f;
+    public float gravity = -20f;
+
+    public float groundFriction = 9f;
+    public float airFriction = 1.5f;
+    public float stopThreshold = 0.15f;
 
     // --------------------------------------------------------
     //  ATTACK
     // --------------------------------------------------------
 
     [Header("Game Design: Attack")]
-    public float attackRange              = 1.5f;
-    public float attackCooldown           = 2f;
+    public float attackRange = 1.5f;
+
+    public float attackCooldown = 2f;
     public LayerMask playerLayer;
 
     // --------------------------------------------------------
@@ -56,11 +60,11 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
 
     public bool IsMoving => _cc != null && _cc.velocity.magnitude > 0.05f;
 
-    private CharacterController  _cc;
-    private Transform            _playerTransform;
-    private PlayerController     _playerController;
-    private float                _attackTimer;
-    private float                _verticalVelocity;
+    private CharacterController _cc;
+    private Transform _playerTransform;
+    private PlayerController _playerController;
+    private float _attackTimer;
+    private float _verticalVelocity;
     private KnockbackPhysicsBody _body;
 
     // --------------------------------------------------------
@@ -69,13 +73,13 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
 
     void Awake()
     {
-        _cc               = GetComponent<CharacterController>();
+        _cc = GetComponent<CharacterController>();
         _verticalVelocity = -2f;
 
         _body = KnockbackPhysicsBody.Default;
         _body.groundFriction = groundFriction;
-        _body.airFriction    = airFriction;
-        _body.stopThreshold  = stopThreshold;
+        _body.airFriction = airFriction;
+        _body.stopThreshold = stopThreshold;
     }
 
     void Start()
@@ -85,7 +89,7 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
         var playerObj = FindObjectOfType<PlayerController>();
         if (playerObj != null)
         {
-            _playerTransform  = playerObj.transform;
+            _playerTransform = playerObj.transform;
             _playerController = playerObj;
         }
         else
@@ -140,21 +144,25 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
         if (_cc.enabled) _cc.Move(new Vector3(0f, _verticalVelocity * Time.deltaTime, 0f));
     }
 
+    // RioTutteEnemy.cs — método TryAttackPlayer completo
     void TryAttackPlayer()
     {
         Collider[] hits = Physics.OverlapSphere(transform.position, attackRange, playerLayer);
         foreach (var hit in hits)
         {
-            if (!hit.TryGetComponent<IDamageable>(out var target)) continue;
-
-            target.TakeDamage(damage);
-
+            //Activar luego de Fase 2
+            // if (!hit.TryGetComponent<IDamageable>(out var target)) continue;
+            //
+            // target.TakeDamage(damage);
+            //
             Vector3 dir = (hit.transform.position - transform.position).normalized;
             if (hit.TryGetComponent<IKnockbackable>(out var kb))
             {
+                // RioTutte usa su propio endurance como si fuera "el player"
+                // en la tabla — cuanto mayor su endurance, más empuja al player
                 KnockbackResult result = KnockbackResolver.Resolve(
-                    AttackType.Punch, endurance,
-                    _playerController != null ? _playerController.combat.endurance : 0
+                    AttackType.Punch,
+                    endurance
                 );
                 kb.ReceiveKnockback(dir, result.ForceOnTarget);
             }
@@ -171,17 +179,19 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
 
     public void TakeDamage(int dmg)
     {
-        HP -= dmg;
+        // TODO: activar cuando se implemente la fase 2.
+        // HP -= dmg;
         Debug.Log($"[RioTutte] Recibió {dmg} daño. HP restante: {HP}");
-        if (HP <= 0) Die();
+        // if (HP <= 0) Die();
     }
 
     public void Die()
     {
         Debug.Log("[RioTutte] Derrotado.");
-        activeAI = false;
-        _body.Cancel();
-        gameObject.SetActive(false);
+        // TODO: activar animación de derrota en fase 2.
+        // activeAI = false;
+        // _body.Cancel();
+        // gameObject.SetActive(false);
     }
 
     // --------------------------------------------------------
@@ -197,4 +207,5 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
     }
 
     public void ApplyClashKnockback(Vector3 direction, float force, float _duration)
-        => ReceiveKnockback(direction, force);}
+        => ReceiveKnockback(direction, force);
+}

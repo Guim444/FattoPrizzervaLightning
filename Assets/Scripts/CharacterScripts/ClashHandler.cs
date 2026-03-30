@@ -83,6 +83,7 @@ public class ClashHandler : MonoBehaviour
     // --------------------------------------------------------
 
     // ClashHandler.cs — método ExecuteClash completo
+    // ClashHandler.cs — solo ExecuteClash(), el resto queda igual
     void ExecuteClash(RioTutteEnemy enemy, Vector3 enemyPosition)
     {
         Vector3 clashDir = (enemyPosition - transform.position).normalized;
@@ -92,7 +93,6 @@ public class ClashHandler : MonoBehaviour
         KnockbackResult result = KnockbackResolver.Resolve(
             AttackType.Clash,
             player.combat.endurance,
-            enemy.endurance,
             resolverConfig
         );
 
@@ -103,7 +103,7 @@ public class ClashHandler : MonoBehaviour
 
         _cooldownTimer = clashCooldown;
 
-        Debug.Log($"[Clash] PlayerEnd:{player.combat.endurance} EnemyEnd:{enemy.endurance} " +
+        Debug.Log($"[Clash] playerEnd:{player.combat.endurance} " +
                   $"→ forceEnemy:{result.ForceOnTarget:F1} forceSelf:{result.ForceOnSelf:F1}");
     }
 }

@@ -89,7 +89,7 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
     {
         _body.mass = KnockbackPhysicsBody.MassFromEndurance(endurance);
 
-        var playerObj = FindObjectOfType<PlayerController>();
+        var playerObj = FindAnyObjectByType<PlayerController>();
         if (playerObj != null)
         {
             _playerTransform = playerObj.transform;

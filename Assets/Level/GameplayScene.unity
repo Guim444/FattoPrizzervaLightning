@@ -427,6 +427,17 @@ Transform:
   - {fileID: 704993144}
   m_Father: {fileID: 266818183}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &438618373 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6590553051149464386, guid: 15f08e761ba0d7b46a2ea9efd44e17b6, type: 3}
+  m_PrefabInstance: {fileID: 716101243}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &448675059
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -479,6 +490,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2480989804119407332, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: staminaTextDisplay
+      value: 
+      objectReference: {fileID: 438618373}
     - target: {fileID: 213103122452913526, guid: 092e69a1c894ff241acbfcded8a7675d, type: 3}
       propertyPath: m_FlipX
       value: 0
@@ -1187,7 +1202,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1497444815
 Transform:
   m_ObjectHideFlags: 0
@@ -1584,7 +1599,6 @@ MonoBehaviour:
   rightBound: {fileID: 478240726}
   player: {fileID: 2004004919}
   enemy: {fileID: 1681110389}
-  enemyStartsOnRight: 0
   enemyEnduranceUpgradeValue: 1
   onPlayerOut:
     m_PersistentCalls:

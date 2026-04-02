@@ -38475,6 +38475,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 128214775}
     m_Modifications:
     - target: {fileID: 463081134366795710, guid: 4328e6f210d8a654a83e2f3231ea7004, type: 3}
+      propertyPath: _anim
+      value: 
+      objectReference: {fileID: 1967666273}
+    - target: {fileID: 463081134366795710, guid: 4328e6f210d8a654a83e2f3231ea7004, type: 3}
       propertyPath: activeAI
       value: 1
       objectReference: {fileID: 0}
@@ -38508,7 +38512,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3384977799937750978, guid: 4328e6f210d8a654a83e2f3231ea7004, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.79
+      value: 2.59
       objectReference: {fileID: 0}
     - target: {fileID: 3384977799937750978, guid: 4328e6f210d8a654a83e2f3231ea7004, type: 3}
       propertyPath: m_LocalPosition.z
@@ -38544,11 +38548,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7643132555759407464, guid: 4328e6f210d8a654a83e2f3231ea7004, type: 3}
       propertyPath: m_Height
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7643132555759407464, guid: 4328e6f210d8a654a83e2f3231ea7004, type: 3}
       propertyPath: m_Radius
-      value: 1
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643132555759407464, guid: 4328e6f210d8a654a83e2f3231ea7004, type: 3}
+      propertyPath: m_Center.y
+      value: -0.08
       objectReference: {fileID: 0}
     - target: {fileID: 1548417505925107317, guid: ee7c33ea77d22f342b673d2b4b0eeb39, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'

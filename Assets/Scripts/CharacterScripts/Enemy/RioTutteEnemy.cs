@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEditor.AnimatedValues;
 
 /// <summary>
 /// Enemigo tutorial RioTutte — versión refactorizada.
@@ -21,6 +22,8 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
     [Header("Stats")]
     public float HP { get; set; } = 10f;
 
+    [SerializeField]
+    Animator _anim;
     public int endurance = 0;
     public int damage = 1;
 
@@ -165,6 +168,7 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
                     endurance
                 );
                 kb.ReceiveKnockback(dir, result.ForceOnTarget);
+                _anim.SetTrigger("Punch");
             }
 
             _attackTimer = attackCooldown;
@@ -181,6 +185,7 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
     {
         // TODO: activar cuando se implemente la fase 2.
         // HP -= dmg;
+        _anim.SetTrigger("Hit");
         Debug.Log($"[RioTutte] Recibió {dmg} daño. HP restante: {HP}");
         // if (HP <= 0) Die();
     }

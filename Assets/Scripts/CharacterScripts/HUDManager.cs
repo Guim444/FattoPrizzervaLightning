@@ -32,6 +32,7 @@ public class HUDManager : MonoBehaviour
         enemy.SetActive(false);
         cameraMovement.freeMoveMode = false;
         MovePlayerToX(combatStartPositionX);
+        cameraMovement.RefreshCombatX(); 
         HidePanel();
     }
 

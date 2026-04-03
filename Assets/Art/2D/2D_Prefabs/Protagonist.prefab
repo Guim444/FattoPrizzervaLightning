@@ -250,12 +250,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkingSpeed: 3
   runningBaseSpeed: 5
-  runningPhase2Multiplier: 1.2
-  runningPhase3Multiplier: 1.4
   tiredSpeed: 1
   glidingSpeed: 3
   punchingSpeed: 2
   punchRunningBaseSpeed: 6
+  spriteRenderer: {fileID: 0}
   runningTurnSpeedNormal: 4
   runningTurnSpeedPhase3: 2
   walkingTurnSpeed: 5

@@ -7,7 +7,7 @@ public class PunchingState : IStateActions
     public CharacterController controller;
     public PlayerStaminaManager stamina;
     public SphereCollider punchCollider;
-
+    float punchDuration = 1.5f;
     private bool punchExecuted = false;
 
     public PunchingState(PlayerStaminaManager staminaManager)
@@ -23,8 +23,7 @@ public class PunchingState : IStateActions
 
         var combat = player.combat;
         stamina.ModifyStamina(-combat.punchStaminaCostPhase0);
-        combat.normalPunchTimer = player.animator
-            .GetCurrentAnimatorStateInfo(0).length;
+        combat.normalPunchTimer = punchDuration;
     }
 
     public void Update()
@@ -47,10 +46,10 @@ public class PunchingState : IStateActions
         }
     }
 
-   
+
     public void Exit()
     {
-        player.canAttack           = true;
-        punchExecuted              = false;
+        player.canAttack = true;
+        punchExecuted = false;
     }
 }

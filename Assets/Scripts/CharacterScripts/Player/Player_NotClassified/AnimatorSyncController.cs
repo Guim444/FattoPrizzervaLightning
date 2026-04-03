@@ -1,5 +1,5 @@
-
 // AnimatorSyncController.cs — receptor de Animation Events del player
+
 using UnityEngine;
 
 /// <summary>
@@ -23,7 +23,10 @@ public class AnimatorSyncController : MonoBehaviour
     public void OnPunchHit()
     {
         if (_player.canAttack)
+        {
             _player.combatAttackHandler.ExecuteAttack();
+            _player.animator.ResetTrigger("isPunching");
+        }
     }
 
     /// <summary>
@@ -33,6 +36,9 @@ public class AnimatorSyncController : MonoBehaviour
     public void OnPunchRunningHit()
     {
         if (_player.canAttack)
+        {
             _player.combatAttackHandler.ExecuteAttack();
+            _player.animator.ResetTrigger("isPunching");
+        }
     }
 }

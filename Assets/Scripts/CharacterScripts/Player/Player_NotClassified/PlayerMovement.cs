@@ -16,12 +16,13 @@ public class PlayerMovement : MonoBehaviour
     public float walkingSpeed = 3f;
 
     public float runningBaseSpeed = 6f;
-    public float runningPhase2Multiplier = 1.4f;
-    public float runningPhase3Multiplier = 1.8f;
     public float tiredSpeed = 1f;
     public float glidingSpeed = 3f;
     public float punchingSpeed = 2f;
     public float punchRunningBaseSpeed = 6f;
+
+    [Header("Visuals")]
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
     // ==================================================
     // TURN SPEEDS
@@ -98,10 +99,15 @@ public class PlayerMovement : MonoBehaviour
     /// Aplica inercia suave a la dirección de movimiento.
     /// Usa MoveTowards para una transición fluida entre direcciones.
     /// </summary>
+    // Reemplaza el ApplyInertia actual por este
     public Vector3 ApplyInertia(Vector3 inputDir, float deltaTime, float turnSpeed)
     {
         if (inputDir.magnitude > 0.1f)
+        {
             LastFacingDirection = inputDir.normalized;
+            UpdateSpriteFlip(LastFacingDirection.z);
+        }
+
         var dir = Vector3.MoveTowards(LastDirection, inputDir, turnSpeed * deltaTime);
 
         if (dir.magnitude < 0.01f)
@@ -109,6 +115,18 @@ public class PlayerMovement : MonoBehaviour
 
         LastDirection = dir;
         return LastDirection;
+    }
+
+    private void UpdateSpriteFlip(float directionZ)
+    {
+        if (spriteRenderer == null) return;
+        if (Mathf.Abs(directionZ) < 0.1f) return; // solo flip en movimiento horizontal
+
+        Vector3 scale = transform.localScale;
+        scale.x = directionZ < 0
+            ? Mathf.Abs(scale.x)
+            : -Mathf.Abs(scale.x);
+        transform.localScale = scale;
     }
 
     /// <summary>
@@ -153,7 +171,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (speedDisplay == null) return;
         speedDisplay.text = _cc.enabled
-            ? (Mathf.Round(_cc.velocity.magnitude * 10) / 10f).ToString("F1")
+            ? (Mathf.Round(_cc.velocity.magnitude * 10) / 10).ToString("F1")
             : "0.0";
     }
 }

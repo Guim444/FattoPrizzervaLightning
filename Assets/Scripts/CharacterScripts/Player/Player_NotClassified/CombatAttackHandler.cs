@@ -67,8 +67,6 @@ public class CombatAttackHandler : MonoBehaviour
     /// </summary>
     public void ExecuteAttack()
     {
-        // Desactiva canAttack INMEDIATAMENTE para que frames adicionales
-        // del Animation Event no vuelvan a entrar
         if (!_player.canAttack) return;
         _player.canAttack = false;
 

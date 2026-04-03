@@ -24,7 +24,7 @@ public static class PlayerStateHelper
         // if (isOnSlope && currentState == State.Gliding)
         //     return State.Gliding;
 
-        var input    = player.inputHandler;
+        var input = player.inputHandler;
         var movement = player.movement;
 
         bool hasMovementInput = movement.GetDirectionalInput().magnitude > 0.1f;
@@ -47,7 +47,10 @@ public static class PlayerStateHelper
             {
                 // Punch presionado mientras camina → Punching
                 if (input.IsPunchInputPressed)
+                {
+                    input.ConsumePunchInput();
                     return State.Punching;
+                }
 
                 return State.Moving;
             }

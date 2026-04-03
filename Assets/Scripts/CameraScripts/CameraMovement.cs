@@ -8,8 +8,8 @@ public class CameraMovement : MonoBehaviour
     public Transform player;
 
     public Transform center;
-
-    private float xZoomTarget; 
+    private float xOffset;
+    private float xZoomTarget;
     private float xVel;
     private float zVel;
     public bool zoomed;
@@ -21,8 +21,8 @@ public class CameraMovement : MonoBehaviour
     public float zoomDistance;
 
     [Header("Zonas Z")]
-    public float zThreshold = 8f;
-
+    public float zTransitionMin = 6f;
+    public float zTransitionMax = 10f;
     public float zTargetInside = 4f;
     public float zTargetOutside = 14f;
 
@@ -32,17 +32,24 @@ public class CameraMovement : MonoBehaviour
     private void Awake()
     {
         xZoomTarget = transform.position.x;
+        xOffset = transform.position.x - player.position.x;
     }
 
     void Update()
     {
-        // Z siempre estático — sin importar el modo
-        float targetZ = player.position.z > zThreshold ? zTargetOutside : zTargetInside;
+        float targetZ;
+        if (player.position.z < zTransitionMin)
+            targetZ = zTargetInside;
+        else if (player.position.z > zTransitionMax)
+            targetZ = zTargetOutside;
+        else
+            targetZ = player.position.z;
 
         float newX = Mathf.SmoothDamp(transform.position.x, xZoomTarget, ref xVel, smoothTime);
         float newZ = Mathf.SmoothDamp(transform.position.z, targetZ, ref zVel, smoothTime);
 
         transform.position = new Vector3(newX, combatY, newZ);
+
     }
 
     private void LateUpdate()
@@ -58,5 +65,11 @@ public class CameraMovement : MonoBehaviour
     {
         xZoomTarget += zoomDistance * zoom; // ← acumula sobre el target, no sobre transform
         zoomed = zoom == 1;
+    }
+    
+    public void RefreshCombatX()
+    {
+        xZoomTarget = player.position.x + xOffset;
+        zoomed = false;
     }
 }

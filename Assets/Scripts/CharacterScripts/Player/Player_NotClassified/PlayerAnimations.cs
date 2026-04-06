@@ -34,7 +34,6 @@ public class PlayerAnimations : MonoBehaviour
                                       || player.currentState == State.PunchRunning);
         if (player.currentState == State.Punching
             || player.currentState == State.PunchRunning)
-            animator.SetTrigger("isPunching");
         animator.SetBool("isTired", player.currentState == State.Tired);
         animator.SetBool("isGliding", player.currentState == State.Gliding);
         animator.SetBool("isKnockedback", player.currentState == State.Knockedback);

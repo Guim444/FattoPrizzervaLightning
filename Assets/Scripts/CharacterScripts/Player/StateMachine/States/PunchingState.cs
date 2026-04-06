@@ -20,6 +20,7 @@ public class PunchingState : IStateActions
     {
         if (punchExecuted) return;
         punchExecuted = true;
+           player.animator.SetTrigger("isPunching");
 
         var combat = player.combat;
         stamina.ModifyStamina(-combat.punchStaminaCostPhase0);

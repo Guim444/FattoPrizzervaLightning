@@ -796,9 +796,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 874552210}
     - target: {fileID: 5181433476781225031, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: walkingSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5181433476781225031, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
       propertyPath: spriteRenderer
       value: 
       objectReference: {fileID: 448675063}
+    - target: {fileID: 5181433476781225031, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: runningBaseSpeed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7169359949759622994, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
       propertyPath: enemyLayer.m_Bits
       value: 64

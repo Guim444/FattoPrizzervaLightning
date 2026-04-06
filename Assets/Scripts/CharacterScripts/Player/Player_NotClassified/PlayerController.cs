@@ -97,13 +97,13 @@ public class PlayerController : MonoBehaviour
     {
         depthScaler.UpdateScaleBasedOnZ();
         isGrounded = cc.isGrounded;
-        movement.SpeedManagement();
 
         if (combat.HP > 0)
         {
             knockbackHandler.HandleKnockback();
             combat.UpdatePunchCooldown();
             stateMachineController.HandleStateTransitions();
+            movement.SpeedManagement();
             StateMachine.Update();
             movement.ApplyGravity();
         }

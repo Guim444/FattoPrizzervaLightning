@@ -17,7 +17,6 @@ public static class StateMachine
 
     public static void SetState(State newState)
     {
-        Debug.Log($"Transitioning to state: {newState}");
         if (_currentState == _states[newState]) return;
         _currentState?.Exit();
         _currentState = _states[newState];

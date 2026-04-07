@@ -27,7 +27,7 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
     public float manualMass = 1f;
 
     [Tooltip("Fricción en suelo. Mayor = parada más brusca y con más peso.")]
-    public float groundFriction = 10f;
+    public float groundFriction = 5f;
 
     [Tooltip("Fricción en aire. Menor = más planeo.")]
     public float airFriction = 1.5f;

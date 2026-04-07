@@ -35,13 +35,13 @@ public static class KnockbackResolver
     private static readonly float[,] TargetForces = new float[7, 3]
     {
         //  Clash   Punch   PunchRun    endurance
-        {    0.5f,   1.0f,   2.0f  },  // -3
-        {    1.5f,   2.0f,   4.0f  },  // -2
-        {    2.5f,   3.5f,   7.0f  },  // -1
-        {    4.0f,   5.0f,  12.0f  },  //  0  ← Clash igual para ambos
-        {    5.5f,   9.0f,  18.0f  },  // +1
-        {    8.0f,  15.0f,  24.0f  },  // +2
-        {   12.0f,  22.0f,  30.0f  },  // +3
+        {    0.5f,   2.0f,   6.0f  },  // -3
+        {    1.5f,   4.0f,  10.0f  },  // -2
+        {    2.5f,   7.0f,  16.0f  },  // -1
+        {    4.0f,  10.0f,  22.0f  },  //  0
+        {    5.5f,  16.0f,  30.0f  },  // +1
+        {    8.0f,  24.0f,  38.0f  },  // +2
+        {   12.0f,  32.0f,  46.0f  },  // +3
     };
 
     private static readonly float[,] SelfForces = new float[7, 3]

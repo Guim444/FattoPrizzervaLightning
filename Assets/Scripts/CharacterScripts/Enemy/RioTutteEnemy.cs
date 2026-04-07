@@ -25,7 +25,6 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
     [SerializeField]
     Animator _anim;
     public int endurance = 0;
-    public int damage = 1;
 
     // --------------------------------------------------------
     //  MOVEMENT (IA)
@@ -43,7 +42,7 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
     [Header("Physics")]
     public float gravity = -20f;
 
-    public float groundFriction = 9f;
+    public float groundFriction = 4f;
     public float airFriction = 1.5f;
     public float stopThreshold = 0.15f;
 
@@ -55,7 +54,6 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
     public float attackRange = 1.5f;
 
     public float attackCooldown = 2f;
-    public LayerMask playerLayer;
 
     // --------------------------------------------------------
     //  RUNTIME STATE
@@ -77,6 +75,7 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
     void Awake()
     {
         _cc = GetComponent<CharacterController>();
+        if (_anim == null) _anim = GetComponentInChildren<Animator>();
         _verticalVelocity = -2f;
 
         _body = KnockbackPhysicsBody.Default;
@@ -147,34 +146,34 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
         if (_cc.enabled) _cc.Move(new Vector3(0f, _verticalVelocity * Time.deltaTime, 0f));
     }
 
-    // RioTutteEnemy.cs — método TryAttackPlayer completo
     void TryAttackPlayer()
     {
-        Collider[] hits = Physics.OverlapSphere(transform.position, attackRange, playerLayer);
-        foreach (var hit in hits)
+        // Re-busca el player si la referencia se perdió (multi-escena)
+        if (_playerController == null)
         {
-            //Activar luego de Fase 2
-            // if (!hit.TryGetComponent<IDamageable>(out var target)) continue;
-            //
-            // target.TakeDamage(damage);
-            //
-            Vector3 dir = (hit.transform.position - transform.position).normalized;
-            if (hit.TryGetComponent<IKnockbackable>(out var kb))
-            {
-                // RioTutte usa su propio endurance como si fuera "el player"
-                // en la tabla — cuanto mayor su endurance, más empuja al player
-                KnockbackResult result = KnockbackResolver.Resolve(
-                    AttackType.Punch,
-                    endurance
-                );
-                kb.ReceiveKnockback(dir, result.ForceOnTarget);
-                _anim.SetTrigger("Punch");
-            }
-
-            _attackTimer = attackCooldown;
-            Debug.Log($"[RioTutte] Ataque al player | daño: {damage}");
-            break;
+            var obj = FindObjectOfType<PlayerController>();
+            if (obj == null) return;
+            _playerTransform  = obj.transform;
+            _playerController = obj;
         }
+
+        float dist = Vector3.Distance(transform.position, _playerTransform.position);
+        if (dist > attackRange) return;
+
+        Vector3 raw = _playerTransform.position - transform.position;
+        raw.y = 0f;
+        Vector3 dir = raw.magnitude > 0.01f ? raw.normalized : transform.forward;
+
+        KnockbackResult result = KnockbackResolver.Resolve(AttackType.Punch, endurance);
+        _playerController.knockbackHandler.ReceiveKnockback(dir, result.ForceOnTarget);
+
+        // TODO Fase 2: activar daño real
+        // _playerController.combat.TakeDamage(damage);
+
+        _anim.SetTrigger("Punch");
+        _attackTimer = attackCooldown;
+
+        Debug.Log($"[RioTutte] Ataque al player | fuerza:{result.ForceOnTarget:F1} dist:{dist:F2}");
     }
 
     // --------------------------------------------------------

@@ -23,18 +23,15 @@ public class PlayerAnimations : MonoBehaviour
             State.Idle => 0f,
             State.Moving => .5f,
             State.Running => 1f,
-            State.Tired => 0.25f,
+            State.Deenergized => 0.25f,
             _ => 0f
         };
         animator.SetFloat("Speed", speed);
         animator.SetBool("isMoving", player.currentState == State.Moving
                                      || player.currentState == State.Running
-                                     || player.currentState == State.Tired);
+                                     || player.currentState == State.Deenergized);
         animator.SetBool("isRunning", player.currentState == State.Running
                                       || player.currentState == State.PunchRunning);
-        if (player.currentState == State.Punching
-            || player.currentState == State.PunchRunning)
-        animator.SetBool("isTired", player.currentState == State.Tired);
         animator.SetBool("isGliding", player.currentState == State.Gliding);
         animator.SetBool("isKnockedback", player.currentState == State.Knockedback);
         animator.SetBool("isDead", player.combat.HP <= 0);

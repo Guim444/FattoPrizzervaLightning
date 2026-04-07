@@ -13,5 +13,5 @@ public enum State
     Gliding,
     Knockedback,
     Interacting,
-    Tired
+    Deenergized
 }

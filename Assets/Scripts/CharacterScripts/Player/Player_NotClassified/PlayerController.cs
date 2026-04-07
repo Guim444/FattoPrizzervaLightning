@@ -110,4 +110,10 @@ public class PlayerController : MonoBehaviour
 
         inputHandler.ConsumeFrameInputs();
     }
+
+    // Llamado por Animation Event al final de ExitDeenergized
+    public void OnDeenergizedExitDone()
+    {
+        canMove = true;
+    }
 }

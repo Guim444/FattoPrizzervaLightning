@@ -4,6 +4,7 @@ public class HUDManager : MonoBehaviour
 {
     [SerializeField] private CameraMovement cameraMovement;
     [SerializeField] private GameObject enemy;
+    [SerializeField] private GameObject enemyRio;
     [SerializeField] private PlayerBoundaryClamp playerBoundary;
 
     [Header("UI")]
@@ -12,8 +13,11 @@ public class HUDManager : MonoBehaviour
     [Header("Referencias")]
     [SerializeField] private Transform playerTransform;
 
+    [SerializeField] private GameObject playerTransformFront;
+
     [Header("Configuración")]
     [SerializeField] private float combatStartPositionY = 1.5f;
+
     [SerializeField] private float combatStartPositionZ = 0f;
     [SerializeField] private float combatStartPositionX = -90f;
 
@@ -22,6 +26,10 @@ public class HUDManager : MonoBehaviour
     public void OnClickCombatPosition()
     {
         playerBoundary.enabled = false;
+        enemy.SetActive(false);
+        playerTransformFront.SetActive(false);
+
+        enemyRio.SetActive(true);
         cameraMovement.freeMoveMode = false;
         HidePanel();
     }
@@ -30,16 +38,22 @@ public class HUDManager : MonoBehaviour
     {
         playerBoundary.enabled = true;
         enemy.SetActive(false);
+        enemyRio.SetActive(true);
+        playerTransformFront.SetActive(false);
+
         cameraMovement.freeMoveMode = false;
         MovePlayerToX(combatStartPositionX);
-        cameraMovement.RefreshCombatX(); 
+        cameraMovement.RefreshCombatX();
         HidePanel();
     }
 
     public void OnClickFreeMove()
     {
+        playerTransformFront.SetActive(true);
+
         playerBoundary.enabled = false;
-        enemy.SetActive(false);
+        enemy.SetActive(true);
+        enemyRio.SetActive(false);
         cameraMovement.freeMoveMode = true;
         MovePlayer(freePosition);
         HidePanel();

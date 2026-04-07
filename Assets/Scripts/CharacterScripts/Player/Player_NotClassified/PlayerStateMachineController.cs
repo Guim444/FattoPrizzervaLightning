@@ -36,7 +36,7 @@ public class PlayerStateMachineController : MonoBehaviour
             baseSpeed = p.movement.runningBaseSpeed,
             staminaCostPerSecond = runningStaminaCost[0]
         };
-        var tired = new TiredState(sm) { player = p, controller = cc };
+        var tired = new DeenergizedState(sm) { player = p, controller = cc };
 
         var punching = new PunchingState(sm)
         {
@@ -60,7 +60,7 @@ public class PlayerStateMachineController : MonoBehaviour
         StateMachine.AddState(State.Idle, idle);
         StateMachine.AddState(State.Moving, moving);
         StateMachine.AddState(State.Running, running);
-        StateMachine.AddState(State.Tired, tired);
+        StateMachine.AddState(State.Deenergized, tired);
         StateMachine.AddState(State.Punching, punching);
         StateMachine.AddState(State.PunchRunning, punchRunning);
         StateMachine.AddState(State.Knockedback, knockedback);

@@ -32,7 +32,7 @@ public static class PlayerStateHelper
         if (hasMovementInput)
         {
             if (staminaManager.isTired)
-                return State.Tired;
+                return State.Deenergized;
 
             // Run input held AND enough stamina para correr
             if (input.IsRunInputHeld && staminaManager.currentStamina > 0)
@@ -59,7 +59,7 @@ public static class PlayerStateHelper
         {
             // Sin input de movimiento
             if (staminaManager.isTired)
-                return State.Tired;
+                return State.Deenergized;
 
             if (input.IsPunchInputPressed)
                 return State.Punching;
@@ -74,7 +74,7 @@ public static class PlayerStateHelper
     public static State DetermineStateFromInput(PlayerStaminaManager staminaManager)
     {
         if (staminaManager.isTired)
-            return State.Tired;
+            return State.Deenergized;
 
         return State.Idle;
     }

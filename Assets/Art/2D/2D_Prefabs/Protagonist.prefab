@@ -26,7 +26,8 @@ GameObject:
   - component: {fileID: 7169359949759622994}
   - component: {fileID: 6110129550315152802}
   - component: {fileID: 1457295679428446297}
-  m_Layer: 6
+  - component: {fileID: 1993278659528858592}
+  m_Layer: 3
   m_Name: Protagonist
   m_TagString: 2D
   m_Icon: {fileID: 0}
@@ -41,9 +42,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1375970196312274560}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7009832, z: -0, w: 0.7131778}
+  m_LocalRotation: {x: 0, y: 0.700984, z: 0, w: 0.71317697}
   m_LocalPosition: {x: -3.81, y: 0.91, z: -0.84}
-  m_LocalScale: {x: 1.5000002, y: 1.5, z: 1.5000002}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -190,8 +191,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxStamina: 100
-  walkingRegen: 5
-  idleRegen: 3
+  walkingRegen: 10
+  idleRegen: 20
   isTired: 0
   staminaTextDisplay: {fileID: 0}
 --- !u!114 &3136478325201886202
@@ -254,7 +255,7 @@ MonoBehaviour:
   glidingSpeed: 3
   punchingSpeed: 2
   punchRunningBaseSpeed: 6
-  spriteRenderer: {fileID: 0}
+  spriteRenderer: {fileID: 8518268266261273643}
   runningTurnSpeedNormal: 4
   runningTurnSpeedPhase3: 2
   walkingTurnSpeed: 5
@@ -364,9 +365,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 3136478325201886202}
-  resolverConfig: {fileID: 11400000, guid: 7746a487e79666c48b97e3eec437d65b, type: 2}
   baseKnockbackToEnemy: 3
   enduranceKnockbackMultiplier: 10
+  knockbackToSelf: 1
   clashCooldown: 0.6
 --- !u!114 &7169359949759622994
 MonoBehaviour:
@@ -386,7 +387,7 @@ MonoBehaviour:
   edgeThresholdRatio: 2
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   basicPunchDamage: 2
   runningPunchDamage: 3
   edgeDamageMultiplier: 0.5
@@ -422,3 +423,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0e7f52889fbf6840a91c967c536dcb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1993278659528858592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1375970196312274560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0d275ec5f2881b4b9c9d79b3c5d486d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minZ: -5
+  maxZ: 5

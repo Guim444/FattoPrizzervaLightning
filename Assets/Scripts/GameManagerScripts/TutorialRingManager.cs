@@ -8,10 +8,12 @@ public class TutorialRingManager : MonoBehaviour
     // ==================================================
     [Header("Ring Bounds — X (paredes sólidas)")]
     public Transform leftBound;
+
     public Transform rightBound;
 
     [Header("Ring Bounds — Z (zona de victoria)")]
     public Transform frontBound;
+
     public Transform backBound;
 
     // ==================================================
@@ -19,7 +21,14 @@ public class TutorialRingManager : MonoBehaviour
     // ==================================================
     [Header("Fighters")]
     public PlayerController player;
-    public RioTutteEnemy    enemy;
+
+    public RioTutteEnemy enemy;
+
+    [SerializeField]
+    private Vector3 playerStartPosition;
+
+    [SerializeField]
+    private Vector3 enemyStartPosition;
 
     // ==================================================
     // CONFIGURATION
@@ -27,6 +36,7 @@ public class TutorialRingManager : MonoBehaviour
     [Header("Configuration")]
     [Tooltip("Endurance inicial del player al empezar / al reiniciar el ring.")]
     public int playerStartEndurance = 0;
+
     [Tooltip("Endurance al que baja el player cuando el enemigo alcanza 3/4 del ring.")]
     public int playerPenaltyEndurance = -1;
 
@@ -35,8 +45,8 @@ public class TutorialRingManager : MonoBehaviour
     // ==================================================
     [Header("Events")]
     public UnityEvent onPlayerOut;
+
     public UnityEvent onEnemyOut;
-    public UnityEvent onEnemyEnduranceUpgrade;
 
     // ==================================================
     // PRIVATE
@@ -45,15 +55,15 @@ public class TutorialRingManager : MonoBehaviour
     private CharacterController _enemyCC;
 
     private bool _enemyThresholdTriggered = false;
-    private bool _resultTriggered         = false;
+    private bool _resultTriggered = false;
 
     // ==================================================
     // SHORTCUTS
     // ==================================================
-    float RingMinX  => leftBound.position.x;
-    float RingMaxX  => rightBound.position.x;
-    float RingMinZ  => frontBound.position.z;
-    float RingMaxZ  => backBound.position.z;
+    float RingMinX => leftBound.position.x;
+    float RingMaxX => rightBound.position.x;
+    float RingMinZ => frontBound.position.z;
+    float RingMaxZ => backBound.position.z;
     float RingWidth => RingMaxX - RingMinX;
     float RingDepth => RingMaxZ - RingMinZ;
 
@@ -63,8 +73,16 @@ public class TutorialRingManager : MonoBehaviour
 
     void Awake()
     {
-        if (player != null) _playerCC = player.GetComponent<CharacterController>();
-        if (enemy  != null) _enemyCC  = enemy.GetComponent<CharacterController>();
+        if (player != null)
+        {
+            _playerCC = player.GetComponent<CharacterController>();
+            playerStartPosition = player.transform.position;
+        }
+        if (enemy != null)
+        {
+            _enemyCC = enemy.GetComponent<CharacterController>();
+            enemyStartPosition = enemy.transform.position;
+        }
     }
 
     void Update()
@@ -78,7 +96,7 @@ public class TutorialRingManager : MonoBehaviour
     {
         // Clamp X para ambos luchadores (paredes sólidas)
         ClampX(player != null ? player.transform : null, _playerCC);
-        ClampX(enemy  != null ? enemy.transform  : null, _enemyCC);
+        ClampX(enemy != null ? enemy.transform : null, _enemyCC);
     }
 
     // ==================================================
@@ -90,17 +108,17 @@ public class TutorialRingManager : MonoBehaviour
         if (t == null || cc == null) return;
 
         float buffer = cc.radius + cc.skinWidth;
-        float minX   = RingMinX + buffer;
-        float maxX   = RingMaxX - buffer;
+        float minX = RingMinX + buffer;
+        float maxX = RingMaxX - buffer;
 
         float x = t.position.x;
         if (x >= minX && x <= maxX) return;
 
-        cc.enabled  = false;
+        cc.enabled = false;
         Vector3 pos = t.position;
-        pos.x       = Mathf.Clamp(x, minX, maxX);
-        t.position  = pos;
-        cc.enabled  = true;
+        pos.x = Mathf.Clamp(x, minX, maxX);
+        t.position = pos;
+        cc.enabled = true;
     }
 
     // ==================================================
@@ -116,10 +134,8 @@ public class TutorialRingManager : MonoBehaviour
 
         if (normalized >= 0.75f)
         {
-            _enemyThresholdTriggered  = true;
-            player.combat.endurance   = playerPenaltyEndurance;
-            onEnemyEnduranceUpgrade.Invoke();
-            Debug.Log($"[TutorialRing] Enemigo alcanzó 3/4 → Player endurance = {playerPenaltyEndurance}");
+            _enemyThresholdTriggered = true;
+            player.combat.endurance = playerPenaltyEndurance;
         }
     }
 
@@ -159,13 +175,37 @@ public class TutorialRingManager : MonoBehaviour
 
     public void ResetRing()
     {
-        _enemyThresholdTriggered  = false;
-        _resultTriggered          = false;
+        RestartPositions();
+        _enemyThresholdTriggered = false;
+        _resultTriggered = false;
         if (player != null)
             player.combat.endurance = playerStartEndurance;
         Debug.Log("[TutorialRing] Ring reiniciado.");
     }
 
+    public void RestartPositions()
+    {
+        TeleportTo(player != null ? player.transform : null, _playerCC, playerStartPosition);
+        TeleportTo(enemy != null ? enemy.transform : null, _enemyCC, enemyStartPosition);
+    }
+
+    /// <summary>
+    /// Actualiza las posiciones de inicio con las posiciones actuales de player y enemigo.
+    /// Llamar desde HUDManager justo después de teleportar al player a su posición de combate.
+    /// </summary>
+    public void RefreshStartPositions()
+    {
+        if (player != null) playerStartPosition = player.transform.position;
+        if (enemy != null)  enemyStartPosition  = enemy.transform.position;
+    }
+
+    void TeleportTo(Transform t, CharacterController cc, Vector3 destination)
+    {
+        if (t == null) return;
+        if (cc != null) cc.enabled = false;
+        t.position = destination;
+        if (cc != null) cc.enabled = true;
+    }
     // ==================================================
     // GIZMOS
     // ==================================================
@@ -198,29 +238,29 @@ public class TutorialRingManager : MonoBehaviour
 
         // Marca 3/4 en Z
         float threshZ = RingMinZ + RingDepth * 0.75f;
-        Gizmos.color  = new Color(1f, 0.5f, 0f);
+        Gizmos.color = new Color(1f, 0.5f, 0f);
         Gizmos.DrawLine(new Vector3(RingMinX, cy, threshZ),
-                        new Vector3(RingMaxX, cy, threshZ));
+            new Vector3(RingMaxX, cy, threshZ));
         UnityEditor.Handles.Label(
             new Vector3(cx, cy + 0.3f, threshZ), "3/4 Threshold");
     }
 
     void DrawWall(float x, float y, float z, float length, bool wallOnX)
     {
-        float h    = 1.5f;
+        float h = 1.5f;
         float half = length * 0.5f;
 
         Vector3 a = wallOnX
-            ? new Vector3(x, y,     z - half)
+            ? new Vector3(x, y, z - half)
             : new Vector3(x - half, y, z);
         Vector3 b = wallOnX
-            ? new Vector3(x, y,     z + half)
+            ? new Vector3(x, y, z + half)
             : new Vector3(x + half, y, z);
 
-        Gizmos.DrawLine(a,                     b);
-        Gizmos.DrawLine(a + Vector3.up * h,    b + Vector3.up * h);
-        Gizmos.DrawLine(a,                     a + Vector3.up * h);
-        Gizmos.DrawLine(b,                     b + Vector3.up * h);
+        Gizmos.DrawLine(a, b);
+        Gizmos.DrawLine(a + Vector3.up * h, b + Vector3.up * h);
+        Gizmos.DrawLine(a, a + Vector3.up * h);
+        Gizmos.DrawLine(b, b + Vector3.up * h);
     }
 #endif
 }

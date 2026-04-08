@@ -1,7 +1,4 @@
 using UnityEngine;
-using System.Collections;
-using UnityEditor.AnimatedValues;
-
 /// <summary>
 /// Enemigo tutorial RioTutte — versión refactorizada.
 ///
@@ -24,7 +21,6 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
 
     [SerializeField]
     Animator _anim;
-    public int endurance = 0;
 
     // --------------------------------------------------------
     //  MOVEMENT (IA)
@@ -62,6 +58,7 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
     public bool IsMoving => _cc != null && _cc.velocity.magnitude > 0.05f;
 
     private CharacterController _cc;
+    private CharacterController _playerCC;
     private Transform _playerTransform;
     private PlayerController _playerController;
     private float _attackTimer;
@@ -86,13 +83,14 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
 
     void Start()
     {
-        _body.mass = KnockbackPhysicsBody.MassFromEndurance(endurance);
 
         var playerObj = FindObjectOfType<PlayerController>();
         if (playerObj != null)
         {
-            _playerTransform = playerObj.transform;
+            _playerTransform  = playerObj.transform;
             _playerController = playerObj;
+            _playerCC         = playerObj.GetComponent<CharacterController>();
+            _body.mass        = KnockbackPhysicsBody.MassFromEndurance(_playerController.combat.endurance);
         }
         else
         {
@@ -129,13 +127,36 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
     //  AI
     // --------------------------------------------------------
 
+    float MinSeparation => _playerCC != null
+        ? _cc.radius + _playerCC.radius + _cc.skinWidth + _playerCC.skinWidth
+        : attackRange * 0.5f;
+
     void MoveTowardPlayer()
     {
         Vector3 dir = _playerTransform.position - transform.position;
         dir.y = 0f;
-        if (dir.magnitude < attackRange * 0.9f) return;
+        if (dir.magnitude < MinSeparation) return;
         dir.Normalize();
         if (_cc.enabled) _cc.Move(dir * walkSpeed * Time.deltaTime);
+    }
+
+    void LateUpdate()
+    {
+        if (_playerTransform == null || _cc == null) return;
+
+        Vector3 delta = transform.position - _playerTransform.position;
+        delta.y = 0f;
+        float dist = delta.magnitude;
+        float minDist = MinSeparation;
+
+        if (dist < minDist && dist > 0.001f)
+        {
+            // Empuja a RioTutte fuera del player la distancia de penetración
+            Vector3 push = delta.normalized * (minDist - dist);
+            _cc.enabled = false;
+            transform.position += push;
+            _cc.enabled = true;
+        }
     }
 
     void ApplyGravity()
@@ -153,18 +174,19 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
         {
             var obj = FindObjectOfType<PlayerController>();
             if (obj == null) return;
-            _playerTransform  = obj.transform;
+            _playerTransform = obj.transform;
             _playerController = obj;
         }
 
-        float dist = Vector3.Distance(transform.position, _playerTransform.position);
-        if (dist > attackRange) return;
+        Vector3 toPlayer = _playerTransform.position - transform.position;
+        toPlayer.y = 0f;
+        float dist = toPlayer.magnitude;
+        float effectiveRange = Mathf.Max(attackRange, MinSeparation);
+        if (dist > effectiveRange) return;
 
-        Vector3 raw = _playerTransform.position - transform.position;
-        raw.y = 0f;
-        Vector3 dir = raw.magnitude > 0.01f ? raw.normalized : transform.forward;
+        Vector3 dir = dist > 0.01f ? toPlayer.normalized : transform.forward;
 
-        KnockbackResult result = KnockbackResolver.Resolve(AttackType.Punch, endurance);
+        KnockbackResult result = KnockbackResolver.Resolve(AttackType.Punch, _playerController.combat.endurance);
         _playerController.knockbackHandler.ReceiveKnockback(dir, result.ForceOnTarget);
 
         // TODO Fase 2: activar daño real
@@ -205,7 +227,7 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
     /// <summary>Fuerza ya resuelta por KnockbackResolver o ClashHandler.</summary>
     public void ReceiveKnockback(Vector3 direction, float force)
     {
-        _body.mass = KnockbackPhysicsBody.MassFromEndurance(endurance);
+        _body.mass = KnockbackPhysicsBody.MassFromEndurance(_playerController.combat.endurance);
         _body.Receive(direction, force);
         Debug.Log($"[RioTutte] Knockback | fuerza:{force:F1} masa:{_body.mass:F2}");
     }

@@ -56,7 +56,6 @@ public class PlayerMovement : MonoBehaviour
     // ==================================================
     [Header("Debug")]
     public TextMeshProUGUI speedDisplay;
-    private Vector3 _lastPosition;
     private float _smoothedSpeed = 0f;
     private float _updateInterval = 0.1f; // actualiza cada 100ms
 
@@ -81,7 +80,6 @@ public class PlayerMovement : MonoBehaviour
     {
         _cc = GetComponent<CharacterController>();
         _input = GetComponent<PlayerInputHandler>();
-        _lastPosition = transform.position;
         _verticalVelocity = -2f;
     }
 
@@ -175,8 +173,7 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     public void SpeedManagement()
     {
-        float realSpeed = (transform.position - _lastPosition).magnitude / Time.deltaTime;
-        _lastPosition = transform.position;
+        float realSpeed = _cc.velocity.magnitude;
 
         _smoothedSpeed = Mathf.Lerp(_smoothedSpeed, realSpeed, Time.deltaTime * 15f);
 

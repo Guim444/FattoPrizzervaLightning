@@ -13,6 +13,8 @@ public class HUDManager : MonoBehaviour
     [Header("Referencias")]
     [SerializeField] private Transform playerTransform;
 
+    [SerializeField] private TutorialRingManager ringManager;
+
     [SerializeField] private GameObject playerTransformFront;
 
     [Header("Configuración")]
@@ -23,34 +25,44 @@ public class HUDManager : MonoBehaviour
 
     [SerializeField] private float freePosition = 13f;
 
+    private void Awake()
+    {
+        Time.timeScale = 0f;
+    }
+
     public void OnClickCombatPosition()
     {
+        Time.timeScale = 1f;
         playerBoundary.enabled = false;
         enemy.SetActive(false);
         playerTransformFront.SetActive(false);
 
         enemyRio.SetActive(true);
         cameraMovement.freeMoveMode = false;
+        ringManager?.RefreshStartPositions();
+        ringManager.enabled = true;
         HidePanel();
     }
 
     public void OnClickStartHere()
     {
+        Time.timeScale = 1f;
         playerBoundary.enabled = true;
         enemy.SetActive(false);
-        enemyRio.SetActive(true);
+        enemyRio.SetActive(false);
         playerTransformFront.SetActive(false);
-
         cameraMovement.freeMoveMode = false;
         MovePlayerToX(combatStartPositionX);
         cameraMovement.RefreshCombatX();
+        ringManager.enabled = false;
         HidePanel();
     }
 
     public void OnClickFreeMove()
     {
+        Time.timeScale = 1f;
         playerTransformFront.SetActive(true);
-
+        ringManager.enabled = false;
         playerBoundary.enabled = false;
         enemy.SetActive(true);
         enemyRio.SetActive(false);
@@ -61,11 +73,22 @@ public class HUDManager : MonoBehaviour
 
     private void MovePlayerToX(float x)
     {
-        CharacterController cc = playerTransform.GetComponent<CharacterController>();
+        if (playerTransform == null)
+        {
+            Debug.LogError("[HUDManager] playerTransform no está asignado en el Inspector.");
+            return;
+        }
 
-        cc.enabled = false;
+        Debug.Log(
+            $"[HUDManager] MovePlayerToX — antes: {playerTransform.position}  →  destino X:{x} Y:{combatStartPositionY} Z:{combatStartPositionZ}");
+
+        CharacterController cc = playerTransform.GetComponent<CharacterController>();
+        if (cc != null) cc.enabled = false;
         playerTransform.position = new Vector3(x, combatStartPositionY, combatStartPositionZ);
-        cc.enabled = true;
+        Physics.SyncTransforms();
+        if (cc != null) cc.enabled = true;
+
+        Debug.Log($"[HUDManager] MovePlayerToX — después: {playerTransform.position}");
     }
 
     private void MovePlayer(float z)

@@ -56,10 +56,8 @@ public class PlayerMovement : MonoBehaviour
     // ==================================================
     [Header("Debug")]
     public TextMeshProUGUI speedDisplay;
-    private float _smoothedSpeed = 0f;
-    private float _updateInterval = 0.1f; // actualiza cada 100ms
 
-    private float _timer;
+    private Vector3 _lastPosition;
 
     // ==================================================
     // RUNTIME STATE
@@ -173,11 +171,14 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     public void SpeedManagement()
     {
-        float realSpeed = _cc.velocity.magnitude;
+        if (speedDisplay == null) return;
 
-        _smoothedSpeed = Mathf.Lerp(_smoothedSpeed, realSpeed, Time.deltaTime * 15f);
-
-        if (speedDisplay != null)
-            speedDisplay.text = _smoothedSpeed.ToString("F1");
+        Vector3 delta = transform.position - _lastPosition;
+        delta.y = 0f;
+        float speed = delta.magnitude / Time.deltaTime;
+        _lastPosition = transform.position;
+        speedDisplay.text = speed > 0.15f
+            ? (Mathf.Round(speed * 10f) / 10f).ToString("F1")
+            : "0,0";
     }
 }

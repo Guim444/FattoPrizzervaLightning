@@ -103,9 +103,9 @@ public class PlayerController : MonoBehaviour
             knockbackHandler.HandleKnockback();
             combat.UpdatePunchCooldown();
             stateMachineController.HandleStateTransitions();
-            movement.SpeedManagement();
             StateMachine.Update();
             movement.ApplyGravity();
+            movement.SpeedManagement();
         }
 
         inputHandler.ConsumeFrameInputs();

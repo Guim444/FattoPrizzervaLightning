@@ -6,6 +6,8 @@ public class PlayerAnimations : MonoBehaviour
     public Animator animator;
     public PlayerController player;
 
+    public bool pauseAnimatorControl = false;
+
     void Awake()
     {
         if (instance == null)
@@ -17,6 +19,7 @@ public class PlayerAnimations : MonoBehaviour
     void LateUpdate()
     {
         if (player == null || animator == null) return;
+        if (pauseAnimatorControl) return;
 
         float speed = player.currentState switch
         {
@@ -35,5 +38,6 @@ public class PlayerAnimations : MonoBehaviour
         animator.SetBool("isGliding", player.currentState == State.Gliding);
         animator.SetBool("isKnockedback", player.currentState == State.Knockedback);
         animator.SetBool("isDead", player.combat.HP <= 0);
+        animator.SetBool("IdleFront", Mathf.Abs(player.movement.LastDirection.x) > 0.1f);
     }
 }

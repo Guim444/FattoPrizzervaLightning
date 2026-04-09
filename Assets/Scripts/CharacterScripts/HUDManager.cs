@@ -16,6 +16,7 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private TutorialRingManager ringManager;
 
     [SerializeField] private GameObject playerTransformFront;
+    [SerializeField] private Animator playerAnimator;
 
     [Header("Configuración")]
     [SerializeField] private float combatStartPositionY = 1.5f;
@@ -39,6 +40,7 @@ public class HUDManager : MonoBehaviour
 
         enemyRio.SetActive(true);
         cameraMovement.freeMoveMode = false;
+        cameraMovement.followPlayerX = false;
         ringManager?.RefreshStartPositions();
         ringManager.enabled = true;
         HidePanel();
@@ -54,7 +56,9 @@ public class HUDManager : MonoBehaviour
         cameraMovement.freeMoveMode = false;
         MovePlayerToX(combatStartPositionX);
         cameraMovement.RefreshCombatX();
+        cameraMovement.followPlayerX = true;
         ringManager.enabled = false;
+        playerAnimator?.SetBool("IdleFront", true);
         HidePanel();
     }
 

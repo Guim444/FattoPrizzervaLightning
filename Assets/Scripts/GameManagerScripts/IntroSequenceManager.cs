@@ -12,6 +12,7 @@ public class IntroSequenceManager : MonoBehaviour
     [SerializeField] private CharacterController playerCC;
     [SerializeField] private PlayerBoundaryClamp boundaryClamp;
     [SerializeField] private MonoBehaviour playerInputHandler; // arrastra PlayerInputHandler aquí
+    [SerializeField] private HUDManager hudManager;
 
     [Header("Tiempos")]
     [SerializeField] private float blizzardBuildUpDuration = 2f;
@@ -120,12 +121,14 @@ public class IntroSequenceManager : MonoBehaviour
 
         yield return StartCoroutine(MovePlayerToPosition(target.position, 2f));
 
-        playerAnimator.SetBool(walkAnimationParam, false);
+        playerAnimator.SetBool("IdleFront", false);
         playerInputHandler.enabled = true;
 
         // La ventisca para
         if (blizzard != null)
             yield return StartCoroutine(StopBlizzard(1.5f));
+
+        hudManager?.OnClickCombatPosition();
     }
 
     private IEnumerator MovePlayerToPosition(Vector3 target, float duration)

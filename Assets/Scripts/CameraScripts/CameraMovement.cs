@@ -3,6 +3,7 @@ using UnityEngine;
 public class CameraMovement : MonoBehaviour
 {
     [HideInInspector] public bool freeMoveMode = false;
+    [HideInInspector] public bool followPlayerX = false;
 
     [Header("Target")]
     public Transform player;
@@ -37,6 +38,9 @@ public class CameraMovement : MonoBehaviour
 
     void Update()
     {
+        if (followPlayerX)
+            xZoomTarget = player.position.x + xOffset;
+
         float targetZ;
         if (player.position.z < zTransitionMin)
             targetZ = zTargetInside;

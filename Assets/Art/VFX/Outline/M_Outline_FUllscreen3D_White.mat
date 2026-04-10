@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: OutlineEdgeDetection
+  m_Name: M_Outline_FUllscreen3D_White
   m_Shader: {fileID: -6465566751694194690, guid: 86d21cee0dc7abc468d4b493bdf1a163, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -51,11 +51,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Depth_Line: 0
-    - _Depth_Line_Bias: 1.79
+    - _Depth_Line: 5.05
+    - _Depth_Line_Bias: 3.53
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _Color: {r: 2, g: 2, b: 2, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

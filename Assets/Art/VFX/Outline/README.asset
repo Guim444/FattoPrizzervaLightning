@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf7219bab7fe46a1ad266029b2fee19, type: 3}
+  m_Name: README
+  m_EditorClassIdentifier: 
+  icon: {fileID: 0}
+  title: OUTLINE USE
+  prevReadme: {fileID: 0}
+  nextReadme: {fileID: 0}
+  sections:
+  - name: Header -Intro
+    heading: Intro
+    text: Hi , this readme is to teach you how to use the different outline in the
+      unity scene.
+    linkText: 
+    url: 
+  - name: Header -Outline 2D
+    heading: Outline 2D
+    text: The M_Outline 2D put an outline on 2D object , you can change the color
+      and the thickness. No need to put something in the maintex_ section but if
+      needed make sure to put the right texture for your object.
+    linkText: 
+    url: 
+  - name: Header -3D Outlin...
+    heading: 3D Outline Black
+    text: "This outline is normally only for the 3D object. \nBEWARE : it is a fullscreen
+      shader so it applies on everything that the camera sees.\nIF A 2D OBJECT HAS
+      THE OUTLINE : Select your 2d prefab and go to layers (above right) and in LAYER
+      , select 2D, normally after, the outline dissapears.\n"
+    linkText: 
+    url: 
+  - name: Header -3D Outlin...
+    heading: 3D Outline White
+    text: "This outline is normally only for the 3D object. \nBEWARE : it is a fullscreen
+      shader so it applies on everything that the camera sees.\nIF A 2D OBJECT HAS
+      THE OUTLINE : Select your 2d prefab and go to layers (above right) and in LAYER
+      , select 2D, normally after, the outline dissapears.\n"
+    linkText: 
+    url: 
+  - name: Header -3D Outlin...
+    heading: 3D Outline Simple
+    text: 'This outline is a basic outline for 3D Objects
+
+      HOW TO USE IT: 
+      Select your 3D object or prefab ; in meshrenderer add a material and add the
+      outline simple
+
+      BEWARE : it technically dubplicate the object to create
+      the outline so use carefully.
+
+'
+    linkText: 
+    url: 
+  isRoot: 0

@@ -152,4 +152,10 @@ public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
         IsPunchInputPressed = false;
         IsActionInputPressed = false;
     }
+
+    public void ConsumePunchInput()
+    {
+        Debug.Log("presionado el puñetazo");
+        IsPunchInputPressed = false;
+    }
 }

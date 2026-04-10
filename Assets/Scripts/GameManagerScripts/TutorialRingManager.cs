@@ -1,137 +1,171 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-/// <summary>
-/// Gestiona los límites del ring del tutorial.
-///
-/// RESPONSABILIDADES:
-///   – Define el área de combate con dos Transforms (leftBound / rightBound).
-///   – Detecta cuando el enemigo alcanza el 75% del ring → sube su Endurance a 1.
-///   – Detecta cuando cualquiera de los dos sale del ring → dispara el resultado.
-///
-/// SETUP EN EDITOR:
-///   1. Crear un GameObject vacío "TutorialRingManager".
-///   2. Crear dos GameObjects hijos "LeftBound" y "RightBound" y asignarlos.
-///   3. Asignar Player y Enemy en el Inspector.
-///   4. Conectar los UnityEvents (UI de victoria/derrota, etc.).
-///
-/// GIZMOS: Muestra el ring en amarillo y la marca de 3/4 en rojo en Scene View.
-/// </summary>
 public class TutorialRingManager : MonoBehaviour
 {
     // ==================================================
-    // RING CONFIGURATION
+    // RING BOUNDS
     // ==================================================
-    [Header("Ring Bounds")]
-    [Tooltip("Límite izquierdo del ring (posición X mínima).")]
+    [Header("Ring Bounds — X (paredes sólidas)")]
     public Transform leftBound;
 
-    [Tooltip("Límite derecho del ring (posición X máxima).")]
     public Transform rightBound;
+
+    [Header("Ring Bounds — Z (zona de victoria)")]
+    public Transform frontBound;
+
+    public Transform backBound;
 
     // ==================================================
     // FIGHTERS
     // ==================================================
     [Header("Fighters")]
     public PlayerController player;
+
     public RioTutteEnemy enemy;
+
+    [SerializeField]
+    private Vector3 playerStartPosition;
+
+    [SerializeField]
+    private Vector3 enemyStartPosition;
 
     // ==================================================
     // CONFIGURATION
     // ==================================================
     [Header("Configuration")]
-    [Tooltip("¿El enemigo empieza en el lado DERECHO del ring?\n" +
-             "Afecta desde qué dirección se calcula el threshold de 3/4.")]
-    public bool enemyStartsOnRight = true;
+    [Tooltip("Endurance inicial del player al empezar / al reiniciar el ring.")]
+    public int playerStartEndurance = 0;
 
-    [Tooltip("Valor de Endurance al que sube el enemigo cuando alcanza 3/4.")]
-    public int enemyEnduranceUpgradeValue = 1;
+    [Tooltip("Endurance al que baja el player cuando el enemigo alcanza 3/4 del ring.")]
+    public int playerPenaltyEndurance = -1;
 
     // ==================================================
     // EVENTS
     // ==================================================
     [Header("Events")]
-    [Tooltip("El player salió del ring → derrota.")]
     public UnityEvent onPlayerOut;
 
-    [Tooltip("El enemigo salió del ring → victoria.")]
     public UnityEvent onEnemyOut;
 
-    [Tooltip("El enemigo fue empujado 3/4 del ring → sube su Endurance.")]
-    public UnityEvent onEnemyEnduranceUpgrade;
+    // ==================================================
+    // PRIVATE
+    // ==================================================
+    private CharacterController _playerCC;
+    private CharacterController _enemyCC;
 
-    // ==================================================
-    // PRIVATE STATE
-    // ==================================================
     private bool _enemyThresholdTriggered = false;
-    private bool _resultTriggered         = false;
+    private bool _resultTriggered = false;
 
     // ==================================================
     // SHORTCUTS
     // ==================================================
-    float RingLeft  => leftBound.position.x;
-    float RingRight => rightBound.position.x;
-    float RingWidth => RingRight - RingLeft;
+    float RingMinX => leftBound.position.x;
+    float RingMaxX => rightBound.position.x;
+    float RingMinZ => frontBound.position.z;
+    float RingMaxZ => backBound.position.z;
+    float RingWidth => RingMaxX - RingMinX;
+    float RingDepth => RingMaxZ - RingMinZ;
 
     // ==================================================
-    // UPDATE
+    // UNITY
     // ==================================================
+
+    void Awake()
+    {
+        if (player != null)
+        {
+            _playerCC = player.GetComponent<CharacterController>();
+            playerStartPosition = player.transform.position;
+        }
+        if (enemy != null)
+        {
+            _enemyCC = enemy.GetComponent<CharacterController>();
+            enemyStartPosition = enemy.transform.position;
+        }
+    }
 
     void Update()
     {
         if (_resultTriggered) return;
-
         CheckEnemyThreshold();
         CheckOutOfBounds();
     }
 
+    void LateUpdate()
+    {
+        // Clamp X para ambos luchadores (paredes sólidas)
+        ClampX(player != null ? player.transform : null, _playerCC);
+        ClampX(enemy != null ? enemy.transform : null, _enemyCC);
+    }
+
     // ==================================================
-    // THRESHOLD CHECK (3/4)
+    // CLAMP X
+    // ==================================================
+
+    void ClampX(Transform t, CharacterController cc)
+    {
+        if (t == null || cc == null) return;
+
+        float buffer = cc.radius + cc.skinWidth;
+        float minX = RingMinX + buffer;
+        float maxX = RingMaxX - buffer;
+
+        float x = t.position.x;
+        if (x >= minX && x <= maxX) return;
+
+        cc.enabled = false;
+        Vector3 pos = t.position;
+        pos.x = Mathf.Clamp(x, minX, maxX);
+        t.position = pos;
+        cc.enabled = true;
+    }
+
+    // ==================================================
+    // THRESHOLD CHECK (3/4 del ring en Z)
     // ==================================================
 
     void CheckEnemyThreshold()
     {
-        if (_enemyThresholdTriggered) return;
+        if (_enemyThresholdTriggered || enemy == null) return;
 
-        // Posición normalizada del enemigo dentro del ring (0 = left, 1 = right)
-        float normalizedPos = (enemy.transform.position.x - RingLeft) / RingWidth;
-        normalizedPos = Mathf.Clamp01(normalizedPos);
+        float normalized = Mathf.Clamp01(
+            (enemy.transform.position.z - RingMinZ) / RingDepth);
 
-        // Si empieza a la derecha: ha sido empujado 3/4 cuando está en el 25% izquierdo
-        // Si empieza a la izquierda: ha sido empujado 3/4 cuando está en el 75% derecho
-        bool crossed = enemyStartsOnRight
-            ? normalizedPos <= 0.25f
-            : normalizedPos >= 0.75f;
-
-        if (crossed)
+        if (normalized >= 0.75f)
         {
             _enemyThresholdTriggered = true;
-            enemy.endurance = enemyEnduranceUpgradeValue;
-            onEnemyEnduranceUpgrade.Invoke();
-            Debug.Log($"[TutorialRing] Enemigo alcanzó 3/4 → Endurance = {enemyEnduranceUpgradeValue}");
+            player.combat.endurance = playerPenaltyEndurance;
         }
     }
 
     // ==================================================
-    // OUT OF BOUNDS CHECK
+    // OUT OF BOUNDS — Z
     // ==================================================
 
     void CheckOutOfBounds()
     {
-        float px = player.transform.position.x;
-        float ex = enemy.transform.position.x;
-
-        if (px < RingLeft || px > RingRight)
+        if (player != null)
         {
-            _resultTriggered = true;
-            Debug.Log("[TutorialRing] Player salió del ring → DERROTA.");
-            onPlayerOut.Invoke();
+            float pz = player.transform.position.z;
+            if (pz < RingMinZ || pz > RingMaxZ)
+            {
+                _resultTriggered = true;
+                Debug.Log("[TutorialRing] Player salió del ring → DERROTA.");
+                onPlayerOut.Invoke();
+                return;
+            }
         }
-        else if (ex < RingLeft || ex > RingRight)
+
+        if (enemy != null)
         {
-            _resultTriggered = true;
-            Debug.Log("[TutorialRing] Enemigo salió del ring → VICTORIA.");
-            onEnemyOut.Invoke();
+            float ez = enemy.transform.position.z;
+            if (ez < RingMinZ || ez > RingMaxZ)
+            {
+                _resultTriggered = true;
+                Debug.Log("[TutorialRing] Enemigo salió del ring → VICTORIA.");
+                onEnemyOut.Invoke();
+            }
         }
     }
 
@@ -139,46 +173,94 @@ public class TutorialRingManager : MonoBehaviour
     // PUBLIC API
     // ==================================================
 
-    /// <summary>Reinicia el estado del ring (para rejugar el tutorial).</summary>
     public void ResetRing()
     {
+        RestartPositions();
         _enemyThresholdTriggered = false;
-        _resultTriggered         = false;
+        _resultTriggered = false;
+        if (player != null)
+            player.combat.endurance = playerStartEndurance;
         Debug.Log("[TutorialRing] Ring reiniciado.");
     }
 
+    public void RestartPositions()
+    {
+        TeleportTo(player != null ? player.transform : null, _playerCC, playerStartPosition);
+        TeleportTo(enemy != null ? enemy.transform : null, _enemyCC, enemyStartPosition);
+    }
+
+    /// <summary>
+    /// Actualiza las posiciones de inicio con las posiciones actuales de player y enemigo.
+    /// Llamar desde HUDManager justo después de teleportar al player a su posición de combate.
+    /// </summary>
+    public void RefreshStartPositions()
+    {
+        if (player != null) playerStartPosition = player.transform.position;
+        if (enemy != null)  enemyStartPosition  = enemy.transform.position;
+    }
+
+    void TeleportTo(Transform t, CharacterController cc, Vector3 destination)
+    {
+        if (t == null) return;
+        if (cc != null) cc.enabled = false;
+        t.position = destination;
+        if (cc != null) cc.enabled = true;
+    }
     // ==================================================
-    // GIZMOS (visibles en Scene View)
+    // GIZMOS
     // ==================================================
 
 #if UNITY_EDITOR
     void OnDrawGizmos()
     {
-        if (leftBound == null || rightBound == null) return;
+        if (leftBound == null || rightBound == null ||
+            frontBound == null || backBound == null) return;
 
-        float halfH = 2f;
-        Vector3 center = (leftBound.position + rightBound.position) * 0.5f;
+        float cx = (RingMinX + RingMaxX) * 0.5f;
+        float cz = (RingMinZ + RingMaxZ) * 0.5f;
+        float cy = leftBound.position.y;
 
-        // Ring completo (amarillo)
+        // Suelo del ring (amarillo)
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(center, new Vector3(RingWidth, halfH * 2f, 1f));
+        Gizmos.DrawWireCube(
+            new Vector3(cx, cy, cz),
+            new Vector3(RingWidth, 0.05f, RingDepth));
 
-        // Línea de límites
-        Gizmos.DrawLine(leftBound.position  + Vector3.up * halfH, leftBound.position  - Vector3.up * halfH);
-        Gizmos.DrawLine(rightBound.position + Vector3.up * halfH, rightBound.position - Vector3.up * halfH);
+        // Paredes X — cian (sólidas)
+        Gizmos.color = Color.cyan;
+        DrawWall(RingMinX, cy, cz, RingDepth, wallOnX: true);
+        DrawWall(RingMaxX, cy, cz, RingDepth, wallOnX: true);
 
-        // Marca de 3/4 (rojo)
-        float thresholdX = enemyStartsOnRight
-            ? RingLeft + RingWidth * 0.25f
-            : RingLeft + RingWidth * 0.75f;
-
+        // Bordes Z — rojo (victoria/derrota)
         Gizmos.color = Color.red;
-        Vector3 markBottom = new Vector3(thresholdX, center.y - halfH, center.z);
-        Vector3 markTop    = new Vector3(thresholdX, center.y + halfH, center.z);
-        Gizmos.DrawLine(markBottom, markTop);
+        DrawWall(cx, cy, RingMinZ, RingWidth, wallOnX: false);
+        DrawWall(cx, cy, RingMaxZ, RingWidth, wallOnX: false);
 
-        // Label "3/4"
-        UnityEditor.Handles.Label(markTop + Vector3.up * 0.2f, "3/4 Threshold");
+        // Marca 3/4 en Z
+        float threshZ = RingMinZ + RingDepth * 0.75f;
+        Gizmos.color = new Color(1f, 0.5f, 0f);
+        Gizmos.DrawLine(new Vector3(RingMinX, cy, threshZ),
+            new Vector3(RingMaxX, cy, threshZ));
+        UnityEditor.Handles.Label(
+            new Vector3(cx, cy + 0.3f, threshZ), "3/4 Threshold");
+    }
+
+    void DrawWall(float x, float y, float z, float length, bool wallOnX)
+    {
+        float h = 1.5f;
+        float half = length * 0.5f;
+
+        Vector3 a = wallOnX
+            ? new Vector3(x, y, z - half)
+            : new Vector3(x - half, y, z);
+        Vector3 b = wallOnX
+            ? new Vector3(x, y, z + half)
+            : new Vector3(x + half, y, z);
+
+        Gizmos.DrawLine(a, b);
+        Gizmos.DrawLine(a + Vector3.up * h, b + Vector3.up * h);
+        Gizmos.DrawLine(a, a + Vector3.up * h);
+        Gizmos.DrawLine(b, b + Vector3.up * h);
     }
 #endif
 }

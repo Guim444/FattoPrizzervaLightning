@@ -68,47 +68,67 @@ public class CombatAttackHandler : MonoBehaviour
     public void ExecuteAttack()
     {
         if (!_player.canAttack) return;
+        _player.canAttack = false;
+
         AttackType attackType = KnockbackResolver.StateToAttackType(_player.currentState);
-        float range = attackType == AttackType.PunchRunning
-            ? punchRangeRunning
-            : punchRange;
+        float radius = attackType == AttackType.PunchRunning ? 0.8f : 0.5f;
+        float reach  = attackType == AttackType.PunchRunning ? punchRangeRunning : punchRange;
 
-        Vector3 origin = transform.position + Vector3.up * 0.5f;
-        Vector3 direction = GetAttackDirection();
+        Vector3 origin      = transform.position + Vector3.up * 0.5f;
+        Vector3 direction   = GetAttackDirection();
+        Vector3 sphereCenter = origin + direction * reach;
 
-        Debug.DrawRay(origin, direction * range, Color.red, 0.5f);
-        Debug.Log($"[Attack] type:{attackType} range:{range} dir:{direction} state:{_player.currentState}");
-        if (!Physics.Raycast(origin, direction, out RaycastHit hit, range, enemyLayer))
-            return;
+        Debug.DrawLine(origin, sphereCenter, Color.red, 0.5f);
 
-        bool isCenterHit = (hit.distance / range) < edgeThresholdRatio;
-        float damage = CalculateDamage(attackType, isCenterHit);
+        Collider[] hits = Physics.OverlapSphere(sphereCenter, radius, enemyLayer);
+        if (hits.Length == 0) return;
 
-        // --- Resolver ---
-        int receiverEndurance = GetReceiverEndurance(hit.collider);
+        Collider closest = GetClosest(hits);
+        float damage = CalculateDamage(attackType, true);
+
+        // El endurance del enemigo ya no existe — solo importa el del player
         KnockbackResult result = KnockbackResolver.Resolve(
             attackType,
             _player.combat.endurance,
-            receiverEndurance,
             resolverConfig
         );
 
-        // --- Aplicar al target ---
-        if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
+        if (closest.TryGetComponent<IDamageable>(out var damageable))
             damageable.TakeDamage((int)damage);
 
-        float knockbackForce = result.ForceOnTarget * attackKnockbackMultiplier;
-        if (hit.collider.TryGetComponent<IKnockbackable>(out var kb))
-            kb.ReceiveKnockback(direction, knockbackForce);
+        if (closest.TryGetComponent<IKnockbackable>(out var kb))
+            kb.ReceiveKnockback(direction, result.ForceOnTarget);
 
-        // --- Aplicar reacción al player (Newton 3) ---
-        float selfKnockback = result.ForceOnSelf * attackKnockbackMultiplier;
-        if (selfKnockback > 0.01f)
-            _player.knockbackHandler.ReceiveKnockback(-direction, selfKnockback);
+        if (result.ForceOnSelf > 0.01f)
+            _player.knockbackHandler.ReceiveKnockback(-direction, result.ForceOnSelf);
 
-        // --- Frena al player al impactar (feedback táctil) ---
+        if (!string.IsNullOrEmpty(result.AnimatorTrigger) && _player.animator != null)
+            _player.animator.SetTrigger(result.AnimatorTrigger);
+
         _player.movement.LastDirection = Vector3.zero;
-        _player.movement.CurrentSpeed = Vector3.zero;
+        _player.movement.CurrentSpeed  = Vector3.zero;
+
+        Debug.Log($"[Attack] {attackType} | playerEnd:{_player.combat.endurance} " +
+                  $"forceEnemy:{result.ForceOnTarget:F1} forceSelf:{result.ForceOnSelf:F1}");
+    }
+
+    // CombatAttackHandler.cs — método GetClosest completo
+    private Collider GetClosest(Collider[] hits)
+    {
+        Collider closest = hits[0];
+        float minDist = Vector3.Distance(transform.position, hits[0].transform.position);
+
+        for (int i = 1; i < hits.Length; i++)
+        {
+            float d = Vector3.Distance(transform.position, hits[i].transform.position);
+            if (d < minDist)
+            {
+                minDist = d;
+                closest = hits[i];
+            }
+        }
+
+        return closest;
     }
 
     // --------------------------------------------------------
@@ -130,16 +150,5 @@ public class CombatAttackHandler : MonoBehaviour
             ? runningPunchDamage
             : basicPunchDamage;
         return baseDamage * multiplier;
-    }
-
-    /// <summary>
-    /// Extrae el endurance del receptor de forma segura.
-    /// Añadir más tipos de enemigo aquí conforme se creen.
-    /// </summary>
-    private int GetReceiverEndurance(Collider col)
-    {
-        if (col.TryGetComponent<RioTutteEnemy>(out var enemy))
-            return enemy.endurance;
-        return 0;
     }
 }

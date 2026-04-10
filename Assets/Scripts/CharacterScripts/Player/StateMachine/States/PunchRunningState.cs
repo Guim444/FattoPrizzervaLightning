@@ -23,6 +23,7 @@ public class PunchRunningState : IStateActions
     {
         if (punchExecuted) return;
         punchExecuted = true;
+        player.animator.SetTrigger("isPunching");
 
         var combat = player.combat;
         var movement = player.movement;
@@ -59,7 +60,13 @@ public class PunchRunningState : IStateActions
     {
         var movement = player.movement;
 
-        // Mantiene la dirección previa mientras dura el golpe
+        if (!player.inputHandler.IsRunInputHeld)
+        {
+            if (controller.enabled)
+                controller.Move(Vector3.zero);
+            return;
+        }
+
         Vector3 input = movement.LastDirection;
         Vector3 toMove = movement.ApplyInertia(input, Time.deltaTime, movement.punchRunningTurnSpeed);
         toMove.y = 0;

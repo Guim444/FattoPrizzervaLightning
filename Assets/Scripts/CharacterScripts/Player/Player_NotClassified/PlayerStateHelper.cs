@@ -24,7 +24,7 @@ public static class PlayerStateHelper
         // if (isOnSlope && currentState == State.Gliding)
         //     return State.Gliding;
 
-        var input    = player.inputHandler;
+        var input = player.inputHandler;
         var movement = player.movement;
 
         bool hasMovementInput = movement.GetDirectionalInput().magnitude > 0.1f;
@@ -32,7 +32,7 @@ public static class PlayerStateHelper
         if (hasMovementInput)
         {
             if (staminaManager.isTired)
-                return State.Tired;
+                return State.Deenergized;
 
             // Run input held AND enough stamina para correr
             if (input.IsRunInputHeld && staminaManager.currentStamina > 0)
@@ -47,7 +47,10 @@ public static class PlayerStateHelper
             {
                 // Punch presionado mientras camina → Punching
                 if (input.IsPunchInputPressed)
+                {
+                    input.ConsumePunchInput();
                     return State.Punching;
+                }
 
                 return State.Moving;
             }
@@ -56,7 +59,7 @@ public static class PlayerStateHelper
         {
             // Sin input de movimiento
             if (staminaManager.isTired)
-                return State.Tired;
+                return State.Deenergized;
 
             if (input.IsPunchInputPressed)
                 return State.Punching;
@@ -71,7 +74,7 @@ public static class PlayerStateHelper
     public static State DetermineStateFromInput(PlayerStaminaManager staminaManager)
     {
         if (staminaManager.isTired)
-            return State.Tired;
+            return State.Deenergized;
 
         return State.Idle;
     }

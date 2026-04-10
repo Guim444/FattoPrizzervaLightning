@@ -22,7 +22,7 @@ public class PlayerStateMachineController : MonoBehaviour
         StateMachine.Reset();
         var sm = _player.staminaManager;
         var cc = _player.cc;
-        var p  = _player;
+        var p = _player;
 
         // CombatAttackHandler se accede via player.combatAttackHandler en cada estado,
         // no hace falta pasarlo explícitamente.
@@ -31,43 +31,43 @@ public class PlayerStateMachineController : MonoBehaviour
         var moving = new MovingState(sm) { player = p, controller = cc };
         var running = new RunningState(sm)
         {
-            player               = p,
-            controller           = cc,
-            baseSpeed            = p.movement.runningBaseSpeed,
+            player = p,
+            controller = cc,
+            baseSpeed = p.movement.runningBaseSpeed,
             staminaCostPerSecond = runningStaminaCost[0]
         };
-        var tired = new TiredState(sm) { player = p, controller = cc };
+        var tired = new DeenergizedState(sm) { player = p, controller = cc };
 
         var punching = new PunchingState(sm)
         {
-            player     = p,
+            player = p,
             controller = cc,
             // punchCollider = p.GetComponent<SphereCollider>()
         };
 
         var punchRunning = new PunchRunningState(sm)
         {
-            player     = p,
+            player = p,
             controller = cc,
         };
 
-        var knockedback  = new KnockedbackState()  { player = p, controller = cc };
-        var gliding      = new GlidingState(sm)    { player = p, controller = cc };
-        var jumping      = new JumpingState();
-        var falling      = new FallingState();
-        var interacting  = new InteractingState();
+        var knockedback = new KnockedbackState() { player = p, controller = cc };
+        var gliding = new GlidingState(sm) { player = p, controller = cc };
+        var jumping = new JumpingState();
+        var falling = new FallingState();
+        var interacting = new InteractingState();
 
-        StateMachine.AddState(State.Idle,         idle);
-        StateMachine.AddState(State.Moving,       moving);
-        StateMachine.AddState(State.Running,      running);
-        StateMachine.AddState(State.Tired,        tired);
-        StateMachine.AddState(State.Punching,     punching);
+        StateMachine.AddState(State.Idle, idle);
+        StateMachine.AddState(State.Moving, moving);
+        StateMachine.AddState(State.Running, running);
+        StateMachine.AddState(State.Deenergized, tired);
+        StateMachine.AddState(State.Punching, punching);
         StateMachine.AddState(State.PunchRunning, punchRunning);
-        StateMachine.AddState(State.Knockedback,  knockedback);
-        StateMachine.AddState(State.Gliding,      gliding);
-        StateMachine.AddState(State.Jumping,      jumping);
-        StateMachine.AddState(State.Falling,      falling);
-        StateMachine.AddState(State.Interacting,  interacting);
+        StateMachine.AddState(State.Knockedback, knockedback);
+        StateMachine.AddState(State.Gliding, gliding);
+        StateMachine.AddState(State.Jumping, jumping);
+        StateMachine.AddState(State.Falling, falling);
+        StateMachine.AddState(State.Interacting, interacting);
 
         StateMachine.SetState(State.Idle);
     }

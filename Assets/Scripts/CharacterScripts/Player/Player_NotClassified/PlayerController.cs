@@ -101,13 +101,19 @@ public class PlayerController : MonoBehaviour
         if (combat.HP > 0)
         {
             knockbackHandler.HandleKnockback();
+            combat.UpdatePunchCooldown();
             stateMachineController.HandleStateTransitions();
             StateMachine.Update();
-            combat.UpdatePunchCooldown();
             movement.ApplyGravity();
             movement.SpeedManagement();
         }
 
         inputHandler.ConsumeFrameInputs();
+    }
+
+    // Llamado por Animation Event al final de ExitDeenergized
+    public void OnDeenergizedExitDone()
+    {
+        canMove = true;
     }
 }

@@ -1,139 +1,82 @@
 using UnityEngine;
 
-// ============================================================
-//  TIPOS DE DATOS
-// ============================================================
+public enum AttackType { Clash, Punch, PunchRunning }
 
-/// <summary>
-/// Tipo de ataque que origina el knockback.
-/// Determina qué columna de la tabla de diseño se usa.
-/// </summary>
-public enum AttackType
-{
-    Clash,
-    Punch,
-    PunchRunning
-}
-
-/// <summary>
-/// Resultado completo de un cálculo de knockback.
-/// Contiene las fuerzas para ambos participantes y el trigger de animación.
-/// </summary>
 public readonly struct KnockbackResult
 {
-    /// <summary>Fuerza aplicada al receptor del golpe.</summary>
     public readonly float ForceOnTarget;
-
-    /// <summary>
-    /// Fuerza de reacción aplicada al atacante (Newton 3).
-    /// 0 cuando el atacante es dominante (rango +3).
-    /// </summary>
     public readonly float ForceOnSelf;
-
-    /// <summary>
-    /// Nombre del trigger de Animator que debe activarse en el atacante.
-    /// Puede ser null si no corresponde ninguna animación especial.
-    /// </summary>
     public readonly string AnimatorTrigger;
 
     public KnockbackResult(float forceOnTarget, float forceOnSelf, string animatorTrigger)
     {
-        ForceOnTarget    = forceOnTarget;
-        ForceOnSelf      = forceOnSelf;
-        AnimatorTrigger  = animatorTrigger;
+        ForceOnTarget   = forceOnTarget;
+        ForceOnSelf     = forceOnSelf;
+        AnimatorTrigger = animatorTrigger;
     }
 }
 
-// ============================================================
-//  RESOLVER
-// ============================================================
-
 /// <summary>
-/// Clase estática pura. Sin estado, sin MonoBehaviour.
-/// Traduce directamente la tabla de diseño (rango -3 a +3) a fuerzas.
+/// El rango es SOLO el endurance del player (-3 a +3).
+/// No existe endurance del enemigo: solo el player controla el empuje.
 ///
-/// TABLA DE DISEÑO (Rango = attackerEndurance - receiverEndurance):
+/// Regla de diseño que la tabla respeta siempre:
+///   ForceOnTarget:  Clash  <  Punch  <  PunchRunning
+///   ForceOnSelf:    Clash  >  Punch  >  PunchRunning
 ///
-///  Rango | Clash                          | Punch                          | Punch-Running
-///  ------+--------------------------------+--------------------------------+---------------------------
-///   -3   | Atropella al player            | Desplaza al player muchísimo   | Desplaza mucho, casi sin retroceso
-///   -2   | Desplaza al player muchísimo   | Desplaza mucho, casi no retro. | Desplaza al player, retrocede un poco
-///   -1   | Desplaza mucho, casi no retro. | Desplaza al player, retrocede  | Player mueve enemigo, pero retrocede también
-///    0   | Equilibrado, ambos retroceden  | Mueve un poco, retrocede un po | Mueve un poco, retrocede
-///   +1   | Mueve un poco al enemigo       | Mueve al enemigo, retrocede    | Mueve más al enemigo, retrocede poco
-///   +2   | Mueve un poco más              | Desplaza mucho, casi sin retro | Desplaza al enemigo muchísimo, apenas retrocede
-///   +3   | Desplaza mucho, casi sin retro | Desplaza muchísimo, sin retro  | Atropella al enemigo
-///
-/// Todos los valores de fuerza son escalables desde el Inspector
-/// a través de KnockbackResolverConfig (ScriptableObject).
+/// End. muy negativo → player vuela, enemigo apenas se mueve.
+/// End. muy positivo → player apenas retrocede, enemigo sale disparado.
 /// </summary>
 public static class KnockbackResolver
 {
-    // --------------------------------------------------------
-    //  CONFIGURACIÓN POR DEFECTO (fallback si no hay config)
-    // --------------------------------------------------------
+    //  Filas: endurance -3..+3 (índice 0..6)
+    //  Cols:  Clash=0 | Punch=1 | PunchRunning=2
 
-    // Fuerzas sobre el TARGET indexadas por rango+3 (índice 0 = rango -3, índice 6 = rango +3)
-    // Layout: [Clash, Punch, PunchRunning]
     private static readonly float[,] TargetForces = new float[7, 3]
     {
-        //  Clash   Punch   PunchRun    (rango)
-        {   18f,    22f,    20f     },  // -3
-        {   14f,    16f,    13f     },  // -2
-        {   10f,    11f,     9f     },  // -1
-        {    5f,     4f,     4f     },  //  0
-        {    3f,     3f,     5f     },  // +1
-        {    5f,    12f,    18f     },  // +2
-        {   12f,    20f,    28f     },  // +3
+        //  Clash   Punch   PunchRun    endurance
+        {    0.5f,   2.0f,   6.0f  },  // -3
+        {    1.5f,   4.0f,  10.0f  },  // -2
+        {    2.5f,   7.0f,  16.0f  },  // -1
+        {    4.0f,  10.0f,  22.0f  },  //  0
+        {    5.5f,  16.0f,  30.0f  },  // +1
+        {    8.0f,  24.0f,  38.0f  },  // +2
+        {   12.0f,  32.0f,  46.0f  },  // +3
     };
 
-    // Fuerzas de reacción sobre el ATACANTE (self)
     private static readonly float[,] SelfForces = new float[7, 3]
     {
-        //  Clash   Punch   PunchRun    (rango)
-        {    0f,     0f,     0f     },  // -3  (target domina completamente)
-        {    2f,     1f,     0f     },  // -2
-        {    5f,     4f,     6f     },  // -1
-        {    5f,     3f,     3f     },  //  0  (equilibrio)
-        {    3f,     3f,     2f     },  // +1
-        {    1f,     1f,     0f     },  // +2
-        {    0f,     0f,     0f     },  // +3  (atacante domina completamente)
+        //  Clash   Punch   PunchRun    endurance
+        {   20.0f,  14.0f,   8.0f  },  // -3
+        {   14.0f,  10.0f,   5.0f  },  // -2
+        {    8.0f,   5.0f,   2.5f  },  // -1
+        {    4.0f,   2.0f,   0.5f  },  //  0  ← Clash igual para ambos
+        {    2.0f,   1.0f,   0.0f  },  // +1
+        {    1.0f,   0.5f,   0.0f  },  // +2
+        {    0.0f,   0.0f,   0.0f  },  // +3
     };
 
-    // Triggers de Animator por tipo de ataque y rango
-    // null = sin trigger especial (animación normal del estado)
     private static readonly string[,] AnimTriggers = new string[7, 3]
     {
-        //  Clash               Punch               PunchRun
-        {   "ClashStagger",    "HitStagger",        "HitStagger"    },  // -3
-        {   "ClashStagger",    "HitStagger",        "HitStagger"    },  // -2
-        {   "ClashRecoil",     "PunchRecoil",       "PunchRecoil"   },  // -1
-        {   "ClashRecoil",     "PunchRecoil",       "PunchRecoil"   },  //  0
-        {   null,              null,                null            },  // +1
-        {   null,              null,                null            },  // +2
-        {   null,              null,                null            },  // +3
+        { "ClashStagger", "HitStagger",  "HitStagger"  },  // -3
+        { "ClashStagger", "HitStagger",  "HitStagger"  },  // -2
+        { "ClashRecoil",  "PunchRecoil", "PunchRecoil" },  // -1
+        { "ClashRecoil",  "PunchRecoil", "PunchRecoil" },  //  0
+        { null,           null,           null          },  // +1
+        { null,           null,           null          },  // +2
+        { null,           null,           null          },  // +3
     };
 
-    // --------------------------------------------------------
-    //  API PÚBLICA
-    // --------------------------------------------------------
-
     /// <summary>
-    /// Calcula fuerzas de knockback para ambos participantes.
+    /// Solo necesita el endurance del player — no hay endurance del enemigo.
     /// </summary>
-    /// <param name="attackType">Tipo de ataque (Clash, Punch, PunchRunning).</param>
-    /// <param name="attackerEndurance">Endurance del que ataca.</param>
-    /// <param name="receiverEndurance">Endurance del que recibe.</param>
-    /// <param name="config">Config de ScriptableObject. Si es null usa valores por defecto.</param>
     public static KnockbackResult Resolve(
         AttackType attackType,
-        int attackerEndurance,
-        int receiverEndurance,
+        int playerEndurance,
         KnockbackResolverConfig config = null)
     {
-        int range      = Mathf.Clamp(attackerEndurance - receiverEndurance, -3, 3);
-        int rowIndex   = range + 3;          // 0..6
-        int colIndex   = (int)attackType;    // 0..2
+        int rowIndex = Mathf.Clamp(playerEndurance, -3, 3) + 3;  // 0..6
+        int colIndex = (int)attackType;                            // 0..2
 
         float forceTarget;
         float forceSelf;
@@ -155,17 +98,12 @@ public static class KnockbackResolver
         return new KnockbackResult(forceTarget, forceSelf, animTrigger);
     }
 
-    /// <summary>
-    /// Determina el AttackType a partir del estado actual del jugador.
-    /// Proxy limpio entre la state machine y el resolver.
-    /// </summary>
     public static AttackType StateToAttackType(State state)
     {
         switch (state)
         {
             case State.PunchRunning: return AttackType.PunchRunning;
-            case State.Punching:     return AttackType.Punch;
-            default:                 return AttackType.Clash;
+            default:                 return AttackType.Punch;
         }
     }
 }

@@ -20,17 +20,17 @@ public class ClashHandler : MonoBehaviour
     // --------------------------------------------------------
 
     [Header("References")]
-    public PlayerController         player;
-    public KnockbackResolverConfig  resolverConfig;
+    public PlayerController player;
 
-    [Header("Game Design: Clash")]
-    [Tooltip("Knockback base al enemigo al colisionar (sin contar Endurance).")]
-    public float baseKnockbackToEnemy = 3f;
+    [Header("Game Design: Clash (contacto físico — mucho menor que un puñetazo)")]
+    [Tooltip("Fuerza base que recibe el enemigo al chocar. Tunearlo en Inspector.")]
+    public float baseKnockbackToEnemy = 1.5f;
 
-    [Tooltip("Cuánto añade el Endurance del player al knockback del enemigo.\n" +
-             "Endurance 0 → baseKnockbackToEnemy\n" +
-             "Endurance 1 → baseKnockbackToEnemy + 1 * enduranceKnockbackMultiplier")]
-    public float enduranceKnockbackMultiplier = 2.5f;
+    [Tooltip("Fuerza extra por cada punto de Endurance del player.")]
+    public float enduranceKnockbackMultiplier = 0.5f;
+
+    [Tooltip("Fuerza de retroceso que recibe el player al chocar.")]
+    public float knockbackToSelf = 1.0f;
 
     [Tooltip("Tiempo mínimo entre dos choques consecutivos.")]
     public float clashCooldown = 0.6f;
@@ -83,27 +83,24 @@ public class ClashHandler : MonoBehaviour
     // --------------------------------------------------------
 
     // ClashHandler.cs — método ExecuteClash completo
+    // ClashHandler.cs — solo ExecuteClash(), el resto queda igual
     void ExecuteClash(RioTutteEnemy enemy, Vector3 enemyPosition)
     {
         Vector3 clashDir = (enemyPosition - transform.position).normalized;
         clashDir.y = 0f;
         if (clashDir == Vector3.zero) clashDir = transform.forward;
 
-        KnockbackResult result = KnockbackResolver.Resolve(
-            AttackType.Clash,
-            player.combat.endurance,
-            enemy.endurance,
-            resolverConfig
-        );
+        float forceOnEnemy = baseKnockbackToEnemy
+                           + player.combat.endurance * enduranceKnockbackMultiplier;
 
-        enemy.ReceiveKnockback(clashDir, result.ForceOnTarget);
+        enemy.ReceiveKnockback(clashDir, forceOnEnemy);
 
-        if (result.ForceOnSelf > 0.01f)
-            player.knockbackHandler.ReceiveKnockback(-clashDir, result.ForceOnSelf);
+        if (knockbackToSelf > 0.01f)
+            player.knockbackHandler.ReceiveKnockback(-clashDir, knockbackToSelf);
 
         _cooldownTimer = clashCooldown;
 
-        Debug.Log($"[Clash] PlayerEnd:{player.combat.endurance} EnemyEnd:{enemy.endurance} " +
-                  $"→ forceEnemy:{result.ForceOnTarget:F1} forceSelf:{result.ForceOnSelf:F1}");
+        Debug.Log($"[Clash] playerEnd:{player.combat.endurance} " +
+                  $"→ forceEnemy:{forceOnEnemy:F1} forceSelf:{knockbackToSelf:F1}");
     }
 }

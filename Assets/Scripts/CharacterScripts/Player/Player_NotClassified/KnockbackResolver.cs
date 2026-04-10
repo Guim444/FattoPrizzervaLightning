@@ -6,13 +6,11 @@ public readonly struct KnockbackResult
 {
     public readonly float ForceOnTarget;
     public readonly float ForceOnSelf;
-    public readonly string AnimatorTrigger;
 
     public KnockbackResult(float forceOnTarget, float forceOnSelf, string animatorTrigger)
     {
         ForceOnTarget   = forceOnTarget;
         ForceOnSelf     = forceOnSelf;
-        AnimatorTrigger = animatorTrigger;
     }
 }
 
@@ -35,24 +33,24 @@ public static class KnockbackResolver
     private static readonly float[,] TargetForces = new float[7, 3]
     {
         //  Clash   Punch   PunchRun    endurance
-        {    0.5f,   2.0f,   6.0f  },  // -3
-        {    1.5f,   4.0f,  10.0f  },  // -2
-        {    2.5f,   7.0f,  16.0f  },  // -1
-        {    4.0f,  10.0f,  22.0f  },  //  0
+        {    0.0f,   0.5f,   2.0f  },  // -3  player dominado → enemy apenas se mueve
+        {    0.0f,   1.0f,   4.0f  },  // -2
+        {    0.5f,   8.0f,   15.0f  },  // -1  ← fase 3 RioTutte: golpes mínimos
+        {    4.0f,  10.0f,  22.0f  },  //  0  equilibrio
         {    5.5f,  16.0f,  30.0f  },  // +1
         {    8.0f,  24.0f,  38.0f  },  // +2
-        {   12.0f,  32.0f,  46.0f  },  // +3
+        {   12.0f,  32.0f,  46.0f  },  // +3  player domina → enemy sale disparado
     };
 
     private static readonly float[,] SelfForces = new float[7, 3]
     {
         //  Clash   Punch   PunchRun    endurance
-        {   20.0f,  14.0f,   8.0f  },  // -3
-        {   14.0f,  10.0f,   5.0f  },  // -2
-        {    8.0f,   5.0f,   2.5f  },  // -1
-        {    4.0f,   2.0f,   0.5f  },  //  0  ← Clash igual para ambos
-        {    2.0f,   1.0f,   0.0f  },  // +1
-        {    1.0f,   0.5f,   0.0f  },  // +2
+        {   12.0f,  18.0f,  10.0f  },  // -3  player dominado → sale volando
+        {    9.0f,  12.0f,   6.0f  },  // -2
+        {    6.0f,   8.0f,   3.0f  },  // -1  ← fase 3 RioTutte: el player rebota
+        {    2.0f,   2.0f,   0.5f  },  //  0  clash equilibrado: empuje suave
+        {    1.0f,   1.0f,   0.0f  },  // +1
+        {    0.5f,   0.5f,   0.0f  },  // +2
         {    0.0f,   0.0f,   0.0f  },  // +3
     };
 

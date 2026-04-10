@@ -7,7 +7,10 @@ public class PunchingState : IStateActions
     public CharacterController controller;
     public PlayerStaminaManager stamina;
     public SphereCollider punchCollider;
-    float punchDuration = 1.5f;
+
+    // Duración total del estado (hardcodeada, no .length — ver convenciones)
+    private const float PunchDuration = 1.0f;
+
     private bool punchExecuted = false;
 
     public PunchingState(PlayerStaminaManager staminaManager)
@@ -15,16 +18,17 @@ public class PunchingState : IStateActions
         stamina = staminaManager;
     }
 
-    // PunchingState.cs — Enter() completo (el resto queda igual)
     public void Enter()
     {
         if (punchExecuted) return;
         punchExecuted = true;
-           player.animator.SetTrigger("isPunching");
+
+        player.animator.SetTrigger("isPunching");
 
         var combat = player.combat;
         stamina.ModifyStamina(-combat.punchStaminaCostPhase0);
-        combat.normalPunchTimer = punchDuration;
+        combat.normalPunchTimer = PunchDuration;
+
     }
 
     public void Update()
@@ -46,7 +50,6 @@ public class PunchingState : IStateActions
                 controller.Move(Vector3.zero);
         }
     }
-
 
     public void Exit()
     {

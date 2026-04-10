@@ -122,8 +122,11 @@ public class PlayerMovement : MonoBehaviour
     private void UpdateSpriteFlip(float directionZ)
     {
         if (spriteRenderer == null) return;
-        if (Mathf.Abs(directionZ) < 0.1f) return; // solo flip en movimiento horizontal
+        if (Mathf.Abs(directionZ) < 0.1f) return;
 
+        // En este juego la cámara mira a lo largo de X → Z es izquierda/derecha en pantalla.
+        // Z < 0 → player mira a la izquierda (escala positiva)
+        // Z > 0 → player mira a la derecha (escala negativa)
         Vector3 scale = transform.localScale;
         scale.x = directionZ < 0
             ? Mathf.Abs(scale.x)

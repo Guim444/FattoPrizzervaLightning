@@ -28,17 +28,4 @@ public class AnimatorSyncController : MonoBehaviour
             _player.animator.ResetTrigger("isPunching");
         }
     }
-
-    /// <summary>
-    /// Llamado desde el Animation Event del clip de PunchRunning
-    /// en el frame exacto del impacto.
-    /// </summary>
-    public void OnPunchRunningHit()
-    {
-        if (_player.canAttack)
-        {
-            _player.combatAttackHandler.ExecuteAttack();
-            _player.animator.ResetTrigger("isPunching");
-        }
-    }
 }

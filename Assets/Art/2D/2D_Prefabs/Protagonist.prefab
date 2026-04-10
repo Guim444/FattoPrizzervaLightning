@@ -98,7 +98,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.28, y: 1.28}
+  m_Size: {x: 1.7000552, y: 1.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -145,7 +145,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 1.5
-  m_Radius: 0.8500278
+  m_Radius: 1
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -249,9 +249,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed79b235861d3dd41b9f0d402c3d7799, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkingSpeed: 3
-  runningBaseSpeed: 5
-  tiredSpeed: 1
+  walkingSpeed: 4.44
+  runningBaseSpeed: 7.5
+  tiredSpeed: 2.25
   glidingSpeed: 3
   punchingSpeed: 2
   punchRunningBaseSpeed: 6
@@ -336,6 +336,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 2058333521518567832}
   player: {fileID: 3136478325201886202}
+  pauseAnimatorControl: 0
 --- !u!114 &5882760703228886459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -365,9 +366,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 3136478325201886202}
-  baseKnockbackToEnemy: 3
-  enduranceKnockbackMultiplier: 10
-  knockbackToSelf: 1
+  resolverConfig: {fileID: 11400000, guid: 7746a487e79666c48b97e3eec437d65b, type: 2}
   clashCooldown: 0.6
 --- !u!114 &7169359949759622994
 MonoBehaviour:
@@ -382,16 +381,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resolverConfig: {fileID: 11400000, guid: 7746a487e79666c48b97e3eec437d65b, type: 2}
-  punchRange: 3
-  punchRangeRunning: 4
-  edgeThresholdRatio: 2
+  punchRange: 1.8
+  punchRangeRunning: 2.6
+  edgeThresholdRatio: 0.6
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64
-  basicPunchDamage: 2
-  runningPunchDamage: 3
+  basicPunchDamage: 1
+  runningPunchDamage: 1.5
   edgeDamageMultiplier: 0.5
-  attackKnockbackMultiplier: 1
+  attackKnockbackMultiplier: 1.5
 --- !u!114 &6110129550315152802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,5 +434,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0d275ec5f2881b4b9c9d79b3c5d486d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minZ: -5
-  maxZ: 5
+  minZ: -0.5
+  maxZ: 0.5

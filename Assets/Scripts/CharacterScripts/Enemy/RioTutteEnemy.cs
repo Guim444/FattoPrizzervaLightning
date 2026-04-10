@@ -42,6 +42,9 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
     public float airFriction = 1.5f;
     public float stopThreshold = 0.15f;
 
+    [Tooltip("Masa propia del enemigo. A mayor masa, menos retrocede ante un mismo impulso.")]
+    public float mass = 1.5f;
+
     // --------------------------------------------------------
     //  ATTACK
     // --------------------------------------------------------
@@ -50,6 +53,10 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
     public float attackRange = 1.5f;
 
     public float attackCooldown = 2f;
+
+    [Tooltip("Fuerza base del golpe de RioTutte al player (endurance 0).\n" +
+             "Se escala automáticamente: endurance -3 → ×2.5, endurance 0 → ×1.")]
+    public float attackKnockbackBase = 5f;
 
     // --------------------------------------------------------
     //  RUNTIME STATE
@@ -76,9 +83,10 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
         _verticalVelocity = -2f;
 
         _body = KnockbackPhysicsBody.Default;
+        _body.mass           = mass;
         _body.groundFriction = groundFriction;
-        _body.airFriction = airFriction;
-        _body.stopThreshold = stopThreshold;
+        _body.airFriction    = airFriction;
+        _body.stopThreshold  = stopThreshold;
     }
 
     void Start()
@@ -90,7 +98,6 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
             _playerTransform  = playerObj.transform;
             _playerController = playerObj;
             _playerCC         = playerObj.GetComponent<CharacterController>();
-            _body.mass        = KnockbackPhysicsBody.MassFromEndurance(_playerController.combat.endurance);
         }
         else
         {
@@ -151,11 +158,45 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
 
         if (dist < minDist && dist > 0.001f)
         {
-            // Empuja a RioTutte fuera del player la distancia de penetración
-            Vector3 push = delta.normalized * (minDist - dist);
-            _cc.enabled = false;
-            transform.position += push;
-            _cc.enabled = true;
+            Vector3 pushDir     = delta.normalized;
+            float   penetration = minDist - dist;
+            int     endurance   = _playerController.combat.endurance;
+
+            if (_playerController.currentState == State.PunchRunning)
+            {
+                // PunchRunning: RioTutte cede completamente. ExecuteAttack gestiona el knockback.
+                _cc.enabled = false;
+                transform.position += pushDir * penetration;
+                _cc.enabled = true;
+            }
+            else if (endurance > 0)
+            {
+                // Player más fuerte (adrenaline): RioTutte cede proporcional al endurance.
+                // +1 → 33%  |  +2 → 67%  |  +3 → 100%
+                float yieldRatio = Mathf.Clamp01(endurance / 3.0f);
+
+                _cc.enabled = false;
+                transform.position += pushDir * penetration * yieldRatio;
+                _cc.enabled = true;
+
+                if (_playerCC != null)
+                {
+                    _playerCC.enabled = false;
+                    _playerController.transform.position -= pushDir * penetration * (1f - yieldRatio);
+                    _playerCC.enabled = true;
+                }
+            }
+            else
+            {
+                // endurance <= 0: RioTutte es pared, player rebota.
+                // ClashHandler gestiona el impulso puntual cuando el player corre.
+                if (_playerCC != null)
+                {
+                    _playerCC.enabled = false;
+                    _playerController.transform.position -= pushDir * penetration;
+                    _playerCC.enabled = true;
+                }
+            }
         }
     }
 
@@ -186,16 +227,13 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
 
         Vector3 dir = dist > 0.01f ? toPlayer.normalized : transform.forward;
 
-        KnockbackResult result = KnockbackResolver.Resolve(AttackType.Punch, _playerController.combat.endurance);
-        _playerController.knockbackHandler.ReceiveKnockback(dir, result.ForceOnTarget);
+        _playerController.knockbackHandler.ReceiveKnockback(dir, attackKnockbackBase);
 
         // TODO Fase 2: activar daño real
         // _playerController.combat.TakeDamage(damage);
 
         _anim.SetTrigger("Punch");
         _attackTimer = attackCooldown;
-
-        Debug.Log($"[RioTutte] Ataque al player | fuerza:{result.ForceOnTarget:F1} dist:{dist:F2}");
     }
 
     // --------------------------------------------------------
@@ -227,9 +265,9 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
     /// <summary>Fuerza ya resuelta por KnockbackResolver o ClashHandler.</summary>
     public void ReceiveKnockback(Vector3 direction, float force)
     {
-        _body.mass = KnockbackPhysicsBody.MassFromEndurance(_playerController.combat.endurance);
         _body.Receive(direction, force);
-        Debug.Log($"[RioTutte] Knockback | fuerza:{force:F1} masa:{_body.mass:F2}");
+        float velEfectiva = _body.mass > 0 ? force / _body.mass : force;
+        Debug.Log($"[RioTutte] Knockback | fuerza:{force:F1} masa:{_body.mass:F2} → vel:{velEfectiva:F1} u/s");
     }
 
     public void ApplyClashKnockback(Vector3 direction, float force, float _duration)

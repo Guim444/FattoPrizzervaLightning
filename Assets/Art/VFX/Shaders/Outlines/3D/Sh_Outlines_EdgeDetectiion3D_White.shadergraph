@@ -1945,10 +1945,10 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": 1.0,
-    "m_FloatType": 0,
+    "m_FloatType": 1,
     "m_RangeValues": {
-        "x": 0.0010000000474974514,
-        "y": 2.0
+        "x": 1.0,
+        "y": 10.0
     }
 }
 
@@ -2012,8 +2012,8 @@
     "m_ObjectId": "3792d71987a44d1fa340eb4abb6bf8c4",
     "m_Title": "Shift",
     "m_Position": {
-        "x": 633.3333129882813,
-        "y": 603.3333129882813
+        "x": 634.0,
+        "y": 604.0
     }
 }
 
@@ -3458,10 +3458,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 3686.000244140625,
-            "y": 496.6666564941406,
-            "width": 106.666748046875,
-            "height": 36.000030517578128
+            "x": 3837.0,
+            "y": 508.0,
+            "width": 105.0,
+            "height": 34.0
         }
     },
     "m_Slots": [
@@ -4231,7 +4231,7 @@
     "m_Title": "Shift",
     "m_Position": {
         "x": 632.0,
-        "y": 1180.6666259765625
+        "y": 1181.0
     }
 }
 
@@ -4363,8 +4363,8 @@
     "m_ObjectId": "9d5d5649a14149af92799ebfd70ba60d",
     "m_Title": "Shift",
     "m_Position": {
-        "x": 618.6666870117188,
-        "y": -528.6666870117188
+        "x": 619.0,
+        "y": -528.0
     }
 }
 
@@ -4381,11 +4381,11 @@
     "m_SrcAlphaBlendMode": 0,
     "m_DstAlphaBlendMode": 1,
     "m_AlphaBlendOperation": 0,
-    "m_EnableStencil": false,
-    "m_StencilReference": 0,
+    "m_EnableStencil": true,
+    "m_StencilReference": 2,
     "m_StencilReadMask": 255,
     "m_StencilWriteMask": 255,
-    "m_StencilCompareFunction": 8,
+    "m_StencilCompareFunction": 6,
     "m_StencilPassOperation": 0,
     "m_StencilFailOperation": 0,
     "m_StencilDepthFailOperation": 0,
@@ -4508,7 +4508,7 @@
         "a": 0.0
     },
     "isMainColor": false,
-    "m_ColorMode": 1
+    "m_ColorMode": 0
 }
 
 {
@@ -4936,7 +4936,7 @@
     "m_Title": "Shift",
     "m_Position": {
         "x": 650.0,
-        "y": 34.666656494140628
+        "y": 35.0
     }
 }
 
@@ -5451,10 +5451,10 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": 1.0,
-    "m_FloatType": 0,
+    "m_FloatType": 1,
     "m_RangeValues": {
-        "x": 0.0010000000474974514,
-        "y": 2.0
+        "x": 1.0,
+        "y": 50.0
     }
 }
 

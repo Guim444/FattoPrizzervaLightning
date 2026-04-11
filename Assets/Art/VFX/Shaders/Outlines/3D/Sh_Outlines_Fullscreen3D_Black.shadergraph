@@ -1388,8 +1388,8 @@
     "m_ObjectId": "0a4d0d0dce9b4ab2b2e8409168f8bf58",
     "m_Title": "Detect edges based on world space normal",
     "m_Position": {
-        "x": -1910.6666259765625,
-        "y": 975.9999389648438
+        "x": -1910.0,
+        "y": 976.0
     }
 }
 
@@ -2746,8 +2746,8 @@
     "m_Value": 0.5,
     "m_FloatType": 1,
     "m_RangeValues": {
-        "x": 0.0010000000474974514,
-        "y": 10.0
+        "x": 0.10000000149011612,
+        "y": 5.0
     }
 }
 
@@ -3147,11 +3147,11 @@
     "m_SrcAlphaBlendMode": 0,
     "m_DstAlphaBlendMode": 1,
     "m_AlphaBlendOperation": 0,
-    "m_EnableStencil": false,
-    "m_StencilReference": 0,
+    "m_EnableStencil": true,
+    "m_StencilReference": 2,
     "m_StencilReadMask": 255,
     "m_StencilWriteMask": 255,
-    "m_StencilCompareFunction": 8,
+    "m_StencilCompareFunction": 6,
     "m_StencilPassOperation": 0,
     "m_StencilFailOperation": 0,
     "m_StencilDepthFailOperation": 0,
@@ -6371,7 +6371,7 @@
     "m_FloatType": 1,
     "m_RangeValues": {
         "x": 0.10000000149011612,
-        "y": 10.0
+        "y": 1.0
     }
 }
 
@@ -7182,8 +7182,8 @@
     "m_ObjectId": "fc36063957204faaa0e07e957d8df4f9",
     "m_Title": "Detect edges based on world space normal",
     "m_Position": {
-        "x": -1830.6666259765625,
-        "y": -36.666656494140628
+        "x": -1830.0,
+        "y": -36.0
     }
 }
 

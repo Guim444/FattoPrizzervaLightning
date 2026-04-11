@@ -92,7 +92,7 @@ public class RioTutteEnemy : MonoBehaviour, IDamageable, IKnockbackable
     void Start()
     {
 
-        var playerObj = FindObjectOfType<PlayerController>();
+        var playerObj = FindAnyObjectByType<PlayerController>();
         if (playerObj != null)
         {
             _playerTransform  = playerObj.transform;

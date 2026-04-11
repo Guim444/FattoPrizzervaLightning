@@ -13,45 +13,45 @@ MonoBehaviour:
   m_Name: KnockbackResolverConfig
   m_EditorClassIdentifier: 
   targetForces:
-  - clash: 18
-    punch: 22
-    punchRunning: 20
-  - clash: 14
-    punch: 16
-    punchRunning: 13
-  - clash: 10
-    punch: 11
-    punchRunning: 9
-  - clash: 20
+  - clash: 0.5
+    punch: 2
+    punchRunning: 6
+  - clash: 1.5
     punch: 4
-    punchRunning: 5
-  - clash: 3
-    punch: 3
-    punchRunning: 5
-  - clash: 5
-    punch: 12
-    punchRunning: 18
+    punchRunning: 10
+  - clash: 2.5
+    punch: 15
+    punchRunning: 30
   - clash: 12
-    punch: 20
-    punchRunning: 28
+    punch: 30
+    punchRunning: 50
+  - clash: 5
+    punch: 16
+    punchRunning: 30
+  - clash: 8
+    punch: 24
+    punchRunning: 38
+  - clash: 12
+    punch: 32
+    punchRunning: 46
   selfForces:
+  - clash: 20
+    punch: 14
+    punchRunning: 8
+  - clash: 14
+    punch: 10
+    punchRunning: 5
+  - clash: 8
+    punch: 5
+    punchRunning: 2.5
   - clash: 0
-    punch: 0
-    punchRunning: 0
+    punch: 2
+    punchRunning: 0.5
   - clash: 2
     punch: 1
     punchRunning: 0
-  - clash: 5
-    punch: 4
-    punchRunning: 6
-  - clash: 5
-    punch: 3
-    punchRunning: 3
-  - clash: 3
-    punch: 3
-    punchRunning: 2
   - clash: 1
-    punch: 1
+    punch: 0.5
     punchRunning: 0
   - clash: 0
     punch: 0

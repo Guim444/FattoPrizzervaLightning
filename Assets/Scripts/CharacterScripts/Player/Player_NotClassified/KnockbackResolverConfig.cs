@@ -19,28 +19,37 @@ public class KnockbackResolverConfig : ScriptableObject
     //  Columnas: Clash=0, Punch=1, PunchRunning=2
     // --------------------------------------------------------
 
+    // Regla de diseño que la tabla respeta siempre:
+    //   ForceOnTarget:  Clash < Punch < PunchRunning
+    //   ForceOnSelf:    Clash > Punch > PunchRunning
+    //
+    // Endurance muy negativo → el player vuela, el enemigo apenas se mueve.
+    // Endurance muy positivo → el enemigo sale disparado, el player apenas retrocede.
+
+    // end -1 = estado de "fase 3 RioTutte": golpes del player son mínimos.
+
     [Header("Target forces — filas: rango -3 a +3 | cols: Clash / Punch / PunchRun")]
     public Row[] targetForces = new Row[7]
     {
-        new Row(18f, 22f, 20f),  // rango -3
-        new Row(14f, 16f, 13f),  // rango -2
-        new Row(10f, 11f,  9f),  // rango -1
-        new Row( 5f,  4f,  4f),  // rango  0
-        new Row( 3f,  3f,  5f),  // rango +1
-        new Row( 5f, 12f, 18f),  // rango +2
-        new Row(12f, 20f, 28f),  // rango +3
+        new Row( 0.0f,  0.5f,  2.0f),  // rango -3  enemy apenas se mueve
+        new Row( 0.0f,  1.0f,  4.0f),  // rango -2
+        new Row( 0.5f,  2.0f,  6.0f),  // rango -1  ← fase 3 RioTutte
+        new Row( 4.0f, 10.0f, 22.0f),  // rango  0
+        new Row( 5.5f, 16.0f, 30.0f),  // rango +1
+        new Row( 8.0f, 24.0f, 38.0f),  // rango +2
+        new Row(12.0f, 32.0f, 46.0f),  // rango +3  enemy vuela
     };
 
     [Header("Self (recoil) forces — misma estructura")]
     public Row[] selfForces = new Row[7]
     {
-        new Row( 0f,  0f,  0f),  // rango -3
-        new Row( 2f,  1f,  0f),  // rango -2
-        new Row( 5f,  4f,  6f),  // rango -1
-        new Row( 5f,  3f,  3f),  // rango  0
-        new Row( 3f,  3f,  2f),  // rango +1
-        new Row( 1f,  1f,  0f),  // rango +2
-        new Row( 0f,  0f,  0f),  // rango +3
+        new Row(25.0f, 18.0f, 10.0f),  // rango -3  player sale volando
+        new Row(18.0f, 12.0f,  6.0f),  // rango -2
+        new Row(12.0f,  8.0f,  3.0f),  // rango -1  ← fase 3 RioTutte: player rebota
+        new Row( 4.0f,  2.0f,  0.5f),  // rango  0
+        new Row( 2.0f,  1.0f,  0.0f),  // rango +1
+        new Row( 1.0f,  0.5f,  0.0f),  // rango +2
+        new Row( 0.0f,  0.0f,  0.0f),  // rango +3
     };
 
     [Header("Animator triggers — vacío = sin trigger especial")]

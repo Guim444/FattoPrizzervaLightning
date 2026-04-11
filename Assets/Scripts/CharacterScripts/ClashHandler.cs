@@ -1,16 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// Detecta el contacto físico directo (clash) entre el player y RioTutte.
-/// Delega el cálculo de fuerzas a KnockbackResolver: ya no tiene su propia
-/// coroutine de push ni sus propios parámetros de fuerza.
-///
-/// CAMBIOS respecto a la versión anterior:
-///   - baseClashForce / enduranceForceMultiplier eliminados.
-///     Las fuerzas vienen del KnockbackResolverConfig.
-///   - PushPlayer() (coroutine) eliminado.
-///     El player recibe knockback vía PlayerKnockbackHandler.ReceiveKnockback().
-///   - El sistema de física es el mismo que para cualquier otro golpe.
+/// Detecta el contacto físico directo (clash) entre el player y RioTutte
+/// y delega el cálculo de fuerzas a KnockbackResolver.
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
 public class ClashHandler : MonoBehaviour
@@ -22,16 +14,10 @@ public class ClashHandler : MonoBehaviour
     [Header("References")]
     public PlayerController player;
 
-    [Header("Game Design: Clash (contacto físico — mucho menor que un puñetazo)")]
-    [Tooltip("Fuerza base que recibe el enemigo al chocar. Tunearlo en Inspector.")]
-    public float baseKnockbackToEnemy = 1.5f;
+    [Tooltip("Opcional. Si es null se usan los valores por defecto del KnockbackResolver.")]
+    public KnockbackResolverConfig resolverConfig;
 
-    [Tooltip("Fuerza extra por cada punto de Endurance del player.")]
-    public float enduranceKnockbackMultiplier = 0.5f;
-
-    [Tooltip("Fuerza de retroceso que recibe el player al chocar.")]
-    public float knockbackToSelf = 1.0f;
-
+    [Header("Game Design: Clash")]
     [Tooltip("Tiempo mínimo entre dos choques consecutivos.")]
     public float clashCooldown = 0.6f;
 
@@ -65,15 +51,15 @@ public class ClashHandler : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (_cooldownTimer > 0f)   return;
-        if (!player.canMove)       return;
+        if (_cooldownTimer > 0f) return;
+        if (!player.canMove) return;
+
+        // Solo Running puro. En PunchRunning el knockback lo gestiona ExecuteAttack (animation event)
+        // — si dispararan ambos, RioTutte recibiría doble knockback.
+        if (player.currentState != State.Running) return;
 
         var enemy = hit.collider.GetComponent<RioTutteEnemy>();
         if (enemy == null) return;
-
-        bool playerMoving = player.movement.GetDirectionalInput().magnitude > 0.1f;
-        bool enemyMoving  = enemy.IsMoving;
-        if (!playerMoving && !enemyMoving) return;
 
         ExecuteClash(enemy, hit.transform.position);
     }
@@ -82,25 +68,23 @@ public class ClashHandler : MonoBehaviour
     //  CLASH LOGIC
     // --------------------------------------------------------
 
-    // ClashHandler.cs — método ExecuteClash completo
-    // ClashHandler.cs — solo ExecuteClash(), el resto queda igual
     void ExecuteClash(RioTutteEnemy enemy, Vector3 enemyPosition)
     {
         Vector3 clashDir = (enemyPosition - transform.position).normalized;
         clashDir.y = 0f;
         if (clashDir == Vector3.zero) clashDir = transform.forward;
 
-        float forceOnEnemy = baseKnockbackToEnemy
-                           + player.combat.endurance * enduranceKnockbackMultiplier;
+        KnockbackResult result = KnockbackResolver.Resolve(
+            AttackType.Clash,
+            player.combat.endurance,
+            resolverConfig
+        );
 
-        enemy.ReceiveKnockback(clashDir, forceOnEnemy);
+        enemy.ReceiveKnockback(clashDir, result.ForceOnTarget);
 
-        if (knockbackToSelf > 0.01f)
-            player.knockbackHandler.ReceiveKnockback(-clashDir, knockbackToSelf);
+        if (result.ForceOnSelf > 0.01f)
+            player.knockbackHandler.ReceiveKnockback(-clashDir, result.ForceOnSelf);
 
         _cooldownTimer = clashCooldown;
-
-        Debug.Log($"[Clash] playerEnd:{player.combat.endurance} " +
-                  $"→ forceEnemy:{forceOnEnemy:F1} forceSelf:{knockbackToSelf:F1}");
     }
 }

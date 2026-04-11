@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 6590086447908142463}
   - component: {fileID: 463081134366795710}
   - component: {fileID: 7643132555759407464}
-  m_Layer: 3
+  - component: {fileID: 8058192601901859618}
+  m_Layer: 6
   m_Name: Riotutte
   m_TagString: 2D
   m_Icon: {fileID: 0}
@@ -27,9 +28,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2289442210450065861}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.20644046, z: -0, w: 0.97845924}
+  m_LocalRotation: {x: 0, y: 0.20644324, z: 0, w: 0.9784586}
   m_LocalPosition: {x: 1.38, y: 1.79, z: 2.63}
-  m_LocalScale: {x: 0.36137, y: 0.36137, z: 0.36137}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -101,19 +102,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2b6bc1316cb05b4ca8f95fd52e43303, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endurance: 0
-  damage: 1
-  walkSpeed: 1.5
-  activeAI: 0
+  _anim: {fileID: 8058192601901859618}
+  walkSpeed: 0.5
+  activeAI: 1
   gravity: -20
-  groundFriction: 9
+  groundFriction: 12
   airFriction: 1.5
   stopThreshold: 0.15
+  mass: 1.5
   attackRange: 1.5
   attackCooldown: 2
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 0
+  attackKnockbackBase: 1
 --- !u!143 &7643132555759407464
 CharacterController:
   m_ObjectHideFlags: 0
@@ -132,10 +131,32 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 9.86
-  m_Radius: 1.5800004
+  m_Height: 4.5
+  m_Radius: 1.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &8058192601901859618
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2289442210450065861}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9129a19ff71ee554ebc4aeb4427d13a1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

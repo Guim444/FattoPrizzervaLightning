@@ -71,17 +71,29 @@ public class CombatAttackHandler : MonoBehaviour
         _player.canAttack = false;
 
         AttackType attackType = KnockbackResolver.StateToAttackType(_player.currentState);
-        float radius = attackType == AttackType.PunchRunning ? 0.8f : 0.5f;
-        float reach  = attackType == AttackType.PunchRunning ? punchRangeRunning : punchRange;
+        Vector3 direction = GetAttackDirection();
 
-        Vector3 origin      = transform.position + Vector3.up * 0.5f;
-        Vector3 direction   = GetAttackDirection();
-        Vector3 sphereCenter = origin + direction * reach;
+        // Esfera centrada junto al player (no proyectada lejos).
+        // Radio = punchRange cubre a cualquier enemigo en contacto cercano.
+        float radius = attackType == AttackType.PunchRunning ? punchRangeRunning : punchRange;
+        Vector3 origin = transform.position + Vector3.up * 0.5f;
 
-        Debug.DrawLine(origin, sphereCenter, Color.red, 0.5f);
+        Debug.DrawLine(origin, origin + direction * radius, Color.red, 0.5f);
 
-        Collider[] hits = Physics.OverlapSphere(sphereCenter, radius, enemyLayer);
-        if (hits.Length == 0) return;
+        LayerMask mask = enemyLayer.value == 0 ? ~0 : enemyLayer;
+        Collider[] all = Physics.OverlapSphere(origin, radius, mask);
+
+        // Solo colliders de otros GameObjects y que estén en la dirección de ataque
+        Collider[] hits = System.Array.FindAll(all, c =>
+            c.gameObject != gameObject &&
+            Vector3.Dot((c.transform.position - transform.position).normalized, direction) > 0.3f
+        );
+
+        if (hits.Length == 0)
+        {
+            Debug.Log($"[Attack] Sin impacto — origin:{origin} radius:{radius} dir:{direction}");
+            return;
+        }
 
         Collider closest = GetClosest(hits);
         float damage = CalculateDamage(attackType, true);
@@ -101,12 +113,8 @@ public class CombatAttackHandler : MonoBehaviour
 
         if (result.ForceOnSelf > 0.01f)
             _player.knockbackHandler.ReceiveKnockback(-direction, result.ForceOnSelf);
-
-        if (!string.IsNullOrEmpty(result.AnimatorTrigger) && _player.animator != null)
-            _player.animator.SetTrigger(result.AnimatorTrigger);
-
         _player.movement.LastDirection = Vector3.zero;
-        _player.movement.CurrentSpeed  = Vector3.zero;
+        _player.movement.CurrentSpeed = Vector3.zero;
 
         Debug.Log($"[Attack] {attackType} | playerEnd:{_player.combat.endurance} " +
                   $"forceEnemy:{result.ForceOnTarget:F1} forceSelf:{result.ForceOnSelf:F1}");

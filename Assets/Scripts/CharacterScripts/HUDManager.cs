@@ -6,6 +6,7 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private GameObject enemy;
     [SerializeField] private GameObject enemyRio;
     [SerializeField] private PlayerBoundaryClamp playerBoundary;
+    [SerializeField] GameObject _canvasMain;
 
     [Header("UI")]
     [SerializeField] private GameObject selectionPanel;
@@ -28,6 +29,7 @@ public class HUDManager : MonoBehaviour
 
     private void Awake()
     {
+        _canvasMain.SetActive(true);
         Time.timeScale = 0f;
     }
 

@@ -36,7 +36,7 @@ public class PlayerAnimations : MonoBehaviour
         animator.SetBool("isRunning", player.currentState == State.Running
                                       || player.currentState == State.PunchRunning);
         animator.SetBool("isGliding", player.currentState == State.Gliding);
-        animator.SetBool("isKnockedback", player.currentState == State.Knockedback);
+        animator.SetBool("isKnockedback", player.knockbackHandler.ShowKnockbackAnim);
         animator.SetBool("isDead", player.combat.HP <= 0);
         animator.SetBool("IdleFront", Mathf.Abs(player.movement.LastDirection.x) > 0.1f);
     }

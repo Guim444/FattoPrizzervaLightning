@@ -73,6 +73,7 @@ public class CameraMovement : MonoBehaviour
     
     public void RefreshCombatX()
     {
+        xOffset = -5f;
         xZoomTarget = player.position.x + xOffset;
         zoomed = false;
     }

@@ -54,6 +54,13 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
     /// <summary>True mientras el knockback esté activo.</summary>
     public bool IsKnockedBack => _body.IsActive;
 
+    /// <summary>
+    /// True solo cuando el knockback proviene de un ataque de enemigo.
+    /// False para recoil de puñetazo propio o colisión (ClashHandler).
+    /// Lo lee PlayerAnimations para decidir si muestra la animación.
+    /// </summary>
+    public bool ShowKnockbackAnim { get; private set; }
+
     // --------------------------------------------------------
     //  INIT
     // --------------------------------------------------------
@@ -94,6 +101,22 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
     /// </summary>
     public void ReceiveKnockback(Vector3 direction, float force)
     {
+        ShowKnockbackAnim = false;
+        ApplyKnockback(direction, force);
+    }
+
+    /// <summary>
+    /// Llamar solo desde RioTutteEnemy (ataque directo al player).
+    /// Activa la animación de knockback además de la física.
+    /// </summary>
+    public void ReceiveEnemyKnockback(Vector3 direction, float force)
+    {
+        ShowKnockbackAnim = true;
+        ApplyKnockback(direction, force);
+    }
+
+    private void ApplyKnockback(Vector3 direction, float force)
+    {
         // Recalcula masa por si el endurance cambió en runtime
         if (autoMassFromEndurance && _player.combat != null)
             _body.mass = Mathf.Max(0.6f, KnockbackPhysicsBody.MassFromEndurance(_player.combat.endurance));
@@ -130,6 +153,7 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
         // Cuando termina el knockback, vuelve a Idle
         if (!_body.IsActive)
         {
+            ShowKnockbackAnim = false;
             _player.currentState = State.Idle;
             StateMachine.SetState(State.Idle);
         }

@@ -50,65 +50,8 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
     private Animator        _anim;
     private Vector3         _lastMoveDirection;
 
-<<<<<<< HEAD
-        _body = KnockbackPhysicsBody.Default;
-        _body.mass           = mass;
-        _body.groundFriction = groundFriction;
-        _body.airFriction    = airFriction;
-        _body.stopThreshold  = stopThreshold;
-    }
-
-    void Start()
-    {
-
-        var playerObj = FindAnyObjectByType<PlayerController>();
-        if (playerObj != null)
-        {
-            _playerTransform  = playerObj.transform;
-            _playerController = playerObj;
-            _playerCC         = playerObj.GetComponent<CharacterController>();
-        }
-        else
-        {
-            Debug.LogWarning("[RioTutte] No se encontró PlayerController en la escena.");
-        }
-    }
-
-    // --------------------------------------------------------
-    //  UPDATE
-    // --------------------------------------------------------
-
-    void Update()
-    {
-        ApplyGravity();
-
-        if (_attackTimer > 0f) _attackTimer -= Time.deltaTime;
-
-        // Knockback tick
-        if (_body.IsActive)
-        {
-            Vector3 delta = _body.Tick(_cc.isGrounded, Time.deltaTime);
-            if (_cc.enabled) _cc.Move(delta);
-            return; // No IA durante knockback
-        }
-
-        if (activeAI && _playerTransform != null)
-        {
-            MoveTowardPlayer();
-            if (_attackTimer <= 0f) TryAttackPlayer();
-        }
-    }
-
-    // --------------------------------------------------------
-    //  AI
-    // --------------------------------------------------------
-
-    float MinSeparation => _playerCC != null
-        ? _cc.radius + _playerCC.radius + _cc.skinWidth + _playerCC.skinWidth
-=======
     float MinSeparation => _player != null
         ? _cc.radius + _player.cc.radius + _cc.skinWidth + _player.cc.skinWidth
->>>>>>> 506919c (Camara follow to players)
         : attackRange * 0.5f;
 
     // ────────────────────────────────────────────────────────────
@@ -256,6 +199,22 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
                 if (dmg >= 30) TriggerFall();
                 break;
         }
+
+        Vector3 dir = _player.transform.position - transform.position;
+        dir.y = 0f;
+
+        if (dir.magnitude < MinSeparation)
+        {
+            IsMoving = false;
+            return;
+        }
+
+        dir.Normalize();
+        _lastMoveDirection = dir;
+        FlipCharacter(dir);
+
+        if (_cc.enabled) _cc.Move(dir * walkSpeed * Time.deltaTime);
+        IsMoving = true;
     }
 
     public override void Die()
@@ -294,6 +253,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
                 // TODO: cinemática fase final
                 break;
         }
+    }
 
         ResetAttackCooldown();
     }

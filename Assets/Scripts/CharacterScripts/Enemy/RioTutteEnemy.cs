@@ -16,9 +16,9 @@ using UnityEngine;
 ///   3 → Fase final (cinemática — ver GDD).
 ///
 /// COLISIONES:
-///   OnTriggerEnter         — contacto con el player; inicia GrabPlayer si procede.
+///   OnTriggerEnter          — contacto con el player; inicia GrabPlayer si procede.
 ///   OnControllerColliderHit — choque con pared o player durante DashGrab.
-///   LateUpdate             — resolución de penetración física player↔RioTutte.
+///   LateUpdate              — resolución de penetración física player↔RioTutte.
 /// </summary>
 [RequireComponent(typeof(RioTutteAttacks))]
 [RequireComponent(typeof(RioTutteAnimatorDriver))]
@@ -43,72 +43,15 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
     public bool fallDirection;
 
     // ── IPhaseChangeHandler ──────────────────────────────────────
-    public int CurrentPhase { get; private set; } = 0;
+    public int CurrentPhase { get; private set; }
 
     // ── PRIVATE ──────────────────────────────────────────────────
     private RioTutteAttacks _attacks;
     private Animator        _anim;
     private Vector3         _lastMoveDirection;
 
-<<<<<<< HEAD
-        _body = KnockbackPhysicsBody.Default;
-        _body.mass           = mass;
-        _body.groundFriction = groundFriction;
-        _body.airFriction    = airFriction;
-        _body.stopThreshold  = stopThreshold;
-    }
-
-    void Start()
-    {
-
-        var playerObj = FindAnyObjectByType<PlayerController>();
-        if (playerObj != null)
-        {
-            _playerTransform  = playerObj.transform;
-            _playerController = playerObj;
-            _playerCC         = playerObj.GetComponent<CharacterController>();
-        }
-        else
-        {
-            Debug.LogWarning("[RioTutte] No se encontró PlayerController en la escena.");
-        }
-    }
-
-    // --------------------------------------------------------
-    //  UPDATE
-    // --------------------------------------------------------
-
-    void Update()
-    {
-        ApplyGravity();
-
-        if (_attackTimer > 0f) _attackTimer -= Time.deltaTime;
-
-        // Knockback tick
-        if (_body.IsActive)
-        {
-            Vector3 delta = _body.Tick(_cc.isGrounded, Time.deltaTime);
-            if (_cc.enabled) _cc.Move(delta);
-            return; // No IA durante knockback
-        }
-
-        if (activeAI && _playerTransform != null)
-        {
-            MoveTowardPlayer();
-            if (_attackTimer <= 0f) TryAttackPlayer();
-        }
-    }
-
-    // --------------------------------------------------------
-    //  AI
-    // --------------------------------------------------------
-
-    float MinSeparation => _playerCC != null
-        ? _cc.radius + _playerCC.radius + _cc.skinWidth + _playerCC.skinWidth
-=======
     float MinSeparation => _player != null
         ? _cc.radius + _player.cc.radius + _cc.skinWidth + _player.cc.skinWidth
->>>>>>> 506919c (Camara follow to players)
         : attackRange * 0.5f;
 
     // ────────────────────────────────────────────────────────────
@@ -224,7 +167,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
                 break;
 
             default: // fase 2+
-                float dist = Vector3.Distance(transform.position, _player.transform.position);
+                float dist     = Vector3.Distance(transform.position, _player.transform.position);
                 bool  useSuperDash = dist > 5f || Random.value > 0.5f;
                 if (useSuperDash)
                     _attacks.StartSuperDash(_lastMoveDirection);
@@ -279,12 +222,10 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         switch (CurrentPhase)
         {
             case 1:
-                // RioTutte empieza a usar DashGrab
                 activeAI = true;
                 break;
 
             case 2:
-                // SuperDash + más resistente al knockback
                 endurance++;
                 _body.mass = mass + endurance * 0.4f;
                 // TODO: cinemática de transición fase 1→2 (TutorialRingManager)
@@ -309,7 +250,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         Vector3 toPlayer = _player.transform.position - transform.position;
         toPlayer.y = 0f;
 
-        if (toPlayer.magnitude > MinSeparation * 1.5f) return; // Fuera de rango
+        if (toPlayer.magnitude > MinSeparation * 1.5f) return;
 
         Vector3 dir = toPlayer.magnitude > 0.01f ? toPlayer.normalized : transform.forward;
         _player.knockbackHandler.ReceiveEnemyKnockback(dir, attackKnockbackBase);
@@ -320,9 +261,6 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
     void TriggerFall()
     {
         groundedTimer = 3f;
-        // Determina si cae hacia adelante o hacia atrás según la dirección del knockback recibido
-        // Simplificación: si el player está delante de donde mira RioTutte, cae de frente
-        // TODO: afinar con la dirección real del knockback cuando se implemente el GDD completo
         Vector3 toPlayer = (_player.transform.position - transform.position).normalized;
         fallDirection = Vector3.Dot(transform.right * Mathf.Sign(transform.localScale.x), toPlayer) < 0f;
     }
@@ -335,7 +273,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
     {
         if (!other.CompareTag("Player") || other.isTrigger) return;
 
-        if (_attacks.IsUsingSuperDash) return; // Intangible durante SuperDash
+        if (_attacks.IsUsingSuperDash) return;
 
         if (_attacks.IsUsingDashGrab)
         {
@@ -343,8 +281,6 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
             return;
         }
 
-        // Contacto normal — la separación física ya la gestiona LateUpdate.
-        // El daño al player por contacto se activará en la fase con sistema de HP real.
         // TODO: activar daño de contacto cuando se implemente fase 2
     }
 
@@ -354,15 +290,12 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
 
         if (hit.gameObject.CompareTag("Wall"))
         {
-            // DashGrab interrumpido por pared: cancela y resetea cooldown
             _attacks.CancelAttack();
             ResetAttackCooldown();
             return;
         }
 
         if (hit.gameObject.CompareTag("Player") && !_attacks.IsGrabbing)
-        {
             _attacks.GrabPlayer();
-        }
     }
 }

@@ -64,6 +64,16 @@ public class HUDManager : MonoBehaviour
         HidePanel();
     }
 
+    // Llamar desde TutorialRingManager.onEnemyOut.
+    // Desactiva el ring y pasa a modo libre manteniendo a RioTutte activo (siguiente fase).
+    public void OnRingPhaseComplete()
+    {
+        ringManager.enabled = false;
+        playerBoundary.enabled = false;
+        cameraMovement.freeMoveMode = true;
+        enemyRio.GetComponent<RioTutteEnemy>().facePlayerByZ = true;
+    }
+
     public void OnClickFreeMove()
     {
         Time.timeScale = 1f;

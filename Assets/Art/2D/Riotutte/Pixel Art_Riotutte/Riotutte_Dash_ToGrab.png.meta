@@ -6,7 +6,7 @@ TextureImporter:
   serializedVersion: 13
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -34,27 +34,27 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
-    wrapU: 0
-    wrapV: 0
+    wrapU: 1
+    wrapV: 1
     wrapW: 0
-  nPOTScale: 1
+  nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 0
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 24
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 0
+  alphaIsTransparency: 1
   spriteTessellationDetail: -1
-  textureType: 0
+  textureType: 8
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -95,12 +95,232 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Riotutte_Dash_ToGrab_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 52
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd8ea0d12b7962249a8b960a1fa0ca18
+      internalID: -1819726433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Riotutte_Dash_ToGrab_1
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 0
+        width: 56
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3562ea049a2aa394d8effa9af7813490
+      internalID: 1013247344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Riotutte_Dash_ToGrab_2
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 0
+        width: 64
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e7f2a922de2fab44b1d40b948e1e8dc
+      internalID: 1190031363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Riotutte_Dash_ToGrab_3
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 0
+        width: 64
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e85282b9cd37dd4419138084e1bc5aba
+      internalID: 127566921
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Riotutte_Dash_ToGrab_4
+      rect:
+        serializedVersion: 2
+        x: 248
+        y: 0
+        width: 57
+        height: 128
+      alignment: 9
+      pivot: {x: 0.4933793, y: 0.41744798}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53d0348bfcbfd5040a91d6b852f5b57e
+      internalID: -1805425749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Riotutte_Dash_ToGrab_5
+      rect:
+        serializedVersion: 2
+        x: 305
+        y: 0
+        width: 64
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22299bb6a0d462c41a8b8e68c55cfe04
+      internalID: 1051407809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Riotutte_Dash_ToGrab_6
+      rect:
+        serializedVersion: 2
+        x: 373
+        y: 0
+        width: 53
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5efd6900076f5954b84b076bb3ade77a
+      internalID: 1372343589
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Riotutte_Dash_ToGrab_7
+      rect:
+        serializedVersion: 2
+        x: 426
+        y: 0
+        width: 64
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5000005, y: 0.39975828}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6646b5f3a5befec4aaaf1d9c8e7cc1c4
+      internalID: 1735660830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Riotutte_Dash_ToGrab_8
+      rect:
+        serializedVersion: 2
+        x: 490
+        y: 0
+        width: 64
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5235863, y: 0.42924112}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 56d005ef3a6efa3488cb7b385c55903a
+      internalID: -1371458129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Riotutte_Dash_ToGrab_9
+      rect:
+        serializedVersion: 2
+        x: 574
+        y: 0
+        width: 64
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cfdeec5d2d151bb4f9c4e00cdb3ac466
+      internalID: 793173368
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 8e0a4a1b7c65fc246a9386cb2c9e4a2a
     internalID: 0
     vertices: []
     indices: 
@@ -109,7 +329,17 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Riotutte_Dash_ToGrab_0: -1819726433
+      Riotutte_Dash_ToGrab_1: 1013247344
+      Riotutte_Dash_ToGrab_2: 1190031363
+      Riotutte_Dash_ToGrab_3: 127566921
+      Riotutte_Dash_ToGrab_4: -1805425749
+      Riotutte_Dash_ToGrab_5: 1051407809
+      Riotutte_Dash_ToGrab_6: 1372343589
+      Riotutte_Dash_ToGrab_7: 1735660830
+      Riotutte_Dash_ToGrab_8: -1371458129
+      Riotutte_Dash_ToGrab_9: 793173368
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

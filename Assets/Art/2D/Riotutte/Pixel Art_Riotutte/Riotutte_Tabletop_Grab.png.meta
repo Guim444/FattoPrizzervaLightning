@@ -6,7 +6,7 @@ TextureImporter:
   serializedVersion: 13
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -34,27 +34,27 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
-    wrapU: 0
-    wrapV: 0
+    wrapU: 1
+    wrapV: 1
     wrapW: 0
-  nPOTScale: 1
+  nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 0
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 24
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 0
+  alphaIsTransparency: 1
   spriteTessellationDetail: -1
-  textureType: 0
+  textureType: 8
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -95,12 +95,166 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Riotutte_Tabletop_Grab_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 49
+        height: 128
+      alignment: 9
+      pivot: {x: 0.4383869, y: 0.4528274}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b65c11144c61b44b884b7a950138586
+      internalID: 332674026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Riotutte_Tabletop_Grab_1
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 0
+        width: 59
+        height: 128
+      alignment: 9
+      pivot: {x: 0.49360374, y: 0.4144997}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3f49d5a498996047b6be7b28e5e7ff7
+      internalID: 620136372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Riotutte_Tabletop_Grab_2
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 0
+        width: 57
+        height: 128
+      alignment: 9
+      pivot: {x: 0.4073101, y: 0.42039627}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e0c6fc99bfceec849a883bc4abb5ad62
+      internalID: -265586054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Riotutte_Tabletop_Grab_3
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 0
+        width: 51
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a406075d2b17ff48b9c7248799e4e42
+      internalID: 1277279929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Riotutte_Tabletop_Grab_4
+      rect:
+        serializedVersion: 2
+        x: 348
+        y: 0
+        width: 57
+        height: 128
+      alignment: 9
+      pivot: {x: 0.46689644, y: 0.4498791}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3ec9def4d966484f80174b50e0e3f61
+      internalID: 1755431236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Riotutte_Tabletop_Grab_5
+      rect:
+        serializedVersion: 2
+        x: 412
+        y: 0
+        width: 61
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5498427, y: 0.38206854}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46f0de6ef455fc5419c0a0e3c6fff1c5
+      internalID: -1681304742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Riotutte_Tabletop_Grab_6
+      rect:
+        serializedVersion: 2
+        x: 477
+        y: 0
+        width: 65
+        height: 128
+      alignment: 9
+      pivot: {x: 0.401301, y: 0.48231027}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a50530449558ac3498c2ede58866e38a
+      internalID: -432140794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: f731e5ad4346f2d48bd878a7e2ff0e58
     internalID: 0
     vertices: []
     indices: 
@@ -109,7 +263,14 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Riotutte_Tabletop_Grab_0: 332674026
+      Riotutte_Tabletop_Grab_1: 620136372
+      Riotutte_Tabletop_Grab_2: -265586054
+      Riotutte_Tabletop_Grab_3: 1277279929
+      Riotutte_Tabletop_Grab_4: 1755431236
+      Riotutte_Tabletop_Grab_5: -1681304742
+      Riotutte_Tabletop_Grab_6: -432140794
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

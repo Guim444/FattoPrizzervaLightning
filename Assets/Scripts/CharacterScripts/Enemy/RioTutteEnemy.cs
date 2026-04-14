@@ -69,6 +69,9 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
     //  UPDATE
     // ────────────────────────────────────────────────────────────
 
+    // Cuando true, RioTutte se orienta cada frame hacia el player por eje Z (modo libre / fase 2+).
+    public bool facePlayerByZ;
+
     protected override void Update()
     {
         // Sincroniza IsAttacking con el componente de ataques antes de que base.Update() lo lea
@@ -77,6 +80,8 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         base.Update();
 
         if (groundedTimer > 0f) groundedTimer -= Time.deltaTime;
+
+        if (facePlayerByZ) FlipTowardPlayerZ();
     }
 
     void LateUpdate()
@@ -244,6 +249,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
             case 2:
                 endurance++;
                 _body.mass = mass + endurance * 0.4f;
+                facePlayerByZ = true;
                 // TODO: cinemática de transición fase 1→2 (TutorialRingManager)
                 break;
 
@@ -251,7 +257,6 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
                 // TODO: cinemática fase final
                 break;
         }
-    }
 
         ResetAttackCooldown();
     }
@@ -273,6 +278,19 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         _player.knockbackHandler.ReceiveEnemyKnockback(dir, attackKnockbackBase);
         _anim.SetTrigger("Punch");
         ResetAttackCooldown();
+    }
+
+    void FlipTowardPlayerZ()
+    {
+        if (_player == null) return;
+        float dz = _player.transform.position.z - transform.position.z;
+        if (Mathf.Abs(dz) < 0.1f) return;
+
+        // Misma convención que el player: Z > 0 → derecha → scaleX negativo
+        float desired = dz > 0f ? -1f : 1f;
+        float current = Mathf.Sign(transform.localScale.x);
+        if (!Mathf.Approximately(current, desired))
+            transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
     }
 
     void TriggerFall()

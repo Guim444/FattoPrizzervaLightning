@@ -61,9 +61,17 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8368352364534002420, guid: ce58638a034b3be45b16fd1764f63ef6, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8368352364534002420, guid: ce58638a034b3be45b16fd1764f63ef6, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 8d77063570d1c8b49a213fb9962cecff, type: 2}
+    - target: {fileID: -8368352364534002420, guid: ce58638a034b3be45b16fd1764f63ef6, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0276fdb5c809faa488e25912aad88d5a, type: 2}
     - target: {fileID: 919132149155446097, guid: ce58638a034b3be45b16fd1764f63ef6, type: 3}
       propertyPath: m_Name
       value: RightHalf_Ornaments

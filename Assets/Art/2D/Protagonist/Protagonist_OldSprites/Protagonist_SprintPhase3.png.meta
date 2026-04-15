@@ -95,12 +95,122 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Protagonist_SprintPhase3_0
+      rect:
+        serializedVersion: 2
+        x: 569
+        y: 0
+        width: 124
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5422117, y: 0.49182168}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4246676cfa4b53498f562f923ac9be6
+      internalID: -1684798464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Protagonist_SprintPhase3_1
+      rect:
+        serializedVersion: 2
+        x: 698
+        y: 0
+        width: 121
+        height: 128
+      alignment: 9
+      pivot: {x: 0.55191016, y: 0.5000002}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01bb1fd4f5b66da48885eddd6ee09358
+      internalID: -20004951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Protagonist_SprintPhase3_2
+      rect:
+        serializedVersion: 2
+        x: 821
+        y: 0
+        width: 122
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 721b6294a6ba6144bacac9146e597314
+      internalID: -1388081000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Protagonist_SprintPhase3_3
+      rect:
+        serializedVersion: 2
+        x: 949
+        y: 0
+        width: 129
+        height: 128
+      alignment: 9
+      pivot: {x: 0.60394245, y: 0.49148875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f4ecb32f10db874e914fb4a09463402
+      internalID: -1082314812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Protagonist_SprintPhase3_4
+      rect:
+        serializedVersion: 2
+        x: 1095
+        y: 0
+        width: 131
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 992ab05445040bb4090df83aec9d4c29
+      internalID: -308205785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: c1dd656f0f6d83b4cb6bed63ece775d8
     internalID: 0
     vertices: []
     indices: 
@@ -109,7 +219,12 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Protagonist_SprintPhase3_0: -1684798464
+      Protagonist_SprintPhase3_1: -20004951
+      Protagonist_SprintPhase3_2: -1388081000
+      Protagonist_SprintPhase3_3: -1082314812
+      Protagonist_SprintPhase3_4: -308205785
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

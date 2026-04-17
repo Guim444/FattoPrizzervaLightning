@@ -176,10 +176,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (speedDisplay == null) return;
 
-        Vector3 delta = transform.position - _lastPosition;
-        delta.y = 0f;
-        float speed = delta.magnitude / Time.deltaTime;
-        _lastPosition = transform.position;
+        float speed = PlayerAnimations.instance != null
+            ? PlayerAnimations.instance.BlendSpeed
+            : 0f;
+
         speedDisplay.text = speed > 0.15f
             ? (Mathf.Round(speed * 10f) / 10f).ToString("F1")
             : "0,0";

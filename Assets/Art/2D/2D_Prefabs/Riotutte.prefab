@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 463081134366795710}
   - component: {fileID: 7643132555759407464}
   - component: {fileID: 8058192601901859618}
+  - component: {fileID: 3984912747352365538}
+  - component: {fileID: 8840908936774846747}
   m_Layer: 6
   m_Name: Riotutte
   m_TagString: 2D
@@ -30,8 +32,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.20644324, z: 0, w: 0.9784586}
   m_LocalPosition: {x: 1.38, y: 1.79, z: 2.63}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: -1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 23.828, z: 0}
@@ -102,7 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2b6bc1316cb05b4ca8f95fd52e43303, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _anim: {fileID: 8058192601901859618}
+  endurance: 0
   walkSpeed: 0.5
   activeAI: 1
   gravity: -20
@@ -110,9 +112,18 @@ MonoBehaviour:
   airFriction: 1.5
   stopThreshold: 0.15
   mass: 1.5
+  minZ: 0
+  maxZ: 100
+  minScale: 0.3
+  maxScale: 1
+  attackCooldownMin: 2
+  attackCooldownMax: 3
   attackRange: 1.5
-  attackCooldown: 2
   attackKnockbackBase: 1
+  phaseTwoHP: 30
+  groundedTimer: 0
+  fallDirection: 0
+  facePlayerByZ: 0
 --- !u!143 &7643132555759407464
 CharacterController:
   m_ObjectHideFlags: 0
@@ -132,12 +143,12 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 4.5
-  m_Radius: 1.5
+  m_Radius: 1.219118
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0, z: 0.5}
 --- !u!95 &8058192601901859618
 Animator:
   serializedVersion: 7
@@ -160,3 +171,32 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3984912747352365538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2289442210450065861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa8bfc19e826d6c408b9811816d1e04c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dashGrabTimeout: 2
+  grabHoldDuration: 0.8
+  superDashDuration: 0.73
+  dashGrabSpeed: 7.5
+  superDashSpeed: 15
+--- !u!114 &8840908936774846747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2289442210450065861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 954d7e45068738846915aec576258c67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

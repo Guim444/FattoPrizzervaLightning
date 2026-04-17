@@ -71,7 +71,10 @@ public class HUDManager : MonoBehaviour
         ringManager.enabled = false;
         playerBoundary.enabled = false;
         cameraMovement.freeMoveMode = true;
-        enemyRio.GetComponent<RioTutteEnemy>().facePlayerByZ = true;
+
+        var rioTutte = enemyRio.GetComponent<RioTutteEnemy>();
+        rioTutte.AdvancePhase();   // 0 → 1: activa DashGrab
+        rioTutte.facePlayerByZ = true;
     }
 
     public void OnClickFreeMove()

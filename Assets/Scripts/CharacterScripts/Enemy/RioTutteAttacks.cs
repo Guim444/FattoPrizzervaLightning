@@ -133,8 +133,9 @@ public class RioTutteAttacks : MonoBehaviour, IAttacker
                                       _player.transform.position.y,
                                       transform.position.z);
         _player.cc.Move(grabPos - _player.transform.position);
-        _player.canMove = false;
-        IsGrabbing      = true;
+        _player.canMove  = false;
+        IsUsingDashGrab  = false; // dashGrab → false en el animator: evita que AnyState interrumpa Grabbing
+        IsGrabbing       = true;
 
         // Cancela el coroutine del dash y lanza el de golpear
         if (_activeCoroutine != null) StopCoroutine(_activeCoroutine);
@@ -166,6 +167,16 @@ public class RioTutteAttacks : MonoBehaviour, IAttacker
             if (_cc.enabled)
                 _cc.Move(_dashDirection * dashGrabSpeed * Time.deltaTime);
 
+            // Detección de contacto con OverlapSphere (convención del proyecto).
+            // RioTutte no tiene trigger collider propio, por eso no usamos OnTriggerEnter.
+            Collider[] hits = Physics.OverlapSphere(transform.position, _cc.radius + 0.35f,
+                                                    LayerMask.GetMask("Player"));
+            if (hits.Length > 0)
+            {
+                GrabPlayer();
+                yield break;
+            }
+
             elapsed += Time.deltaTime;
             yield return null;
         }
@@ -177,8 +188,12 @@ public class RioTutteAttacks : MonoBehaviour, IAttacker
 
     IEnumerator GrabHitRoutine()
     {
-        _anim.SetTrigger("GrabPunch");
+        // Esperamos la duración del agarre antes de golpear.
+        // GrabPunch se dispara DESPUÉS para que el animator ya esté en Grabbing
+        // cuando recibe el trigger y pueda usarlo para salir al estado siguiente.
         yield return new WaitForSeconds(grabHoldDuration);
+
+        _anim.SetTrigger("GrabPunch");
 
         if (_player != null)
         {

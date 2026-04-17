@@ -34,6 +34,11 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
     [Tooltip("HP que absorbe RioTutte en fase 1 antes de pasar a fase 2.")]
     public float phaseTwoHP = 30f;
 
+    // ── PHASE TRANSITION ─────────────────────────────────────────
+    [Header("Phase Transition")]
+    [Tooltip("Segundos que RioTutte se queda quieto al entrar en una nueva fase (da peso a la transición).")]
+    public float phaseEntrancePause = 1.5f;
+
     // ── FALL STATE (fase 2) ──────────────────────────────────────
     [Header("Fase 2: Fall")]
     [Tooltip("Segundos que RioTutte permanece caído en el suelo.")]
@@ -100,9 +105,16 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         float   penetration = minDist - dist;
         int     playerEnd   = _player.combat.endurance;
 
-        if (_attacks.IsUsingDashGrab || _player.currentState == State.PunchRunning)
+        if (_attacks.IsUsingDashGrab)
         {
-            // RioTutte cede completamente: el ataque/PunchRun del player gana siempre
+            // Durante DashGrab no resolver penetración: necesitamos el solapamiento
+            // para que OnTriggerEnter / OnControllerColliderHit detecten el contacto y ejecuten GrabPlayer().
+            return;
+        }
+
+        if (_player.currentState == State.PunchRunning)
+        {
+            // PunchRun del player gana: RioTutte cede completamente
             _cc.enabled = false;
             transform.position += pushDir * penetration;
             _cc.enabled = true;
@@ -173,7 +185,8 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
 
             default: // fase 2+
                 float dist     = Vector3.Distance(transform.position, _player.transform.position);
-                bool  useSuperDash = dist > 5f || Random.value > 0.5f;
+                // Lejos → DashGrab (cierra distancia). Cerca → 50/50 entre DashGrab y SuperDash.
+                bool  useSuperDash = dist <= 5f && Random.value > 0.5f;
                 if (useSuperDash)
                     _attacks.StartSuperDash(_lastMoveDirection);
                 else
@@ -195,8 +208,11 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         switch (CurrentPhase)
         {
             case 1:
-                phaseTwoHP = Mathf.Max(0f, phaseTwoHP - dmg);
-                if (phaseTwoHP <= 0f) AdvancePhase();
+                if (dmg >= 30)
+                {
+                    phaseTwoHP = Mathf.Max(0f, phaseTwoHP - dmg);
+                    if (phaseTwoHP <= 0f) AdvancePhase();
+                }
                 break;
 
             case 2:
@@ -243,13 +259,15 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         switch (CurrentPhase)
         {
             case 1:
-                activeAI = true;
+                activeAI      = true;
+                groundedTimer = phaseEntrancePause;
                 break;
 
             case 2:
                 endurance++;
-                _body.mass = mass + endurance * 0.4f;
+                _body.mass    = mass + endurance * 0.4f;
                 facePlayerByZ = true;
+                groundedTimer = phaseEntrancePause;
                 // TODO: cinemática de transición fase 1→2 (TutorialRingManager)
                 break;
 

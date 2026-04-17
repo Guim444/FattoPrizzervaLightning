@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// Responsabilidad única: gestionar el estado de combate del jugador.
@@ -13,6 +14,13 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     // ==================================================
     [Header("Combat: Damage Values")]
     public float basicPunchDamage;
+
+    // ==================================================
+    // HP
+    // ==================================================
+    [Header("HP")]
+    [Tooltip("Vida máxima del jugador. También es la vida de inicio tras cada retry.")]
+    public int maxHP = 10;
 
    // ==================================================
     // COMBAT STATE
@@ -40,6 +48,13 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     public float punchRunningStaminaCostPhase3 = 6f;
 
     // ==================================================
+    // EVENTS
+    // ==================================================
+    [Header("Events")]
+    [Tooltip("Se dispara cuando HP llega a 0. Conectar a TutorialRingManager.ShowRetry() en el Inspector.")]
+    public UnityEvent onDied;
+
+    // ==================================================
     // PRIVATE REFS
     // ==================================================
     private PlayerController _player;
@@ -57,7 +72,7 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     public void Initialize(PlayerController player)
     {
         _player = player;
-        HP = 5;
+        HP = maxHP;
     }
 
     // ==================================================
@@ -91,7 +106,7 @@ public class PlayerCombat : MonoBehaviour, IDamageable
         _player.canMove = false;
         _player.animator.speed = 1;
         _player.animator.SetBool("isDead", true);
-        // TODO: conectar con BattleManager cuando exista
+        onDied.Invoke();
     }
 
     /// <summary>

@@ -73,12 +73,12 @@ public class CombatAttackHandler : MonoBehaviour
         AttackType attackType = KnockbackResolver.StateToAttackType(_player.currentState);
         Vector3 direction = GetAttackDirection();
 
-        // Esfera centrada junto al player (no proyectada lejos).
-        // Radio = punchRange cubre a cualquier enemigo en contacto cercano.
+        // Esfera proyectada hacia adelante: el origen se desplaza la mitad del radio
+        // en la dirección de ataque, así el alcance efectivo = radius * 1.5 en vez de radius.
         float radius = attackType == AttackType.PunchRunning ? punchRangeRunning : punchRange;
-        Vector3 origin = transform.position + Vector3.up * 0.5f;
+        Vector3 origin = transform.position + Vector3.up * 0.5f + direction * (radius * 0.5f);
 
-        Debug.DrawLine(origin, origin + direction * radius, Color.red, 0.5f);
+        Debug.DrawLine(transform.position + Vector3.up * 0.5f, origin + direction * radius, Color.red, 0.5f);
 
         LayerMask mask = enemyLayer.value == 0 ? ~0 : enemyLayer;
         Collider[] all = Physics.OverlapSphere(origin, radius, mask);

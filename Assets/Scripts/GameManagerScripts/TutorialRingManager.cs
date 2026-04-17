@@ -49,6 +49,13 @@ public class TutorialRingManager : MonoBehaviour
     public UnityEvent onEnemyOut;
 
     // ==================================================
+    // RETRY CANVAS
+    // ==================================================
+    [Header("Retry")]
+    [Tooltip("Canvas que aparece cuando el jugador pierde (HP 0 o sale del ring).")]
+    [SerializeField] private GameObject retryCanvas;
+
+    // ==================================================
     // PRIVATE
     // ==================================================
     private CharacterController _playerCC;
@@ -172,6 +179,43 @@ public class TutorialRingManager : MonoBehaviour
     // ==================================================
     // PUBLIC API
     // ==================================================
+
+    /// <summary>
+    /// Muestra el canvas de retry y pausa el juego.
+    /// Conectar a PlayerCombat.onDied y a TutorialRingManager.onPlayerOut en el Inspector.
+    /// </summary>
+    public void ShowRetry()
+    {
+        Time.timeScale = 0f;
+        if (retryCanvas != null) retryCanvas.SetActive(true);
+    }
+
+    /// <summary>
+    /// Llamado por el botón "Reintentar" del canvas.
+    /// Resetea posiciones y vida del player, pero mantiene la fase actual de RioTutte.
+    /// </summary>
+    public void Retry()
+    {
+        if (retryCanvas != null) retryCanvas.SetActive(false);
+        Time.timeScale = 1f;
+
+        RestartPositions();
+        _enemyThresholdTriggered = false;
+        _resultTriggered         = false;
+
+        if (player != null)
+        {
+            player.combat.HP       = player.combat.maxHP;
+            player.combat.endurance = playerStartEndurance;
+            player.canMove         = true;
+            player.animator.SetBool("isDead", false);
+        }
+
+        if (enemy != null)
+            enemy.activeAI = true;
+
+        Debug.Log("[TutorialRing] Retry — fase de RioTutte conservada.");
+    }
 
     public void ResetRing()
     {

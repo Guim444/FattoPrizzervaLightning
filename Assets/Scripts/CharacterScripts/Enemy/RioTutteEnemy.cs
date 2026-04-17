@@ -31,8 +31,8 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
 
     // ── PHASE ────────────────────────────────────────────────────
     [Header("Phase")]
-    [Tooltip("HP que absorbe RioTutte en fase 1 antes de pasar a fase 2.")]
-    public float phaseTwoHP = 30f;
+    [Tooltip("Número de RunningPunches que el player debe conectar en fase 1 para avanzar a fase 2.")]
+    public int runningPunchsToAdvance = 4;
 
     // ── PHASE TRANSITION ─────────────────────────────────────────
     [Header("Phase Transition")]
@@ -54,6 +54,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
     private RioTutteAttacks _attacks;
     private Animator        _anim;
     private Vector3         _lastMoveDirection;
+    private int             _runningPunchHits;
 
     float MinSeparation => _player != null
         ? _cc.radius + _player.cc.radius + _cc.skinWidth + _player.cc.skinWidth
@@ -208,10 +209,12 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         switch (CurrentPhase)
         {
             case 1:
-                if (dmg >= 30)
+                if (_player.currentState == State.PunchRunning)
                 {
-                    phaseTwoHP = Mathf.Max(0f, phaseTwoHP - dmg);
-                    if (phaseTwoHP <= 0f) AdvancePhase();
+                    _runningPunchHits++;
+                    Debug.Log($"[RioTutte] RunningPunch conectado: {_runningPunchHits}/{runningPunchsToAdvance}");
+                    if (_runningPunchHits >= runningPunchsToAdvance)
+                        AdvancePhase();
                 }
                 break;
 

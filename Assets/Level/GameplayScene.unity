@@ -858,6 +858,34 @@ PrefabInstance:
       propertyPath: myCamera
       value: 
       objectReference: {fileID: 1613816022}
+    - target: {fileID: 4348642207067692730, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: onDied.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4348642207067692730, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: onDied.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4348642207067692730, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: onDied.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1713666894}
+    - target: {fileID: 4348642207067692730, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: onDied.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4348642207067692730, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: onDied.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowGameOver
+      objectReference: {fileID: 0}
+    - target: {fileID: 4348642207067692730, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: onDied.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: RingResultUI, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4348642207067692730, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: onDied.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 5181433476781225031, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
       propertyPath: speedDisplay
       value: 
@@ -4121,6 +4149,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  retryCanvas: {fileID: 0}
 --- !u!114 &2021292070
 MonoBehaviour:
   m_ObjectHideFlags: 0

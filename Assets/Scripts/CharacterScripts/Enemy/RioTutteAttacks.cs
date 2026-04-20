@@ -167,11 +167,11 @@ public class RioTutteAttacks : MonoBehaviour, IAttacker
             if (_cc.enabled)
                 _cc.Move(_dashDirection * dashGrabSpeed * Time.deltaTime);
 
-            // Detección de contacto con OverlapSphere (convención del proyecto).
-            // RioTutte no tiene trigger collider propio, por eso no usamos OnTriggerEnter.
-            Collider[] hits = Physics.OverlapSphere(transform.position, _cc.radius + 0.35f,
-                                                    LayerMask.GetMask("Player"));
-            if (hits.Length > 0)
+            // Detección por distancia directa: no depende de layers ni de callbacks de CC estáticos.
+            Vector3 toPlayer2D = _player.transform.position - transform.position;
+            toPlayer2D.y = 0f;
+            float grabDist = _cc.radius + _player.cc.radius + 0.2f;
+            if (toPlayer2D.magnitude <= grabDist)
             {
                 GrabPlayer();
                 yield break;

@@ -200,7 +200,9 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
     {
         if (dmg <= 0) return;
 
-        _anim.SetTrigger("Hit");
+        // No interrumpir la animación de caída con Hit
+        if (groundedTimer <= 0f)
+            _anim.SetTrigger("Hit");
 
         // Si recibe knockback durante DashGrab, lo cancela
         if (_attacks.IsUsingDashGrab)
@@ -213,6 +215,11 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
                 {
                     _runningPunchHits++;
                     Debug.Log($"[RioTutte] RunningPunch conectado: {_runningPunchHits}/{runningPunchsToAdvance}");
+                    if (groundedTimer <= 0f) // solo inicia la caída si no está ya cayendo
+                    {
+                        fallDirection = false;
+                        groundedTimer = 3f;
+                    }
                     if (_runningPunchHits >= runningPunchsToAdvance)
                         AdvancePhase();
                 }

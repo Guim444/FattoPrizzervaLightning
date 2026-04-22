@@ -17651,11 +17651,6 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!4 &940454687 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3441257240747312107, guid: 74a8f1ae98529b448a02cce5909fb30b, type: 3}
-  m_PrefabInstance: {fileID: 3733887666151799668}
-  m_PrefabAsset: {fileID: 0}
 --- !u!21 &941610075
 Material:
   serializedVersion: 8
@@ -18891,7 +18886,7 @@ Transform:
   m_Children:
   - {fileID: 1012550087}
   - {fileID: 424248082}
-  - {fileID: 940454687}
+  - {fileID: 2022294589583177887}
   - {fileID: 1578643387}
   m_Father: {fileID: 749623740}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -20763,33 +20758,6 @@ Texture2D:
     offset: 0
     size: 0
     path: 
---- !u!1 &1292308797 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2632949465686497617, guid: 74a8f1ae98529b448a02cce5909fb30b, type: 3}
-  m_PrefabInstance: {fileID: 3733887666151799668}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &1292308800
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1292308797}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 1149198649271804147, guid: ef06afd97d75b714eab07b7be07a485c, type: 3}
 --- !u!4 &1310105803 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1315904134543502190, guid: 4c4ec5d5f45872f4e9a8bf40b0d34d03, type: 3}
@@ -33088,6 +33056,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4c4ec5d5f45872f4e9a8bf40b0d34d03, type: 3}
+--- !u!4 &2022294589583177887 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3441257240747312107, guid: 74a8f1ae98529b448a02cce5909fb30b, type: 3}
+  m_PrefabInstance: {fileID: 3733887666151799668}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2219711939041492253
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33505,9 +33478,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Outside_Snow
       objectReference: {fileID: 0}
+    - target: {fileID: 2632949465686497617, guid: 74a8f1ae98529b448a02cce5909fb30b, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 3441257240747312107, guid: 74a8f1ae98529b448a02cce5909fb30b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -42.4
+      value: -42
       objectReference: {fileID: 0}
     - target: {fileID: 3441257240747312107, guid: 74a8f1ae98529b448a02cce5909fb30b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -33523,15 +33500,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3441257240747312107, guid: 74a8f1ae98529b448a02cce5909fb30b, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3441257240747312107, guid: 74a8f1ae98529b448a02cce5909fb30b, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3441257240747312107, guid: 74a8f1ae98529b448a02cce5909fb30b, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3441257240747312107, guid: 74a8f1ae98529b448a02cce5909fb30b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -33548,10 +33525,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2632949465686497617, guid: 74a8f1ae98529b448a02cce5909fb30b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1292308800}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 74a8f1ae98529b448a02cce5909fb30b, type: 3}
 --- !u!1001 &4057189765102781174
 PrefabInstance:

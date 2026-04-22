@@ -48,6 +48,14 @@ public class HUDManager : MonoBehaviour
         HidePanel();
     }
 
+    // Llamado desde ChurchDoorTrigger: igual que OnClickCombatPosition
+    // pero además resetea la cámara a su posición de combate original.
+    public void OnEnterCombatFromTrigger()
+    {
+        OnClickCombatPosition();
+        cameraMovement.ResetToCombatX();
+    }
+
     public void OnClickStartHere()
     {
         Time.timeScale = 1f;

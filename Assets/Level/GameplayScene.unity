@@ -4364,7 +4364,6 @@ MonoBehaviour:
   playerTransform: {fileID: 2004004907}
   introSequenceManager: {fileID: 2021292073}
   ringManager: {fileID: 2021292069}
-  outSide: {fileID: 0}
   playerTransformFront: {fileID: 1426844573}
   playerAnimator: {fileID: 2004004937}
   combatStartPositionY: 1.5
@@ -5003,7 +5002,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2021292068}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5166d30c954744347bc7c9efcdc57b7c, type: 3}
   m_Name: 
@@ -5025,7 +5024,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2021292068}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31675de336212b549b99184f759a94b0, type: 3}
   m_Name: 

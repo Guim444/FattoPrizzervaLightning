@@ -14,8 +14,10 @@ public class HUDManager : MonoBehaviour
     [Header("Referencias")]
     [SerializeField] private Transform playerTransform;
 
-    [SerializeField] private TutorialRingManager ringManager;
+    [SerializeField] private IntroSequenceManager introSequenceManager;
 
+    [SerializeField] private TutorialRingManager ringManager;
+    // [SerializeField] GameObject outSide;
     [SerializeField] private GameObject playerTransformFront;
     [SerializeField] private Animator playerAnimator;
 
@@ -39,7 +41,6 @@ public class HUDManager : MonoBehaviour
         playerBoundary.enabled = false;
         enemy.SetActive(false);
         playerTransformFront.SetActive(false);
-
         enemyRio.SetActive(true);
         cameraMovement.freeMoveMode = false;
         cameraMovement.followPlayerX = false;
@@ -58,10 +59,12 @@ public class HUDManager : MonoBehaviour
 
     public void OnClickStartHere()
     {
+        introSequenceManager?.ShowBlackScreen();
         Time.timeScale = 1f;
         playerBoundary.enabled = true;
         enemy.SetActive(false);
         enemyRio.SetActive(false);
+        // outSide.SetActive(false);
         playerTransformFront.SetActive(false);
         cameraMovement.freeMoveMode = false;
         MovePlayerToX(combatStartPositionX);
@@ -70,6 +73,7 @@ public class HUDManager : MonoBehaviour
         ringManager.enabled = false;
         playerAnimator?.SetBool("IdleFront", true);
         HidePanel();
+        introSequenceManager?.StartIntro();
     }
 
     // Llamar desde TutorialRingManager.onEnemyOut.
@@ -81,7 +85,7 @@ public class HUDManager : MonoBehaviour
         cameraMovement.freeMoveMode = true;
 
         var rioTutte = enemyRio.GetComponent<RioTutteEnemy>();
-        rioTutte.AdvancePhase();   // 0 → 1: activa DashGrab
+        rioTutte.AdvancePhase(); // 0 → 1: activa DashGrab
         rioTutte.facePlayerByZ = true;
     }
 
@@ -133,6 +137,6 @@ public class HUDManager : MonoBehaviour
 
     private void HidePanel()
     {
-        selectionPanel.SetActive(false);
+        _canvasMain.SetActive(false);
     }
 }

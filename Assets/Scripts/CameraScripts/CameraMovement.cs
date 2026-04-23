@@ -33,7 +33,7 @@ public class CameraMovement : MonoBehaviour
     public bool zoomed;
 
     private float _combatX;
-    private float xOffset;
+    [HideInInspector] public float xOffset;
     private float xZoomTarget;
     private float xVel;
     private float zVel;

@@ -33479,8 +33479,8 @@ PrefabInstance:
       value: Outside_Snow
       objectReference: {fileID: 0}
     - target: {fileID: 2632949465686497617, guid: 74a8f1ae98529b448a02cce5909fb30b, type: 3}
-      propertyPath: m_Layer
-      value: 7
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3441257240747312107, guid: 74a8f1ae98529b448a02cce5909fb30b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -33521,6 +33521,14 @@ PrefabInstance:
     - target: {fileID: 3441257240747312107, guid: 74a8f1ae98529b448a02cce5909fb30b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4578720353351891076, guid: 74a8f1ae98529b448a02cce5909fb30b, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6342325749509214845, guid: 74a8f1ae98529b448a02cce5909fb30b, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

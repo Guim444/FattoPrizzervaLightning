@@ -14,9 +14,11 @@ public class HUDManager : MonoBehaviour
     [Header("Referencias")]
     [SerializeField] private Transform playerTransform;
 
+    [SerializeField] private PlayableAreaManager playableAreaManager;
     [SerializeField] private IntroSequenceManager introSequenceManager;
 
     [SerializeField] private TutorialRingManager ringManager;
+
     // [SerializeField] GameObject outSide;
     [SerializeField] private GameObject playerTransformFront;
     [SerializeField] private Animator playerAnimator;
@@ -59,6 +61,7 @@ public class HUDManager : MonoBehaviour
 
     public void OnClickStartHere()
     {
+        playableAreaManager.SetActive(false);
         introSequenceManager?.ShowBlackScreen();
         Time.timeScale = 1f;
         playerBoundary.enabled = true;

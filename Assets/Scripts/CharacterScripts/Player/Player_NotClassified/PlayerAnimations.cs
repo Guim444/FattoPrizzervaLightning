@@ -49,7 +49,8 @@ public class PlayerAnimations : MonoBehaviour
         animator.SetBool("isGliding",     player.currentState == State.Gliding);
         animator.SetBool("isKnockedback", player.knockbackHandler.ShowKnockbackAnim);
         animator.SetBool("isDead",        player.combat.HP <= 0);
-        animator.SetBool("IdleFront",     Mathf.Abs(player.movement.LastDirection.x) > 0.1f);
+        animator.SetBool("IdleFront",     player.currentState == State.Idle
+                                       && Mathf.Abs(player.movement.LastDirection.x) > 0.1f);
     }
 
     void UpdateBlendSpeed()

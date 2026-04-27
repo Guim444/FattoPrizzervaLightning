@@ -1435,17 +1435,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
---- !u!114 &448675060 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2480989804119407332, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
-  m_PrefabInstance: {fileID: 448675059}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1685155677cb184fbdd595c32875de7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!143 &448675061 stripped
 CharacterController:
   m_CorrespondingSourceObject: {fileID: 7686821030642128762, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
@@ -4926,6 +4915,17 @@ SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 8518268266261273643, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
   m_PrefabInstance: {fileID: 448675059}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2004004961 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1160761135607046887, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+  m_PrefabInstance: {fileID: 448675059}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83ee6cb2b4c402d4dbecdb428f7ac778, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2021292068
 GameObject:
   m_ObjectHideFlags: 0
@@ -5079,7 +5079,7 @@ MonoBehaviour:
   playerTransform: {fileID: 2004004907}
   playerCC: {fileID: 448675061}
   boundaryClamp: {fileID: 2004004936}
-  playerInputHandler: {fileID: 448675060}
+  playerInputHandler: {fileID: 2004004961}
   hudManager: {fileID: 1961765227}
   fadePanel: {fileID: 406121362}
   fadeInDuration: 10

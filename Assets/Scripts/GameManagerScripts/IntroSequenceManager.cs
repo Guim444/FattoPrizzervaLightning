@@ -59,7 +59,7 @@ public class IntroSequenceManager : MonoBehaviour
 
         // Prepara la apariencia del jugador bajo el negro — Combat Directly no pasa por aquí
         if (playerAnimator != null) playerAnimator.enabled = false;
-        if (playerCC != null) playerCC.enabled = false;
+        if (playerInputHandler != null) playerInputHandler.enabled = false;
         SetHumanForm();
     }
 
@@ -81,7 +81,7 @@ public class IntroSequenceManager : MonoBehaviour
         if (fadePanel != null)
             yield return StartCoroutine(FadeFromBlack());
 
-        if (playerCC != null) playerCC.enabled = true;
+        if (playerInputHandler != null) playerInputHandler.enabled = true;
         StartCoroutine(BlinkCoroutine());
     }
 

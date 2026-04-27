@@ -19,7 +19,7 @@ public class PlayableAreaManager : MonoBehaviour
     [Header("Personaje")]
     public PlayerController player;
     [Header("Activación")]
-    public bool isActive = true;
+    public bool isActive = false;
 
     private CharacterController _playerCC;
 

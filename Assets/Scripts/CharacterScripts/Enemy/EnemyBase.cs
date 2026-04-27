@@ -84,7 +84,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IKnockbackable
 
     protected virtual void Start()
     {
-        var playerObj = FindObjectOfType<PlayerController>();
+        var playerObj = FindFirstObjectByType<PlayerController>();
         if (playerObj != null)
             _player = playerObj;
         else

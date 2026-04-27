@@ -42,9 +42,16 @@ public class CameraMovement : MonoBehaviour
 
     private void Awake()
     {
-        _cam            = GetComponent<Camera>();
+        _cam = GetComponent<Camera>();
         if (_cam != null)
             _cam.farClipPlane = farClipPlane;
+
+        Vector3 pos = transform.position;
+        if (float.IsNaN(pos.x) || float.IsNaN(pos.y) || float.IsNaN(pos.z))
+        {
+            Debug.LogWarning("[CameraMovement] Posición inicial inválida — reseteando a origen.");
+            transform.position = Vector3.zero;
+        }
 
         _combatX    = transform.position.x;
         xZoomTarget = _combatX;
@@ -74,9 +81,19 @@ public class CameraMovement : MonoBehaviour
 
         float targetY = followPlayerY ? player.position.y + yOffset : combatY;
 
-        float newX = Mathf.SmoothDamp(transform.position.x, xZoomTarget, ref xVel, smoothTime);
-        float newY = Mathf.SmoothDamp(transform.position.y, targetY,     ref _yVel, ySmoothTime);
-        float newZ = Mathf.SmoothDamp(transform.position.z, targetZ,     ref zVel,  smoothTime);
+        float st  = Mathf.Max(smoothTime,  0.01f);
+        float sty = Mathf.Max(ySmoothTime, 0.01f);
+
+        float newX = Mathf.SmoothDamp(transform.position.x, xZoomTarget, ref xVel,  st);
+        float newY = Mathf.SmoothDamp(transform.position.y, targetY,     ref _yVel, sty);
+        float newZ = Mathf.SmoothDamp(transform.position.z, targetZ,     ref zVel,  st);
+
+        if (float.IsNaN(newX) || float.IsNaN(newY) || float.IsNaN(newZ))
+        {
+            xVel = 0f; zVel = 0f; _yVel = 0f;
+            Debug.LogWarning("[CameraMovement] NaN detectado — velocidades reseteadas.");
+            return;
+        }
 
         transform.position = new Vector3(newX, newY, newZ);
     }
@@ -99,6 +116,34 @@ public class CameraMovement : MonoBehaviour
     {
         xOffset     = -5f;
         xZoomTarget = player.position.x + xOffset;
+        zoomed      = false;
+    }
+
+    /// <summary>
+    /// Inicializa el seguimiento de cámara desde las posiciones actuales de escena,
+    /// sin hardcodear ningún offset. Usar cuando cámara y jugador ya están donde deben.
+    /// </summary>
+    public void RefreshFromCurrentPositions()
+    {
+        xOffset     = transform.position.x - player.position.x;
+        xZoomTarget = transform.position.x;
+        xVel        = 0f;
+        zoomed      = false;
+    }
+
+    /// <summary>
+    /// Teleporta la cámara a una posición exacta e inicializa todo el estado
+    /// de SmoothDamp para que no arrastre desde la posición anterior.
+    /// </summary>
+    public void TeleportTo(Vector3 position)
+    {
+        transform.position = position;
+        _combatX    = position.x;
+        xZoomTarget = position.x;
+        xVel        = 0f;
+        zVel        = 0f;
+        _yVel       = 0f;
+        combatY     = position.y;
         zoomed      = false;
     }
 }

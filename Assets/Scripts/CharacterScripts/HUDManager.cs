@@ -12,6 +12,8 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private GameObject selectionPanel;
 
     [Header("Referencias")]
+    [SerializeField] private GameObject OutsideChurch;
+
     [SerializeField] private Transform playerTransform;
 
     [SerializeField] private PlayableAreaManager playableAreaManager;
@@ -23,13 +25,17 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private GameObject playerTransformFront;
     [SerializeField] private Animator playerAnimator;
 
-    [Header("Configuración")]
-    [SerializeField] private float combatStartPositionY = 1.5f;
+    [Header("Configuración — Jugador")]
+    [SerializeField] private float startPositionX = 0f;
 
-    [SerializeField] private float combatStartPositionZ = 0f;
-    [SerializeField] private float combatStartPositionX = -90f;
+    [SerializeField] private float startPositionY = 2.25f;
+    [SerializeField] private float combatStartPositionX = 0f;
+    [SerializeField] private float combatStartPositionY = 2.25f;
+    [SerializeField] private float combatStartPositionZ = -2f;
 
-    [SerializeField] private float freePosition = 13f;
+    [Header("Configuración — Cámara")]
+    [SerializeField] private Vector3 combatCameraPosition = new Vector3(-11f, 3.35f, 0f);
+
 
     private void Awake()
     {
@@ -46,6 +52,9 @@ public class HUDManager : MonoBehaviour
         enemyRio.SetActive(true);
         cameraMovement.freeMoveMode = false;
         cameraMovement.followPlayerX = false;
+        MovePlayerToX(combatStartPositionX);
+        cameraMovement.TeleportTo(combatCameraPosition);
+        playableAreaManager.SetActive(true);
         ringManager?.RefreshStartPositions();
         ringManager.enabled = true;
         HidePanel();
@@ -65,13 +74,13 @@ public class HUDManager : MonoBehaviour
         introSequenceManager?.ShowBlackScreen();
         Time.timeScale = 1f;
         playerBoundary.enabled = true;
+        OutsideChurch.SetActive(false);
         enemy.SetActive(false);
         enemyRio.SetActive(false);
-        // outSide.SetActive(false);
         playerTransformFront.SetActive(false);
+        MoveStartPlayerToX(startPositionX);
         cameraMovement.freeMoveMode = false;
-        MovePlayerToX(combatStartPositionX);
-        cameraMovement.RefreshCombatX();
+        cameraMovement.RefreshFromCurrentPositions();
         cameraMovement.followPlayerX = true;
         ringManager.enabled = false;
         playerAnimator?.SetBool("IdleFront", true);
@@ -101,7 +110,9 @@ public class HUDManager : MonoBehaviour
         enemy.SetActive(true);
         enemyRio.SetActive(false);
         cameraMovement.freeMoveMode = true;
-        MovePlayer(freePosition);
+        cameraMovement.followPlayerX = false;
+        MovePlayerToX(combatStartPositionX);
+        cameraMovement.TeleportTo(combatCameraPosition);
         HidePanel();
     }
 
@@ -125,17 +136,24 @@ public class HUDManager : MonoBehaviour
         Debug.Log($"[HUDManager] MovePlayerToX — después: {playerTransform.position}");
     }
 
-    private void MovePlayer(float z)
+    private void MoveStartPlayerToX(float x)
     {
+        if (playerTransform == null)
+        {
+            Debug.LogError("[HUDManager] playerTransform no está asignado en el Inspector.");
+            return;
+        }
+
+        Debug.Log(
+            $"[HUDManager] MovePlayerToX — antes: {playerTransform.position}  →  destino X:{x} Y:{combatStartPositionY} Z:{combatStartPositionZ}");
+
         CharacterController cc = playerTransform.GetComponent<CharacterController>();
+        if (cc != null) cc.enabled = false;
+        playerTransform.position = new Vector3(x, startPositionY, combatStartPositionZ);
+        Physics.SyncTransforms();
+        if (cc != null) cc.enabled = true;
 
-        cc.enabled = false;
-
-        Vector3 pos = playerTransform.position;
-        pos.z = z;
-        playerTransform.position = pos;
-
-        cc.enabled = true;
+        Debug.Log($"[HUDManager] MovePlayerToX — después: {playerTransform.position}");
     }
 
     private void HidePanel()

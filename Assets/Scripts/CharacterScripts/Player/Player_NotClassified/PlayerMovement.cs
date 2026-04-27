@@ -119,6 +119,22 @@ public class PlayerMovement : MonoBehaviour
         return LastDirection;
     }
 
+    public void RefreshSpriteFlip()
+    {
+        UpdateSpriteFlip(LastFacingDirection.z);
+    }
+
+    // Para sprites con orientación natural invertida (idle, punch estático, etc.)
+    public void EnforceInvertedSpriteFlip()
+    {
+        float dirZ = LastFacingDirection.z;
+        if (Mathf.Abs(dirZ) < 0.1f) return;
+
+        Vector3 scale = transform.localScale;
+        scale.x = dirZ < 0 ? -Mathf.Abs(scale.x) : Mathf.Abs(scale.x);
+        transform.localScale = scale;
+    }
+
     private void UpdateSpriteFlip(float directionZ)
     {
         if (spriteRenderer == null) return;

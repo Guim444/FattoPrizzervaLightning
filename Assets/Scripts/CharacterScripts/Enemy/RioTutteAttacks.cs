@@ -65,7 +65,7 @@ public class RioTutteAttacks : MonoBehaviour, IAttacker
 
     void Start()
     {
-        _player = FindObjectOfType<PlayerController>();
+        _player = FindFirstObjectByType<PlayerController>();
         if (_player == null)
             Debug.LogWarning("[RioTutteAttacks] No se encontró PlayerController en la escena.");
     }

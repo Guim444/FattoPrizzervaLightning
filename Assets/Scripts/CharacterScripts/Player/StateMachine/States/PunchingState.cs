@@ -34,6 +34,8 @@ public class PunchingState : IStateActions
     public void Update()
     {
         var movement = player.movement;
+        movement.RefreshSpriteFlip();
+
         bool isMoving = movement.GetDirectionalInput().magnitude > 0.1f;
 
         if (isMoving)

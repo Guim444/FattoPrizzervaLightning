@@ -9,7 +9,7 @@ public class IntroSequenceManager : MonoBehaviour
     [SerializeField] private Transform playerTransform;
     [SerializeField] private CharacterController playerCC;
     [SerializeField] private PlayerBoundaryClamp boundaryClamp;
-    [SerializeField] private MonoBehaviour playerInputHandler;
+    [SerializeField] private PlayerInputHandler playerInputHandler;
     [SerializeField] private HUDManager hudManager;
 
     [Header("Fade")]

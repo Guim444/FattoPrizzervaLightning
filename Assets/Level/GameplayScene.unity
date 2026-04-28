@@ -1371,20 +1371,24 @@ PrefabInstance:
     m_TransformParent: {fileID: 301409532}
     m_Modifications:
     - target: {fileID: 1375970196312274560, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
+    - target: {fileID: 1375970196312274560, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
       propertyPath: m_Name
       value: Protagonist
       objectReference: {fileID: 0}
     - target: {fileID: 2303475782801046062, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -94.03
+      value: -97.613
       objectReference: {fileID: 0}
     - target: {fileID: 2303475782801046062, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -13
+      value: -19.7
       objectReference: {fileID: 0}
     - target: {fileID: 2303475782801046062, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.778
+      value: 0.33
       objectReference: {fileID: 0}
     - target: {fileID: 2303475782801046062, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5082,7 +5086,7 @@ MonoBehaviour:
   playerInputHandler: {fileID: 2004004961}
   hudManager: {fileID: 1961765227}
   fadePanel: {fileID: 406121362}
-  fadeInDuration: 10
+  fadeInDuration: 20
   _fullBlizzardRate: 2000
   playerSpriteRenderer: {fileID: 2004004950}
   humanSprite: {fileID: -789798510, guid: 4e8234de2d183514d868f19d92aaf82a, type: 3}

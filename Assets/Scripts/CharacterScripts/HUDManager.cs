@@ -60,10 +60,10 @@ public class HUDManager : MonoBehaviour
         HidePanel();
     }
 
-    // Llamado desde ChurchDoorTrigger: igual que OnClickCombatPosition
-    // pero además resetea la cámara a su posición de combate original.
+    // Llamado desde ChurchDoorTrigger: para el blink, fija alma, reposiciona cámara y entra a combate.
     public void OnEnterCombatFromTrigger()
     {
+        introSequenceManager?.StopBlinkAndGoSoul();
         OnClickCombatPosition();
         cameraMovement.ResetToCombatX();
     }

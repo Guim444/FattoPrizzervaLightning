@@ -756,13 +756,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 316893473}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0.2164396, w: 0.97629607}
-  m_LocalPosition: {x: -68.74, y: -11.3, z: -0.0679}
+  m_LocalRotation: {x: 0, y: 0, z: 0.17364816, w: 0.9848078}
+  m_LocalPosition: {x: -65.66, y: -20, z: 1.98}
   m_LocalScale: {x: 11.756793, y: 1, z: 2.5545096}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 266818183}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 25}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 20}
 --- !u!64 &316893475
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1121,7 +1121,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -13, y: 4.58, z: -0.78}
-  m_LocalScale: {x: 1, y: 26.265587, z: 44.29325}
+  m_LocalScale: {x: 1, y: 5.6035004, z: 21.005188}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 266818183}
@@ -1154,7 +1154,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 365929402}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1216,6 +1216,7 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
+  playerCamera: {fileID: 1613816022}
 --- !u!54 &365929408
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1379,12 +1380,16 @@ PrefabInstance:
       value: Protagonist
       objectReference: {fileID: 0}
     - target: {fileID: 2303475782801046062, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2303475782801046062, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
       propertyPath: m_LocalPosition.x
       value: -97.613
       objectReference: {fileID: 0}
     - target: {fileID: 2303475782801046062, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -19.7
+      value: -30.08
       objectReference: {fileID: 0}
     - target: {fileID: 2303475782801046062, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3570,13 +3575,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1613816017}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.024167223, y: 0.7058462, z: -0.024109408, w: 0.7075422}
-  m_LocalPosition: {x: -115, y: -22, z: 0}
+  m_LocalRotation: {x: 0.02414114, y: 0.7066946, z: -0.02414114, w: 0.7066946}
+  m_LocalPosition: {x: -115, y: -36.91, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1884281755}
-  m_LocalEulerAnglesHint: {x: 3.5, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 3.913, y: 90, z: 0}
 --- !u!114 &1613816019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3603,7 +3608,8 @@ MonoBehaviour:
   followPlayerY: 0
   yOffset: 1.5
   ySmoothTime: 0.4
-  farClipPlane: 40
+  farClipPlane: 200
+  fieldOfView: 40
   zoomed: 0
   xOffset: 0
 --- !u!114 &1613816020
@@ -3689,8 +3695,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
+  near clip plane: 0.5
+  far clip plane: 300
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -4402,8 +4408,8 @@ MonoBehaviour:
   ringManager: {fileID: 2021292069}
   playerTransformFront: {fileID: 1426844573}
   playerAnimator: {fileID: 2004004937}
-  startPositionX: -100
-  startPositionY: -24
+  startPositionX: -110
+  startPositionY: -30
   combatStartPositionX: 0.7
   combatStartPositionY: 2.25
   combatStartPositionZ: -2
@@ -5058,11 +5064,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundPlane: {fileID: 316893474}
   player: {fileID: 2004004907}
-  startTiltAngle: -25
-  endTiltAngle: -10
+  startTiltAngle: -20
+  endTiltAngle: -20
   playerStartX: -100
   walkDistance: 80
-  rotationStartProgress: 0.82
+  rotationStartProgress: 0.5
   cameraMovement: {fileID: 1613816019}
   yOffset: 1.5
   introCamXOffset: -15
@@ -5086,7 +5092,7 @@ MonoBehaviour:
   playerInputHandler: {fileID: 2004004961}
   hudManager: {fileID: 1961765227}
   fadePanel: {fileID: 406121362}
-  fadeInDuration: 20
+  fadeInDuration: 5
   _fullBlizzardRate: 2000
   playerSpriteRenderer: {fileID: 2004004950}
   humanSprite: {fileID: -789798510, guid: 4e8234de2d183514d868f19d92aaf82a, type: 3}
@@ -14927,7 +14933,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &9217042682586031062
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,6 +7,7 @@ public class CameraMovement : MonoBehaviour
 
     [Header("Target")]
     public Transform player;
+
     public Transform center;
 
     [Header("Smoothness")]
@@ -17,18 +18,22 @@ public class CameraMovement : MonoBehaviour
 
     [Header("Zonas Z")]
     public float zTransitionMin = 6f;
+
     public float zTransitionMax = 10f;
     public float zTargetInside = 4f;
     public float zTargetOutside = 14f;
 
     [Header("Posición Y")]
     public float combatY = 1.5f;
+
     public bool followPlayerY = false;
     public float yOffset = 1.5f;
     public float ySmoothTime = 0.4f;
 
     [Header("Cámara")]
     [SerializeField] float farClipPlane = 40f;
+
+    [SerializeField] float fieldOfView = 40f;
 
     public bool zoomed;
 
@@ -44,7 +49,10 @@ public class CameraMovement : MonoBehaviour
     {
         _cam = GetComponent<Camera>();
         if (_cam != null)
+        {
             _cam.farClipPlane = farClipPlane;
+            _cam.fieldOfView = fieldOfView;
+        }
 
         Vector3 pos = transform.position;
         if (float.IsNaN(pos.x) || float.IsNaN(pos.y) || float.IsNaN(pos.z))
@@ -53,17 +61,17 @@ public class CameraMovement : MonoBehaviour
             transform.position = Vector3.zero;
         }
 
-        _combatX    = transform.position.x;
+        _combatX = transform.position.x;
         xZoomTarget = _combatX;
-        xOffset     = transform.position.x - player.position.x;
-        xVel        = 0f;
+        xOffset = transform.position.x - player.position.x;
+        xVel = 0f;
     }
 
     public void ResetToCombatX()
     {
         xZoomTarget = _combatX;
-        xVel        = 0f;
-        zoomed      = false;
+        xVel = 0f;
+        zoomed = false;
     }
 
     void Update()
@@ -81,17 +89,18 @@ public class CameraMovement : MonoBehaviour
 
         float targetY = followPlayerY ? player.position.y + yOffset : combatY;
 
-        float st  = Mathf.Max(smoothTime,  0.01f);
+        float st = Mathf.Max(smoothTime, 0.01f);
         float sty = Mathf.Max(ySmoothTime, 0.01f);
 
-        float newX = Mathf.SmoothDamp(transform.position.x, xZoomTarget, ref xVel,  st);
-        float newY = Mathf.SmoothDamp(transform.position.y, targetY,     ref _yVel, sty);
-        float newZ = Mathf.SmoothDamp(transform.position.z, targetZ,     ref zVel,  st);
+        float newX = Mathf.SmoothDamp(transform.position.x, xZoomTarget, ref xVel, st);
+        float newY = Mathf.SmoothDamp(transform.position.y, targetY, ref _yVel, sty);
+        float newZ = Mathf.SmoothDamp(transform.position.z, targetZ, ref zVel, st);
 
         if (float.IsNaN(newX) || float.IsNaN(newY) || float.IsNaN(newZ))
         {
-            xVel = 0f; zVel = 0f; _yVel = 0f;
-            Debug.LogWarning("[CameraMovement] NaN detectado — velocidades reseteadas.");
+            xVel = 0f;
+            zVel = 0f;
+            _yVel = 0f;
             return;
         }
 
@@ -114,9 +123,9 @@ public class CameraMovement : MonoBehaviour
 
     public void RefreshCombatX()
     {
-        xOffset     = -5f;
+        xOffset = -5f;
         xZoomTarget = player.position.x + xOffset;
-        zoomed      = false;
+        zoomed = false;
     }
 
     /// <summary>
@@ -125,10 +134,10 @@ public class CameraMovement : MonoBehaviour
     /// </summary>
     public void RefreshFromCurrentPositions()
     {
-        xOffset     = transform.position.x - player.position.x;
+        xOffset = transform.position.x - player.position.x;
         xZoomTarget = transform.position.x;
-        xVel        = 0f;
-        zoomed      = false;
+        xVel = 0f;
+        zoomed = false;
     }
 
     /// <summary>
@@ -138,12 +147,12 @@ public class CameraMovement : MonoBehaviour
     public void TeleportTo(Vector3 position)
     {
         transform.position = position;
-        _combatX    = position.x;
+        _combatX = position.x;
         xZoomTarget = position.x;
-        xVel        = 0f;
-        zVel        = 0f;
-        _yVel       = 0f;
-        combatY     = position.y;
-        zoomed      = false;
+        xVel = 0f;
+        zVel = 0f;
+        _yVel = 0f;
+        combatY = position.y;
+        zoomed = false;
     }
 }

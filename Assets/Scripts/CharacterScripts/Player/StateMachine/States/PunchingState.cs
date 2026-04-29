@@ -28,7 +28,6 @@ public class PunchingState : IStateActions
         var combat = player.combat;
         stamina.ModifyStamina(-combat.punchStaminaCostPhase0);
         combat.normalPunchTimer = PunchDuration;
-
     }
 
     public void Update()

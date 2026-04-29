@@ -12,15 +12,15 @@
   <component name="ChangeListManager">
     <list default="true" id="d89429cd-0160-411e-9efc-9464283b12c3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FattoPrizzervaLightning/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FattoPrizzervaLightning/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Art/2D/2D_Prefabs/Protagonist.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/2D/2D_Prefabs/Protagonist.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Art/2D/Animations/Player/Protagonist_LeftRighWalk_Animator.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/2D/Animations/Player/Protagonist_LeftRighWalk_Animator.controller" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Art/2D/Protagonist/Protagonist_OldSprites/Protagonist_SprintPhase1.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/2D/Protagonist/Protagonist_OldSprites/Protagonist_SprintPhase1.png.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Level/GameplayScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Level/GameplayScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/ActionScripts/InputActions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/ActionScripts/InputActions.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Interfaces/IAdrenalinable.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Interfaces/IAdrenalinable.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Interfaces/TypeOfDamage.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Interfaces/TypeOfDamage.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Player/Player_NotClassified/KnockbackDebugger.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Player/Player_NotClassified/KnockbackDebugger.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CameraScripts/CameraMovement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/CameraScripts/CameraMovement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/HUDManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/HUDManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Player/ChurchDoorTrigger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Player/ChurchDoorTrigger.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Player/StateMachine/States/PunchRunningState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Player/StateMachine/States/PunchRunningState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Player/StateMachine/States/PunchingState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Player/StateMachine/States/PunchingState.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManagerScripts/IntroSequenceManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManagerScripts/IntroSequenceManager.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -34,12 +34,13 @@
     </persistenceIdMap>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="2445" />
+    <option name="cachedIndexableFilesCount" value="20" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/Art/2D/Animations/Player/Protagonist_LeftRighWalk_Animator.controller" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Player/ChurchDoorTrigger.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Player/PlayerZoneTransformation.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Player/Player_NotClassified/PlayerBoundaryClamp.cs" root0="FORCE_HIGHLIGHTING" />
@@ -146,7 +147,8 @@
       <workItem from="1777272343621" duration="14006000" />
       <workItem from="1777295755913" duration="72000" />
       <workItem from="1777355543488" duration="3133000" />
-      <workItem from="1777368125581" duration="3661000" />
+      <workItem from="1777368125581" duration="9450000" />
+      <workItem from="1777449418278" duration="5391000" />
     </task>
     <servers />
   </component>

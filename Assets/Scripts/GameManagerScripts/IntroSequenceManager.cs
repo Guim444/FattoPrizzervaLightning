@@ -39,6 +39,7 @@ public class IntroSequenceManager : MonoBehaviour
     [SerializeField] private float ratioQ4 = 0.15f;
 
     private ParticleSystem _blizzardPS;
+    private Coroutine _blinkCoroutine;
 
     private void Awake()
     {
@@ -82,7 +83,7 @@ public class IntroSequenceManager : MonoBehaviour
             yield return StartCoroutine(FadeFromBlack());
 
         if (playerInputHandler != null) playerInputHandler.enabled = true;
-        StartCoroutine(BlinkCoroutine());
+        _blinkCoroutine = StartCoroutine(BlinkCoroutine());
     }
 
     // ── Fade ──────────────────────────────────────────────────────────────
@@ -166,9 +167,20 @@ public class IntroSequenceManager : MonoBehaviour
         StartCoroutine(EnterChurchSequence(churchPosition));
     }
 
+    // Detiene el blink y fija la forma de alma — llamar antes de entrar a combate.
+    public void StopBlinkAndGoSoul()
+    {
+        if (_blinkCoroutine != null)
+        {
+            StopCoroutine(_blinkCoroutine);
+            _blinkCoroutine = null;
+        }
+        SetSoulForm();
+    }
+
     private IEnumerator EnterChurchSequence(Transform target)
     {
-        StopCoroutine(BlinkCoroutine());
+        StopBlinkAndGoSoul();
         if (playerAnimator != null) playerAnimator.enabled = true;
 
         playerInputHandler.enabled = false;

@@ -80,6 +80,7 @@ public class HUDManager : MonoBehaviour
         playerTransformFront.SetActive(false);
         MoveStartPlayerToX(startPositionX);
         cameraMovement.freeMoveMode = false;
+        cameraMovement.ApplyIntroFOV();
         cameraMovement.RefreshFromCurrentPositions();
         cameraMovement.followPlayerX = true;
         ringManager.enabled = false;
@@ -108,6 +109,7 @@ public class HUDManager : MonoBehaviour
         ringManager.enabled = false;
         playerBoundary.enabled = false;
         enemy.SetActive(true);
+        OutsideChurch.SetActive(true);
         enemyRio.SetActive(false);
         cameraMovement.freeMoveMode = true;
         cameraMovement.followPlayerX = false;

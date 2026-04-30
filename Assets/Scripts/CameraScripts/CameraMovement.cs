@@ -49,10 +49,7 @@ public class CameraMovement : MonoBehaviour
     {
         _cam = GetComponent<Camera>();
         if (_cam != null)
-        {
             _cam.farClipPlane = farClipPlane;
-            _cam.fieldOfView = fieldOfView;
-        }
 
         Vector3 pos = transform.position;
         if (float.IsNaN(pos.x) || float.IsNaN(pos.y) || float.IsNaN(pos.z))
@@ -138,6 +135,12 @@ public class CameraMovement : MonoBehaviour
         xZoomTarget = transform.position.x;
         xVel = 0f;
         zoomed = false;
+    }
+
+    public void ApplyIntroFOV()
+    {
+        if (_cam != null)
+            _cam.fieldOfView = fieldOfView;
     }
 
     /// <summary>

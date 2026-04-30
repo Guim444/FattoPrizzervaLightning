@@ -5,6 +5,7 @@ public class IntroSequenceManager : MonoBehaviour
 {
     [Header("Referencias")]
     [SerializeField] private GameObject blizzardRoot;
+    [SerializeField] private Camera mainCamera;
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private Transform playerTransform;
     [SerializeField] private CharacterController playerCC;
@@ -12,9 +13,23 @@ public class IntroSequenceManager : MonoBehaviour
     [SerializeField] private PlayerInputHandler playerInputHandler;
     [SerializeField] private HUDManager hudManager;
 
-    [Header("Fade")]
-    [SerializeField] private UnityEngine.UI.Image fadePanel;
-    [SerializeField] private float fadeInDuration = 0.3f;
+    [Header("Fase 1 — Quad negro + nieve")]
+    [SerializeField] private MeshRenderer blackScreenQuad;
+    [SerializeField] private float holdBlackDuration = 2f;
+
+    [Header("Fase 2 — Reveal del jugador")]
+    [SerializeField] private MeshRenderer fadeQuad;
+    [SerializeField] private float fadeInDuration = 4f;
+    // 1 = lineal | 2 = oscuro más tiempo, revela al final | 3 = muy dramático
+    [SerializeField] private float fadeExponent   = 2f;
+
+    [Header("Jugador — aparición")]
+    [SerializeField] private float autoWalkSpeed = 3f;
+    [SerializeField] private float introPlayerZ  = 0f;
+
+    [Header("Cámara intro")]
+    [SerializeField] private float introStartFOV = 20f;
+    [SerializeField] private float introEndFOV   = 40f;
 
     [Header("Blizzard")]
     [SerializeField] private float _fullBlizzardRate = 2000f;
@@ -26,11 +41,15 @@ public class IntroSequenceManager : MonoBehaviour
     [SerializeField] private Material humanMaterial;
 
     private Material _originalMaterial;
+    private Material _quadMaterial;
+    private Material _fadeMaterial;
+    private CameraClearFlags _originalClearFlags;
+    private Color _originalBgColor;
 
     [Header("Blink — Posición")]
     [SerializeField] private float blinkStartX   = -100f;
     [SerializeField] private float blinkEndX     = 0f;
-    [SerializeField] private float blinkInterval = 0.5f; // duración del ciclo completo
+    [SerializeField] private float blinkInterval = 0.5f;
 
     [Header("Blink — Ratio humano por cuarto (1=siempre humano, 0=siempre alma)")]
     [SerializeField] private float ratioQ1 = 1.00f;
@@ -48,19 +67,38 @@ public class IntroSequenceManager : MonoBehaviour
 
         if (playerSpriteRenderer != null)
             _originalMaterial = playerSpriteRenderer.sharedMaterial;
+
+        if (blackScreenQuad != null)
+            _quadMaterial = blackScreenQuad.material;
+
+        if (fadeQuad != null)
+            _fadeMaterial = fadeQuad.material;
+
+        if (mainCamera != null)
+        {
+            _originalClearFlags = mainCamera.clearFlags;
+            _originalBgColor    = mainCamera.backgroundColor;
+        }
     }
 
     public void ShowBlackScreen()
     {
-        if (fadePanel == null) return;
-        fadePanel.gameObject.SetActive(true);
-        var c = fadePanel.color;
-        c.a = 1f;
-        fadePanel.color = c;
+        // Quad negro cubre la escena
+        if (blackScreenQuad != null)
+            blackScreenQuad.gameObject.SetActive(true);
 
-        // Prepara la apariencia del jugador bajo el negro — Combat Directly no pasa por aquí
+        // Cámara: fondo negro + FOV inicial cerrado
+        if (mainCamera != null)
+        {
+            mainCamera.clearFlags      = CameraClearFlags.SolidColor;
+            mainCamera.backgroundColor = Color.black;
+            mainCamera.fieldOfView     = introStartFOV;
+        }
+
+        // Prepara al jugador — Combat Directly no pasa por aquí
         if (playerAnimator != null) playerAnimator.enabled = false;
         if (playerInputHandler != null) playerInputHandler.enabled = false;
+        if (playerTransform != null) playerTransform.gameObject.SetActive(false);
         SetHumanForm();
     }
 
@@ -71,7 +109,7 @@ public class IntroSequenceManager : MonoBehaviour
 
     private IEnumerator PlayIntroSequence()
     {
-        // Blizzard a tope ANTES del fade — cuando la pantalla se abra ya está la tormenta
+        // Blizzard a tope ANTES del fade — la tormenta ya está cuando la pantalla se abre
         if (_blizzardPS != null)
         {
             var emission = _blizzardPS.emission;
@@ -79,35 +117,98 @@ public class IntroSequenceManager : MonoBehaviour
             _blizzardPS.Play();
         }
 
-        if (fadePanel != null)
-            yield return StartCoroutine(FadeFromBlack());
+        // Activar player invisible durante el hold — tiene holdBlackDuration segundos para posicionarse en el suelo
+        ActivatePlayerInvisible();
+
+        yield return StartCoroutine(HoldBlackWithFOV());
+        yield return StartCoroutine(FadeFromBlack());
 
         if (playerInputHandler != null) playerInputHandler.enabled = true;
         _blinkCoroutine = StartCoroutine(BlinkCoroutine());
     }
 
-    // ── Fade ──────────────────────────────────────────────────────────────
+    // ── Hold negro: FOV se abre de introStartFOV → introEndFOV ───────────
+
+    private IEnumerator HoldBlackWithFOV()
+    {
+        if (holdBlackDuration <= 0f) yield break;
+
+        if (mainCamera != null)
+            mainCamera.fieldOfView = introStartFOV;
+
+        yield return new WaitForSecondsRealtime(holdBlackDuration);
+    }
+
+    // ── Fade: swap de quads, jugador camina ──────────────────────────────
+
+    private void ActivatePlayerInvisible()
+    {
+        if (playerTransform == null) return;
+        playerCC.enabled = false;
+        Vector3 pos = playerTransform.position;
+        pos.z = introPlayerZ;
+        playerTransform.position = pos;
+        Physics.SyncTransforms();
+        playerCC.enabled = true;
+        SetPlayerAlpha(0f);
+        playerTransform.gameObject.SetActive(true);
+    }
 
     private IEnumerator FadeFromBlack()
     {
-        fadePanel.gameObject.SetActive(true);
-        var c = fadePanel.color;
-        c.a = 1f;
-        fadePanel.color = c;
+        // Activar el transparente con alpha=1 PRIMERO, esperar un frame, luego quitar el opaco
+        SetFadeQuadAlpha(1f);
+        if (fadeQuad != null) fadeQuad.gameObject.SetActive(true);
+        yield return null;
+        if (blackScreenQuad != null) blackScreenQuad.gameObject.SetActive(false);
 
+        // Fade: quad desaparece, FOV se abre, jugador aparece caminando — todo a la vez
         float elapsed = 0f;
         while (elapsed < fadeInDuration)
         {
             elapsed += Time.unscaledDeltaTime;
-            c.a = Mathf.Lerp(1f, 0f, elapsed / fadeInDuration);
-            fadePanel.color = c;
+            float t      = Mathf.Clamp01(elapsed / fadeInDuration);
+            float reveal = Mathf.Pow(t, fadeExponent);
+
+            SetFadeQuadAlpha(1f - reveal);
+            SetPlayerAlpha(reveal);
+            if (mainCamera != null)
+                mainCamera.fieldOfView = Mathf.Lerp(introStartFOV, introEndFOV, t);
+            playerCC.Move(Vector3.right * autoWalkSpeed * Time.deltaTime);
+
             yield return null;
         }
 
-        c.a = 0f;
-        fadePanel.color = c;
-        fadePanel.gameObject.SetActive(false);
-        
+        if (mainCamera != null)
+            mainCamera.fieldOfView = introEndFOV;
+
+        SetFadeQuadAlpha(0f);
+        SetPlayerAlpha(1f);
+        if (fadeQuad != null) fadeQuad.gameObject.SetActive(false);
+
+        if (mainCamera != null)
+        {
+            mainCamera.clearFlags      = _originalClearFlags;
+            mainCamera.backgroundColor = _originalBgColor;
+        }
+    }
+
+    private void SetFadeQuadAlpha(float alpha)
+    {
+        if (_fadeMaterial == null) return;
+        Color c = _fadeMaterial.color;
+        c.a = alpha;
+        _fadeMaterial.color = c;
+        if (_fadeMaterial.HasProperty("_BaseColor"))
+            _fadeMaterial.SetColor("_BaseColor", c);
+    }
+
+    private void SetPlayerAlpha(float alpha)
+    {
+        if (playerSpriteRenderer == null) return;
+        Color c = playerSpriteRenderer.color;
+        c.a = alpha;
+        playerSpriteRenderer.color = c;
     }
 
     // ── Blink ─────────────────────────────────────────────────────────────
@@ -167,7 +268,6 @@ public class IntroSequenceManager : MonoBehaviour
         StartCoroutine(EnterChurchSequence(churchPosition));
     }
 
-    // Detiene el blink y fija la forma de alma — llamar antes de entrar a combate.
     public void StopBlinkAndGoSoul()
     {
         if (_blinkCoroutine != null)

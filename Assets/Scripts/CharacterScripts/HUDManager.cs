@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class HUDManager : MonoBehaviour
 {
-    [SerializeField] private CameraMovement cameraMovement;
     [SerializeField] private GameObject enemy;
     [SerializeField] private GameObject enemyRio;
     [SerializeField] private PlayerBoundaryClamp playerBoundary;
     [SerializeField] GameObject _canvasMain;
+    [SerializeField] GameObject _canvasUIStats;
 
     [Header("UI")]
     [SerializeField] private GameObject selectionPanel;
@@ -50,26 +50,21 @@ public class HUDManager : MonoBehaviour
         enemy.SetActive(false);
         playerTransformFront.SetActive(false);
         enemyRio.SetActive(true);
-        cameraMovement.freeMoveMode = false;
-        cameraMovement.followPlayerX = false;
         MovePlayerToX(combatStartPositionX);
-        cameraMovement.TeleportTo(combatCameraPosition);
         playableAreaManager.SetActive(true);
         ringManager?.RefreshStartPositions();
         ringManager.enabled = true;
         HidePanel();
     }
 
-    // Llamado desde ChurchDoorTrigger: para el blink, fija alma, reposiciona cámara y entra a combate.
     public void OnEnterCombatFromTrigger()
     {
-        introSequenceManager?.StopBlinkAndGoSoul();
         OnClickCombatPosition();
-        cameraMovement.ResetToCombatX();
     }
 
     public void OnClickStartHere()
     {
+        _canvasUIStats.SetActive(false);
         playableAreaManager.SetActive(false);
         introSequenceManager?.ShowBlackScreen();
         Time.timeScale = 1f;
@@ -79,10 +74,6 @@ public class HUDManager : MonoBehaviour
         enemyRio.SetActive(false);
         playerTransformFront.SetActive(false);
         MoveStartPlayerToX(startPositionX);
-        cameraMovement.freeMoveMode = false;
-        cameraMovement.ApplyIntroFOV();
-        cameraMovement.RefreshFromCurrentPositions();
-        cameraMovement.followPlayerX = true;
         ringManager.enabled = false;
         playerAnimator?.SetBool("IdleFront", true);
         HidePanel();
@@ -95,8 +86,6 @@ public class HUDManager : MonoBehaviour
     {
         ringManager.enabled = false;
         playerBoundary.enabled = false;
-        cameraMovement.freeMoveMode = true;
-
         var rioTutte = enemyRio.GetComponent<RioTutteEnemy>();
         rioTutte.AdvancePhase(); // 0 → 1: activa DashGrab
         rioTutte.facePlayerByZ = true;
@@ -111,10 +100,7 @@ public class HUDManager : MonoBehaviour
         enemy.SetActive(true);
         OutsideChurch.SetActive(true);
         enemyRio.SetActive(false);
-        cameraMovement.freeMoveMode = true;
-        cameraMovement.followPlayerX = false;
         MovePlayerToX(combatStartPositionX);
-        cameraMovement.TeleportTo(combatCameraPosition);
         HidePanel();
     }
 

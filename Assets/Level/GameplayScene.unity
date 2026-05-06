@@ -213,7 +213,7 @@ Transform:
   m_GameObject: {fileID: 16785035}
   serializedVersion: 2
   m_LocalRotation: {x: 0.03812094, y: 0.69994575, z: -0.038784105, w: 0.71212256}
-  m_LocalPosition: {x: -112.00404, y: -29.473013, z: -0.55759823}
+  m_LocalPosition: {x: -114.982925, y: -29.147572, z: -0.609284}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -242,7 +242,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 2004004907}
   m_Lens:
-    FieldOfView: 59.99997
+    FieldOfView: 50
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 20000
@@ -304,7 +304,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -245.24557, y: -116.58615}
-  m_SizeDelta: {x: 191.5089, y: 44.8277}
+  m_SizeDelta: {x: 250, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &39879215
 MonoBehaviour:
@@ -455,7 +455,7 @@ MonoBehaviour:
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
   m_ScreenY: 0.5
-  m_CameraDistance: 10
+  m_CameraDistance: 12.99706
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
   m_DeadZoneDepth: 0
@@ -1749,8 +1749,8 @@ MonoBehaviour:
   player: {fileID: 2004004907}
   xTransitionMin: -7
   xTransitionMax: 0
-  fovClose: 35
-  fovFar: 60
+  distanceClose: 4
+  distanceFar: 13
   smoothTime: 1
 --- !u!4 &685871264
 Transform:
@@ -2206,8 +2206,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 266.68115, y: -106.58615}
-  m_SizeDelta: {x: 193.3624, y: 44.8277}
+  m_AnchoredPosition: {x: 341, y: -116.59}
+  m_SizeDelta: {x: 250, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &811697717
 MonoBehaviour:
@@ -3568,7 +3568,7 @@ Transform:
   m_GameObject: {fileID: 1613816017}
   serializedVersion: 2
   m_LocalRotation: {x: 0.03812094, y: 0.69994575, z: -0.038784105, w: 0.71212256}
-  m_LocalPosition: {x: -112.00404, y: -29.473013, z: -0.55759823}
+  m_LocalPosition: {x: -114.982925, y: -29.147572, z: -0.609284}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3689,7 +3689,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 20000
-  field of view: 59.99997
+  field of view: 50
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -4685,8 +4685,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000011444, y: 0}
-  m_SizeDelta: {x: 252.6731, y: 50.3881}
+  m_AnchoredPosition: {x: 48, y: -116.59}
+  m_SizeDelta: {x: 250, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2002800131
 MonoBehaviour:

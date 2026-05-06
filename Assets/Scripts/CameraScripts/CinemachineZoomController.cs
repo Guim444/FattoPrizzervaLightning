@@ -2,9 +2,9 @@ using Cinemachine;
 using UnityEngine;
 
 /// <summary>
-/// Controla el zoom (FOV) de la virtual camera según la profundidad del jugador en X.
-/// Cuando el jugador se acerca a la cámara (X menor) el FOV disminuye (zoom in).
-/// Cuando se aleja (X mayor) el FOV aumenta (zoom out).
+/// Controla el zoom moviendo físicamente la cámara (CameraDistance) según la
+/// profundidad del jugador en X. Al no cambiar el FOV, el fondo no sufre
+/// distorsión de perspectiva.
 /// </summary>
 public class CinemachineZoomController : MonoBehaviour
 {
@@ -19,17 +19,18 @@ public class CinemachineZoomController : MonoBehaviour
     [Tooltip("Por encima de este X el jugador está 'lejos' de la cámara")]
     [SerializeField] private float xTransitionMax = 10f;
 
-    [Header("FOV")]
-    [Tooltip("FOV cuando el jugador está cerca (X pequeña)")]
-    [SerializeField] private float fovClose = 45f;
+    [Header("Distancia de cámara")]
+    [Tooltip("Distancia cuando el jugador está cerca (zoom in)")]
+    [SerializeField] private float distanceClose = 7f;
 
-    [Tooltip("FOV cuando el jugador está lejos (X grande)")]
-    [SerializeField] private float fovFar = 65f;
+    [Tooltip("Distancia cuando el jugador está lejos (zoom out)")]
+    [SerializeField] private float distanceFar = 13f;
 
-    [Tooltip("Velocidad de la transición de FOV")]
+    [Tooltip("Velocidad de la transición")]
     [SerializeField] private float smoothTime = 0.3f;
 
-    private float _fovVelocity;
+    private CinemachineFramingTransposer _transposer;
+    private float _distanceVelocity;
 
     private void Awake()
     {
@@ -40,24 +41,32 @@ public class CinemachineZoomController : MonoBehaviour
             return;
         }
 
-        virtualCamera.m_Lens.FieldOfView = GetTargetFOV();
+        _transposer = virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+        if (_transposer == null)
+        {
+            Debug.LogError("[CinemachineZoomController] No se encontró CinemachineFramingTransposer.");
+            enabled = false;
+            return;
+        }
+
+        _transposer.m_CameraDistance = GetTargetDistance();
     }
 
     private void Update()
     {
-        float target  = GetTargetFOV();
-        float current = virtualCamera.m_Lens.FieldOfView;
-        virtualCamera.m_Lens.FieldOfView = Mathf.SmoothDamp(current, target, ref _fovVelocity, smoothTime);
+        float target  = GetTargetDistance();
+        float current = _transposer.m_CameraDistance;
+        _transposer.m_CameraDistance = Mathf.SmoothDamp(current, target, ref _distanceVelocity, smoothTime);
     }
 
-    private float GetTargetFOV()
+    private float GetTargetDistance()
     {
         float x = player.position.x;
 
-        if (x <= xTransitionMin) return fovClose;
-        if (x >= xTransitionMax) return fovFar;
+        if (x <= xTransitionMin) return distanceClose;
+        if (x >= xTransitionMax) return distanceFar;
 
         float t = (x - xTransitionMin) / (xTransitionMax - xTransitionMin);
-        return Mathf.Lerp(fovClose, fovFar, t);
+        return Mathf.Lerp(distanceClose, distanceFar, t);
     }
 }

@@ -69,6 +69,7 @@ public class PlayerMovement : MonoBehaviour
     private float _verticalVelocity = 0f;
     private CharacterController _cc;
     private PlayerInputHandler _input;
+    private PlayerController _playerController;
 
     // ==================================================
     // INITIALIZATION
@@ -78,6 +79,7 @@ public class PlayerMovement : MonoBehaviour
     {
         _cc = GetComponent<CharacterController>();
         _input = GetComponent<PlayerInputHandler>();
+        _playerController = GetComponent<PlayerController>();
         _verticalVelocity = -2f;
     }
 
@@ -128,6 +130,12 @@ public class PlayerMovement : MonoBehaviour
     public void EnforceInvertedSpriteFlip()
     {
         float dirZ = LastFacingDirection.z;
+        float dirX = LastFacingDirection.x;
+
+        // IdleFront: activo cuando la última dirección es principalmente en X (profundidad)
+        _playerController?.animator?.SetBool("IdleFront",
+            Mathf.Abs(dirX) > Mathf.Abs(dirZ));
+
         if (Mathf.Abs(dirZ) < 0.1f) return;
 
         Vector3 scale = transform.localScale;
@@ -137,6 +145,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void UpdateSpriteFlip(float directionZ)
     {
+        // IdleFront: activo cuando el jugador se mueve en profundidad (X), no en horizontal (Z)
+        _playerController?.animator?.SetBool("IdleFront",
+            Mathf.Abs(LastFacingDirection.x) > Mathf.Abs(directionZ));
+
         if (spriteRenderer == null) return;
         if (Mathf.Abs(directionZ) < 0.1f) return;
 

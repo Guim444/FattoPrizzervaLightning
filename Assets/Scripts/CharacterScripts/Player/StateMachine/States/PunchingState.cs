@@ -23,6 +23,7 @@ public class PunchingState : IStateActions
         if (punchExecuted) return;
         punchExecuted = true;
 
+        player.movement.RefreshSpriteFlip();
         player.animator.SetTrigger("isPunching");
 
         var combat = player.combat;

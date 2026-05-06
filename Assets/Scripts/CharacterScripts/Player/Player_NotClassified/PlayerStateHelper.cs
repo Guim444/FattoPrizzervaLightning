@@ -34,26 +34,27 @@ public static class PlayerStateHelper
             if (staminaManager.isTired)
                 return State.Deenergized;
 
-            // Run input held AND enough stamina para correr
-            if (input.IsRunInputHeld && staminaManager.currentStamina > 0)
+            if (input.IsRunInputHeld && !staminaManager.isTired)
             {
-                // Punch presionado mientras corre → PunchRunning (solo en press, no en hold)
+                // Sprint + punch: PunchRunning no requiere stamina > 0, solo no estar agotado.
+                // (currentStamina puede llegar a 0 un frame antes de que isTired se active,
+                // lo que causaba que el punch cayera al bloque de walking y devolviera Punching)
                 if (input.IsPunchInputPressed)
                     return State.PunchRunning;
 
-                return State.Running;
+                // Mantener carrera solo mientras haya stamina
+                if (staminaManager.currentStamina > 0)
+                    return State.Running;
             }
-            else
-            {
-                // Punch presionado mientras camina → Punching
-                if (input.IsPunchInputPressed)
-                {
-                    input.ConsumePunchInput();
-                    return State.Punching;
-                }
 
-                return State.Moving;
+            // Andando o sprint sin stamina
+            if (input.IsPunchInputPressed)
+            {
+                input.ConsumePunchInput();
+                return State.Punching;
             }
+
+            return State.Moving;
         }
         else
         {

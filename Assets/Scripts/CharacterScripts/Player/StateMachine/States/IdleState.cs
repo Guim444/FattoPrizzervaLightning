@@ -15,6 +15,7 @@ public class IdleState : IStateActions
     {
         stamina.SetIdle();
         player.animator.speed = 1f;
+        player.movement.EnforceInvertedSpriteFlip();
     }
 
     public void Update()

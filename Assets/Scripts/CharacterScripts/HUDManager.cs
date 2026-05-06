@@ -35,6 +35,7 @@ public class HUDManager : MonoBehaviour
 
     [Header("Configuración — Cámara")]
     [SerializeField] private Vector3 combatCameraPosition = new Vector3(-11f, 3.35f, 0f);
+    [SerializeField] private CinemachineZoomController cinemachineZoomController;
 
 
     private void Awake()
@@ -46,6 +47,7 @@ public class HUDManager : MonoBehaviour
     public void OnClickCombatPosition()
     {
         Time.timeScale = 1f;
+        cinemachineZoomController?.gameObject.SetActive(true);
         playerBoundary.enabled = false;
         enemy.SetActive(false);
         playerTransformFront.SetActive(false);
@@ -66,6 +68,7 @@ public class HUDManager : MonoBehaviour
     {
         _canvasUIStats.SetActive(false);
         playableAreaManager.SetActive(false);
+        cinemachineZoomController?.gameObject.SetActive(false);
         introSequenceManager?.ShowBlackScreen();
         Time.timeScale = 1f;
         playerBoundary.enabled = true;

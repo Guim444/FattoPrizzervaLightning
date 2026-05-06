@@ -14,6 +14,7 @@ public class MovingState : IStateActions
     public void Enter()
     {
         stamina.SetWalking();
+        player.movement.RefreshSpriteFlip();
     }
 
     public void Update()

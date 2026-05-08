@@ -257,6 +257,15 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         // TODO: animación de derrota + notificar TutorialRingManager
     }
 
+    /// <summary>
+    /// Resetea contadores internos de fase sin cambiar CurrentPhase.
+    /// Llamado por TutorialRingManager en cada retry.
+    /// </summary>
+    public void ResetPhaseCounters()
+    {
+        _runningPunchHits = 0;
+    }
+
     // ────────────────────────────────────────────────────────────
     //  IPhaseChangeHandler
     // ────────────────────────────────────────────────────────────

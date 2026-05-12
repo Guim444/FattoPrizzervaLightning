@@ -12,27 +12,51 @@
   <component name="ChangeListManager">
     <list default="true" id="d89429cd-0160-411e-9efc-9464283b12c3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FattoPrizzervaLightning/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FattoPrizzervaLightning/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/2D/Animations/Player/Protagonist_LeftRighWalk_Animator.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/2D/Animations/Player/Protagonist_LeftRighWalk_Animator.controller" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Art/2D/2D_Prefabs/Protagonist.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/2D/2D_Prefabs/Protagonist.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Art/2D/Bridging/Bridging_Plant/Plant_IdleFlip/Animator_General_GenericPlant_IdleFlip.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/2D/Bridging/Bridging_Plant/Plant_IdleFlip/Animator_General_GenericPlant_IdleFlip.controller" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Art/2D/Bridging/Bridging_Plant/Plant_WindyFlip/Animation_General_GenericPlant_WindyFlip.anim" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/2D/Bridging/Bridging_Plant/Plant_WindyFlip/Animation_General_GenericPlant_WindyFlip.anim" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Art/2D/Bridging/Bridging_Plant/Plant_WindyFlip/Animator_General_GenericPlant_WindyFlip_Spritesheet_0 (1).controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/2D/Bridging/Bridging_Plant/Plant_WindyFlip/Animator_General_GenericPlant_WindyFlip_Spritesheet_0 (1).controller" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Art/2D/Bridging/Bridging_ThinTree/Animation_General_ThinLog_Idle.anim" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/2D/Bridging/Bridging_ThinTree/Animation_General_ThinLog_Idle.anim" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Level/EverythingScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Level/EverythingScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Level/GameplayScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Level/GameplayScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CameraScripts/CameraMovement.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CameraScripts/CameraMovement.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Enemy/EnemyBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Enemy/EnemyBase.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Enemy/RioTutteEnemy.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Enemy/RioTutteEnemy.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/EnvironmentScripts/LightingScripts/SpriteObjectShadow.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/EnvironmentScripts/LightingScripts/SpriteObjectShadow.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/EnvironmentScripts/ParallaxScripts/BackgroundControl_0.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/EnvironmentScripts/ParallaxScripts/BackgroundControl_0.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/EnvironmentScripts/ParallaxScripts/CloudSettingsToggle.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/EnvironmentScripts/ParallaxScripts/CloudSettingsToggle.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/EnvironmentScripts/ParallaxScripts/ParallaxBackground_0.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/EnvironmentScripts/ParallaxScripts/ParallaxBackground_0.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManagerScripts/SlopeIllusionController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManagerScripts/SlopeIllusionController.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManagerScripts/TutorialRingManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManagerScripts/TutorialRingManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/HUDManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/HUDManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManagerScripts/IntroSequenceManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManagerScripts/IntroSequenceManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/NotUsed/CameraMovement.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/NotUsed/CameraMovement.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/NotUsed/CloudSettingsToggle.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/NotUsed/CloudSettingsToggle.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/NotUsed/SlopeIllusionController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/NotUsed/SlopeIllusionController.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/NotUsed/SpriteObjectShadow.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/NotUsed/SpriteObjectShadow.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/System/_DefaultProjectParameters/Settings/Universal Render Pipeline Asset_Renderer.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/System/_DefaultProjectParameters/Settings/Universal Render Pipeline Asset_Renderer.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotChats">
+    <option name="panelChat">
+      <chat>
+        <option name="activeSessionId" value="7c9bef6a-be30-4dec-b9c5-6d69b18cb924" />
+        <option name="sessions">
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="7c9bef6a-be30-4dec-b9c5-6d69b18cb924" />
+            <option name="modeId" value="Ask" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+        </option>
+        <option name="type" value="PANEL" />
+      </chat>
+    </option>
   </component>
   <component name="CopilotPersistence">
     <persistenceIdMap>
@@ -40,7 +64,7 @@
     </persistenceIdMap>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="19" />
+    <option name="cachedIndexableFilesCount" value="20" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -160,6 +184,8 @@
       <workItem from="1777550918873" duration="5407000" />
       <workItem from="1777958164360" duration="11320000" />
       <workItem from="1777972190859" duration="13649000" />
+      <workItem from="1778261234107" duration="95000" />
+      <workItem from="1778564471802" duration="8482000" />
     </task>
     <servers />
   </component>

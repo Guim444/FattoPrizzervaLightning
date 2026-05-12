@@ -213,7 +213,7 @@ Transform:
   m_GameObject: {fileID: 16785035}
   serializedVersion: 2
   m_LocalRotation: {x: 0.03812094, y: 0.69994575, z: -0.038784105, w: 0.71212256}
-  m_LocalPosition: {x: -113.350815, y: -29.325878, z: -0.5809657}
+  m_LocalPosition: {x: -114.53784, y: -29.196196, z: -0.60156155}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -455,7 +455,7 @@ MonoBehaviour:
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
   m_ScreenY: 0.5
-  m_CameraDistance: 11.35499
+  m_CameraDistance: 12.54926
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
   m_DeadZoneDepth: 0
@@ -1468,13 +1468,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: CHR_Player
       objectReference: {fileID: 0}
-    - target: {fileID: 1375970196312274560, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
-      propertyPath: m_IsActive
-      value: 1
+    - target: {fileID: 1993278659528858592, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: maxZ
+      value: 1.8
       objectReference: {fileID: 0}
-    - target: {fileID: 2303475782801046062, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
+    - target: {fileID: 1993278659528858592, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: minZ
+      value: -1.8
       objectReference: {fileID: 0}
     - target: {fileID: 2303475782801046062, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1532,10 +1532,6 @@ PrefabInstance:
       propertyPath: speedDisplay
       value: 
       objectReference: {fileID: 874552210}
-    - target: {fileID: 8518268266261273643, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1727,7 +1723,7 @@ GameObject:
   - component: {fileID: 685871264}
   - component: {fileID: 685871263}
   m_Layer: 0
-  m_Name: Zoom
+  m_Name: CM_Zoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3077,7 +3073,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1497444815
 Transform:
   m_ObjectHideFlags: 0
@@ -3550,8 +3546,8 @@ GameObject:
   - component: {fileID: 1613816022}
   - component: {fileID: 1613816021}
   - component: {fileID: 1613816020}
-  - component: {fileID: 1613816019}
   - component: {fileID: 1613816023}
+  - component: {fileID: 1613816024}
   m_Layer: 0
   m_Name: CAM_Main
   m_TagString: Untagged
@@ -3568,42 +3564,12 @@ Transform:
   m_GameObject: {fileID: 1613816017}
   serializedVersion: 2
   m_LocalRotation: {x: 0.03812094, y: 0.69994575, z: -0.038784105, w: 0.71212256}
-  m_LocalPosition: {x: -113.350815, y: -29.325878, z: -0.5809657}
+  m_LocalPosition: {x: -114.53784, y: -29.196196, z: -0.60156155}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1884281755}
   m_LocalEulerAnglesHint: {x: 3.913, y: 90, z: 0}
---- !u!114 &1613816019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1613816017}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6877e214326265e4d9a184c9e5bc7d9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  freeMoveMode: 0
-  followPlayerX: 0
-  player: {fileID: 2004004907}
-  center: {fileID: 0}
-  smoothTime: 0.5
-  zoomDistance: 3.9
-  zTransitionMin: 6
-  zTransitionMax: 10
-  zTargetInside: 0.15
-  zTargetOutside: 16
-  combatY: 3
-  followPlayerY: 0
-  yOffset: 1.5
-  ySmoothTime: 0.4
-  farClipPlane: 200
-  fieldOfView: 40
-  zoomed: 0
-  xOffset: 0
 --- !u!114 &1613816020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3741,6 +3707,32 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1613816024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1613816017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6877e214326265e4d9a184c9e5bc7d9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 2004004907}
+  startXOffset: 86
+  smoothTime: 0.5
+  ySmoothTime: 0.4
+  zoomDistance: 3.9
+  zTransitionMin: 6
+  zTransitionMax: 10
+  zTargetInside: 0.15
+  zTargetOutside: 16
+  combatY: 3
+  followPlayerY: 0
+  yOffset: 2
+  farClipPlane: 200
+  zoomed: 0
 --- !u!1 &1664303296
 GameObject:
   m_ObjectHideFlags: 0
@@ -4843,7 +4835,6 @@ GameObject:
   - component: {fileID: 2021292070}
   - component: {fileID: 2021292069}
   - component: {fileID: 2021292073}
-  - component: {fileID: 2021292072}
   m_Layer: 0
   m_Name: =============HUDManager=============
   m_TagString: Untagged
@@ -4946,25 +4937,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2021292072
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2021292068}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5166d30c954744347bc7c9efcdc57b7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groundPlane: {fileID: 316893474}
-  player: {fileID: 2004004907}
-  startTiltAngle: -20
-  endTiltAngle: -20
-  playerStartX: -100
-  walkDistance: 80
-  rotationStartProgress: 0.5
 --- !u!114 &2021292073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5004,6 +4976,7 @@ MonoBehaviour:
   ratioQ2: 0.85
   ratioQ3: 0.5
   ratioQ4: 0.15
+  lockHumanForm: 1
 --- !u!114 &2021292074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5036,6 +5009,8 @@ MonoBehaviour:
   combatStartPositionZ: -2
   combatCameraPosition: {x: -11, y: 3.35, z: 0}
   cinemachineZoomController: {fileID: 685871263}
+  cinemachineBrain: {fileID: 1613816023}
+  cameraMovement: {fileID: 1613816024}
 --- !u!224 &2038197482 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4527820824394562835, guid: 15f08e761ba0d7b46a2ea9efd44e17b6, type: 3}

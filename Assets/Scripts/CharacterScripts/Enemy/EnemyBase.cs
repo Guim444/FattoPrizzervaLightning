@@ -84,7 +84,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IKnockbackable
 
     protected virtual void Start()
     {
-        var playerObj = FindObjectOfType<PlayerController>();
+        var playerObj = FindFirstObjectByType<PlayerController>();
         if (playerObj != null)
             _player = playerObj;
         else
@@ -197,7 +197,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IKnockbackable
     //  IKnockbackable
     // ────────────────────────────────────────────────────────────
 
-    public void ReceiveKnockback(Vector3 direction, float force)
+    public virtual void ReceiveKnockback(Vector3 direction, float force)
     {
         _body.Receive(direction, force);
         float velEfectiva = _body.mass > 0f ? force / _body.mass : force;

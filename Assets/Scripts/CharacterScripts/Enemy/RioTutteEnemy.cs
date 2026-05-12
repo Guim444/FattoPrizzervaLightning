@@ -55,6 +55,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
     private Animator        _anim;
     private Vector3         _lastMoveDirection;
     private int             _runningPunchHits;
+    private bool            _punchRunImpactPending;
 
     float MinSeparation => _player != null
         ? _cc.radius + _player.cc.radius + _cc.skinWidth + _player.cc.skinWidth
@@ -113,9 +114,10 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
             return;
         }
 
-        if (_player.currentState == State.PunchRunning)
+        if (_punchRunImpactPending)
         {
-            // PunchRun del player gana: RioTutte cede completamente
+            // Cede completamente solo en el frame exacto del impacto del PunchRunning
+            _punchRunImpactPending = false;
             _cc.enabled = false;
             transform.position += pushDir * penetration;
             _cc.enabled = true;
@@ -248,6 +250,13 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         IsMoving = true;
     }
 
+    public override void ReceiveKnockback(Vector3 direction, float force)
+    {
+        base.ReceiveKnockback(direction, force);
+        if (_player != null && _player.currentState == State.PunchRunning)
+            _punchRunImpactPending = true;
+    }
+
     public override void Die()
     {
         Debug.Log("[RioTutte] Derrotado.");
@@ -255,6 +264,15 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         _body.Cancel();
         _attacks.CancelAttack();
         // TODO: animación de derrota + notificar TutorialRingManager
+    }
+
+    /// <summary>
+    /// Resetea contadores internos de fase sin cambiar CurrentPhase.
+    /// Llamado por TutorialRingManager en cada retry.
+    /// </summary>
+    public void ResetPhaseCounters()
+    {
+        _runningPunchHits = 0;
     }
 
     // ────────────────────────────────────────────────────────────

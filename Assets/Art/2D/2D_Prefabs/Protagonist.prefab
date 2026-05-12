@@ -15,8 +15,8 @@ GameObject:
   - component: {fileID: 3332383495369071900}
   - component: {fileID: 2480989804119407332}
   - component: {fileID: 3136478325201886202}
-  - component: {fileID: 1160761135607046887}
   - component: {fileID: 5181433476781225031}
+  - component: {fileID: 1160761135607046887}
   - component: {fileID: 4348642207067692730}
   - component: {fileID: 1285487963815221391}
   - component: {fileID: 8163199147146702146}
@@ -30,7 +30,7 @@ GameObject:
   m_Layer: 3
   m_Name: Protagonist
   m_TagString: 2D
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -45,7 +45,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0.700984, z: 0, w: 0.71317697}
   m_LocalPosition: {x: -3.81, y: 0.91, z: -0.84}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 89.012, z: 0}
@@ -144,7 +144,7 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2.4346745
+  m_Height: 3.2706041
   m_Radius: 1.1371696
   m_SlopeLimit: 45
   m_StepOffset: 0.3
@@ -225,18 +225,6 @@ MonoBehaviour:
   isInRun: 0
   canAttack: 1
   isInsideRing: 0
---- !u!114 &1160761135607046887
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1375970196312274560}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83ee6cb2b4c402d4dbecdb428f7ac778, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5181433476781225031
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -269,6 +257,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   speedDisplay: {fileID: 0}
+--- !u!114 &1160761135607046887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1375970196312274560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83ee6cb2b4c402d4dbecdb428f7ac778, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4348642207067692730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -357,6 +357,7 @@ MonoBehaviour:
   runThreshold: 9
   runMidThreshold: 11
   runMaxThreshold: 13.5
+  accelToWalk: 8
   accelWalkToRun: 3.5
   accelRunToMid: 4.5
   accelMidToMax: 6

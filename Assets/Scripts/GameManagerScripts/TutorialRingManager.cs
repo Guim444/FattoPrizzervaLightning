@@ -55,14 +55,18 @@ public class TutorialRingManager : MonoBehaviour
     [Tooltip("Canvas que aparece cuando el jugador pierde (HP 0 o sale del ring).")]
     [SerializeField] private GameObject retryCanvas;
 
+    [Tooltip("Referencia al TutorialManager para resetear los milestones de Endurance en cada retry.")]
+    [SerializeField] private TutorialManager tutorialManager;
+
     // ==================================================
     // PRIVATE
     // ==================================================
     private CharacterController _playerCC;
     private CharacterController _enemyCC;
 
-    private bool _enemyThresholdTriggered = false;
-    private bool _resultTriggered = false;
+    private bool  _enemyThresholdTriggered = false;
+    private bool  _resultTriggered         = false;
+    private float _enemyStartHP;
 
     // ==================================================
     // SHORTCUTS
@@ -89,6 +93,7 @@ public class TutorialRingManager : MonoBehaviour
         {
             _enemyCC = enemy.GetComponent<CharacterController>();
             enemyStartPosition = enemy.transform.position;
+            _enemyStartHP      = enemy.HP;
         }
     }
 
@@ -212,7 +217,13 @@ public class TutorialRingManager : MonoBehaviour
         }
 
         if (enemy != null)
-            enemy.activeAI = true;
+        {
+            enemy.HP        = _enemyStartHP;
+            enemy.activeAI  = true;
+            enemy.ResetPhaseCounters();
+        }
+
+        tutorialManager?.ResetMilestones();
 
         Debug.Log("[TutorialRing] Retry — fase de RioTutte conservada.");
     }

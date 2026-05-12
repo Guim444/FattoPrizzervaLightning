@@ -23,6 +23,7 @@ public class DeenergizedState : IStateActions
         savedEndurance = player.combat.endurance;
         player.combat.endurance = -2;
 
+        player.movement.RefreshSpriteFlip();
         player.animator.SetBool("isDeenergized", true);
 
         stamina.StopAllRegenDrain();

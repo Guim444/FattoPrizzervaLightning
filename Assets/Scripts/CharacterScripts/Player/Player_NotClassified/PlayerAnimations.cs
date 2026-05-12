@@ -17,6 +17,7 @@ public class PlayerAnimations : MonoBehaviour
 
     // ── ACELERACIÓN POR TRAMO (unidades/segundo con Time.deltaTime) ──
     [Header("Blend Tree: Aceleración por tramo (u/s)")]
+    public float accelToWalk     = 8f;
     public float accelWalkToRun  = 3.5f;
     public float accelRunToMid   = 4.5f;
     public float accelMidToMax   = 6.0f;
@@ -48,7 +49,8 @@ public class PlayerAnimations : MonoBehaviour
         animator.SetBool("isGliding",     player.currentState == State.Gliding);
         animator.SetBool("isKnockedback", player.knockbackHandler.ShowKnockbackAnim);
         animator.SetBool("isDead",        player.combat.HP <= 0);
-        animator.SetBool("IdleFront",     Mathf.Abs(player.movement.LastDirection.x) > 0.1f);
+        animator.SetBool("IdleFront",     player.currentState == State.Idle
+                                       && Mathf.Abs(player.movement.LastDirection.x) > 0.1f);
     }
 
     void UpdateBlendSpeed()
@@ -63,10 +65,10 @@ public class PlayerAnimations : MonoBehaviour
             return;
         }
 
-        // Sin tecla de correr: fijo en walk
+        // Sin tecla de correr: acelera suavemente hasta walkThreshold
         if (isWalking)
         {
-            _blendSpeed = walkThreshold;
+            _blendSpeed = Mathf.MoveTowards(_blendSpeed, walkThreshold, accelToWalk * Time.deltaTime);
             return;
         }
 

@@ -16,9 +16,6 @@ public class PlayerZoneTransformation : MonoBehaviour
     [SerializeField] private Material zoneMaterial2; // forma intermedia
     [SerializeField] private Material zoneMaterial3; // blanco puro
 
-    [Header("Velocidad de transición")]
-    [SerializeField] private float transitionSpeed = 1f;
-
     private int currentZone = 0;
     private Material currentMaterial;
     private Material targetMaterial;

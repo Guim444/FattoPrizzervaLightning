@@ -26,27 +26,6 @@ MonoBehaviour:
     BlurQuality: 0
     Falloff: 100
     SampleCount: -1
---- !u!114 &-6707614221730514355
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1614fc811f8f184697d9bee70ab9fe5, type: 3}
-  m_Name: DecalRendererFeature
-  m_EditorClassIdentifier: 
-  m_Active: 1
-  m_Settings:
-    technique: 2
-    maxDrawDistance: 1000
-    decalLayers: 1
-    dBufferSettings:
-      surfaceData: 2
-    screenSpaceSettings:
-      normalBlend: 0
 --- !u!114 &-3409835923088045136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,8 +81,7 @@ MonoBehaviour:
   - {fileID: 5993250553209430498}
   - {fileID: 9019489105833884506}
   - {fileID: 8884217464984721623}
-  - {fileID: -6707614221730514355}
-  m_RendererFeatureMap: 4cdbace031c18c8d908feb7af477c316b08bf8454bd4add034f4c05098e44813e221f6e19f4d2c535afbbbf08da92b7dd758bcbbb6144b7b4dfa645f67c4e9a2
+  m_RendererFeatureMap: 4cdbace031c18c8d908feb7af477c316b08bf8454bd4add034f4c05098e44813e221f6e19f4d2c535afbbbf08da92b7dd758bcbbb6144b7b
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -198,7 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
   m_Name: Black Outline
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   injectionPoint: 450
   fetchColorBuffer: 1
   requirements: 0
@@ -218,7 +196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
   m_Name: RenderObjects
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     passTag: RenderObjects
     Event: 300
@@ -260,7 +238,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
   m_Name: WhiteOutline
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   injectionPoint: 600
   fetchColorBuffer: 1
   requirements: 0

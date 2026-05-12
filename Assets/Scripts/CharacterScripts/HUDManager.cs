@@ -1,3 +1,4 @@
+using Cinemachine;
 using UnityEngine;
 
 public class HUDManager : MonoBehaviour
@@ -36,6 +37,8 @@ public class HUDManager : MonoBehaviour
     [Header("Configuración — Cámara")]
     [SerializeField] private Vector3 combatCameraPosition = new Vector3(-11f, 3.35f, 0f);
     [SerializeField] private CinemachineZoomController cinemachineZoomController;
+    [SerializeField] private CinemachineBrain cinemachineBrain;
+    [SerializeField] private CameraMovement cameraMovement;
 
 
     private void Awake()
@@ -44,10 +47,24 @@ public class HUDManager : MonoBehaviour
         Time.timeScale = 0f;
     }
 
+    private void ActivateCinemachine()
+    {
+        cameraMovement.enabled = false;
+        if (cinemachineBrain != null) cinemachineBrain.enabled = true;
+        cinemachineZoomController?.gameObject.SetActive(true);
+    }
+
+    private void ActivateCameraMovement()
+    {
+        cinemachineZoomController?.gameObject.SetActive(false);
+        if (cinemachineBrain != null) cinemachineBrain.enabled = false;
+        cameraMovement.enabled = true;
+    }
+
     public void OnClickCombatPosition()
     {
         Time.timeScale = 1f;
-        cinemachineZoomController?.gameObject.SetActive(true);
+        ActivateCinemachine();
         playerBoundary.enabled = false;
         enemy.SetActive(false);
         playerTransformFront.SetActive(false);
@@ -68,7 +85,7 @@ public class HUDManager : MonoBehaviour
     {
         _canvasUIStats.SetActive(false);
         playableAreaManager.SetActive(false);
-        cinemachineZoomController?.gameObject.SetActive(false);
+        ActivateCinemachine();
         introSequenceManager?.ShowBlackScreen();
         Time.timeScale = 1f;
         playerBoundary.enabled = true;
@@ -97,6 +114,7 @@ public class HUDManager : MonoBehaviour
     public void OnClickFreeMove()
     {
         Time.timeScale = 1f;
+        ActivateCameraMovement();
         playerTransformFront.SetActive(true);
         ringManager.enabled = false;
         playerBoundary.enabled = false;

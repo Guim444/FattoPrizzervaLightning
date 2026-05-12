@@ -45,6 +45,9 @@ public class IntroSequenceManager : MonoBehaviour
     [SerializeField] private float ratioQ3 = 0.50f;
     [SerializeField] private float ratioQ4 = 0.15f;
 
+    [Header("Blink — Bloqueo de forma")]
+    [SerializeField] private bool lockHumanForm = false;
+
     private Material _originalMaterial;
     private Material _spriteFadeMat;
     private Coroutine _blinkCoroutine;
@@ -190,6 +193,13 @@ public class IntroSequenceManager : MonoBehaviour
     {
         while (true)
         {
+            if (lockHumanForm)
+            {
+                SetHumanForm();
+                yield return null;
+                continue;
+            }
+
             float ratio = GetHumanRatio();
 
             if (ratio >= 1f)

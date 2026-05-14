@@ -8,6 +8,10 @@ public class PlayerAnimations : MonoBehaviour
 
     public bool pauseAnimatorControl = false;
 
+    [Header("Character Controller: Idle Front")]
+    [SerializeField] private float idleFrontCenterX = 0f;
+    [SerializeField] private float defaultCenterX = -1f;
+
     // ── BLEND TREE THRESHOLDS ────────────────────────────────────
     [Header("Blend Tree: Umbrales de velocidad")]
     public float walkThreshold   = 4.4f;
@@ -24,6 +28,9 @@ public class PlayerAnimations : MonoBehaviour
 
     public float BlendSpeed => _blendSpeed;
     private float _blendSpeed;
+    private CharacterController _characterController;
+    private bool _isIdleFrontColliderApplied;
+    private bool _hasAppliedCharacterControllerCenter;
 
     void Awake()
     {
@@ -31,6 +38,8 @@ public class PlayerAnimations : MonoBehaviour
             instance = this;
         else
             Destroy(gameObject);
+
+        _characterController = GetComponent<CharacterController>();
     }
 
     void LateUpdate()
@@ -49,8 +58,35 @@ public class PlayerAnimations : MonoBehaviour
         animator.SetBool("isGliding",     player.currentState == State.Gliding);
         animator.SetBool("isKnockedback", player.knockbackHandler.ShowKnockbackAnim);
         animator.SetBool("isDead",        player.combat.HP <= 0);
-        animator.SetBool("IdleFront",     player.currentState == State.Idle
-                                       && Mathf.Abs(player.movement.LastDirection.x) > 0.1f);
+        bool isIdleFront = player.currentState == State.Idle
+                        && Mathf.Abs(player.movement.LastFacingDirection.x) > 0.1f;
+
+        animator.SetBool("IdleFront", isIdleFront);
+        UpdateCharacterControllerCenter(IsAnimatorInIdleFront());
+    }
+
+    bool IsAnimatorInIdleFront()
+    {
+        const int baseLayer = 0;
+
+        if (animator.GetCurrentAnimatorStateInfo(baseLayer).IsName("Idle_Front"))
+            return true;
+
+        return animator.IsInTransition(baseLayer)
+            && animator.GetNextAnimatorStateInfo(baseLayer).IsName("Idle_Front");
+    }
+
+    void UpdateCharacterControllerCenter(bool isIdleFront)
+    {
+        if (_characterController == null) return;
+        if (_hasAppliedCharacterControllerCenter && _isIdleFrontColliderApplied == isIdleFront) return;
+
+        Vector3 center = _characterController.center;
+        center.x = isIdleFront ? idleFrontCenterX : defaultCenterX;
+        _characterController.center = center;
+
+        _isIdleFrontColliderApplied = isIdleFront;
+        _hasAppliedCharacterControllerCenter = true;
     }
 
     void UpdateBlendSpeed()

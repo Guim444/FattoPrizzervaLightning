@@ -29,13 +29,15 @@ public class HUDManager : MonoBehaviour
     [Header("Configuración — Jugador")]
     [SerializeField] private float startPositionX = 0f;
 
-    [SerializeField] private float startPositionY = 2.25f;
-    [SerializeField] private float combatStartPositionX = 0f;
-    [SerializeField] private float combatStartPositionY = 2.25f;
-    [SerializeField] private float combatStartPositionZ = -2f;
+//Se eliminará
+    private float startPositionY = 2.25f;
+    private float combatStartPositionX = 0f;
+    private float combatStartPositionY = 2.25f;
+    private float combatStartPositionZ = -2f;
 
     [Header("Configuración — Cámara")]
-    [SerializeField] private Vector3 combatCameraPosition = new Vector3(-11f, 3.35f, 0f);
+    [SerializeField] private float freeMoveStartCameraY = 1.5f;
+
     [SerializeField] private CinemachineZoomController cinemachineZoomController;
     [SerializeField] private CinemachineBrain cinemachineBrain;
     [SerializeField] private CameraMovement cameraMovement;
@@ -114,6 +116,7 @@ public class HUDManager : MonoBehaviour
     public void OnClickFreeMove()
     {
         Time.timeScale = 1f;
+        cameraMovement.combatY = freeMoveStartCameraY;
         ActivateCameraMovement();
         playerTransformFront.SetActive(true);
         ringManager.enabled = false;

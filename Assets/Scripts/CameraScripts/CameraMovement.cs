@@ -15,6 +15,8 @@ public class CameraMovement : MonoBehaviour
 
     [Header("Zoom X")]
     public float zoomDistance;
+    [SerializeField] private float zoomInThreshold  =  0.5f;
+    [SerializeField] private float zoomOutThreshold = -0.5f;
 
     [Header("Zonas Z")]
     public float zTransitionMin  = 6f;
@@ -91,9 +93,9 @@ public class CameraMovement : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (player.position.x > 0.5f && !zoomed)
+        if (player.position.x > zoomInThreshold && !zoomed)
             Zoom(1);
-        else if (player.position.x < -0.5f && zoomed)
+        else if (player.position.x < zoomOutThreshold && zoomed)
             Zoom(-1);
     }
 

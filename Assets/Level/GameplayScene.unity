@@ -93,7 +93,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000002, guid: a7b8128b19cd2a3448449ba20669f1c0, type: 2}
+  m_LightingDataAsset: {fileID: 112000002, guid: d9318a624800105488fbcd08f68ad99b, type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 76659e594ee49414e976dfa156dea75f, type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -1544,6 +1544,18 @@ PrefabInstance:
     - target: {fileID: 7686821030642128762, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
       propertyPath: m_Center.x
       value: -0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8518268266261273643, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: m_FlipX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8518268266261273643, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: m_Size.x
+      value: 4.2501383
+      objectReference: {fileID: 0}
+    - target: {fileID: 8518268266261273643, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: m_Size.y
+      value: 3.75
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3737,6 +3749,8 @@ MonoBehaviour:
   smoothTime: 0.5
   ySmoothTime: 0.4
   zoomDistance: 3.9
+  zoomInThreshold: 0
+  zoomOutThreshold: -2
   zTransitionMin: 6
   zTransitionMax: 10
   zTargetInside: 0.15

@@ -45,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
     // ==================================================
     // GRAVITY
     // ==================================================
-    [Header("Gravity")]
+    [Header("Gravity")] 
     public float gravity = -20f;
 
     public float groundCheckDistance = 0.2f;
@@ -107,10 +107,7 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 ApplyInertia(Vector3 inputDir, float deltaTime, float turnSpeed)
     {
         if (inputDir.magnitude > 0.1f)
-        {
             LastFacingDirection = inputDir.normalized;
-            UpdateSpriteFlip(LastFacingDirection.z);
-        }
 
         var dir = Vector3.MoveTowards(LastDirection, inputDir, turnSpeed * deltaTime);
 

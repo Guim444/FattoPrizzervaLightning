@@ -29,8 +29,6 @@ public class PlayerAnimations : MonoBehaviour
     public float BlendSpeed => _blendSpeed;
     private float _blendSpeed;
     private CharacterController _characterController;
-    private bool _isIdleFrontColliderApplied;
-    private bool _hasAppliedCharacterControllerCenter;
 
     void Awake()
     {
@@ -63,6 +61,7 @@ public class PlayerAnimations : MonoBehaviour
 
         animator.SetBool("IdleFront", isIdleFront);
         UpdateCharacterControllerCenter(IsAnimatorInIdleFront());
+        EnforceSpriteFlip();
     }
 
     bool IsAnimatorInIdleFront()
@@ -79,14 +78,33 @@ public class PlayerAnimations : MonoBehaviour
     void UpdateCharacterControllerCenter(bool isIdleFront)
     {
         if (_characterController == null) return;
-        if (_hasAppliedCharacterControllerCenter && _isIdleFrontColliderApplied == isIdleFront) return;
+
+        float targetX;
+        if (isIdleFront)
+            targetX = idleFrontCenterX;
+        else
+        {
+            bool isMoving = player.currentState == State.Moving
+                         || player.currentState == State.Running
+                         || player.currentState == State.PunchRunning;
+            targetX = isMoving ? idleFrontCenterX : defaultCenterX;
+        }
+
+        if (Mathf.Approximately(_characterController.center.x, targetX)) return;
 
         Vector3 center = _characterController.center;
-        center.x = isIdleFront ? idleFrontCenterX : defaultCenterX;
+        center.x = targetX;
         _characterController.center = center;
+    }
 
-        _isIdleFrontColliderApplied = isIdleFront;
-        _hasAppliedCharacterControllerCenter = true;
+    void EnforceSpriteFlip()
+    {
+        var state = player.currentState;
+
+        if (state == State.Moving || state == State.Running || state == State.Idle)
+            player.movement.EnforceInvertedSpriteFlip();
+        else if (state == State.PunchRunning)
+            player.movement.RefreshSpriteFlip();
     }
 
     void UpdateBlendSpeed()

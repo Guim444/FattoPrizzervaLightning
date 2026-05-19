@@ -34,7 +34,6 @@ public class RunningState : IStateActions
         player.animator.speed = 1;
         actualSpeed           = baseSpeed;
         stamina.SetRunning(staminaCostPerSecond);
-        player.movement.RefreshSpriteFlip();
     }
 
     public void Update()

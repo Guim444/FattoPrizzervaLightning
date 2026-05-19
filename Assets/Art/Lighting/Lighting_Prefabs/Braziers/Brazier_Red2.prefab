@@ -301,7 +301,83 @@ PrefabInstance:
       value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: 7494922782359506662, guid: 230090b4e610bd845a2c8caba4dbd6ab, type: 3}
+    - {fileID: 5459368409204391014, guid: 230090b4e610bd845a2c8caba4dbd6ab, type: 3}
+    - {fileID: 7369995241455584148, guid: 230090b4e610bd845a2c8caba4dbd6ab, type: 3}
+    - {fileID: 4172535614770489321, guid: 230090b4e610bd845a2c8caba4dbd6ab, type: 3}
+    - {fileID: 2765862069517304385, guid: 230090b4e610bd845a2c8caba4dbd6ab, type: 3}
+    - {fileID: 1405390448938012650, guid: 230090b4e610bd845a2c8caba4dbd6ab, type: 3}
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 2958103991357850680, guid: 230090b4e610bd845a2c8caba4dbd6ab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7224142625826766794}
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 230090b4e610bd845a2c8caba4dbd6ab, type: 3}
+--- !u!4 &4216661211043415812 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2958103991357850680, guid: 230090b4e610bd845a2c8caba4dbd6ab, type: 3}
+  m_PrefabInstance: {fileID: 1407899280200794940}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8217625227424915483
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4216661211043415812}
+    m_Modifications:
+    - target: {fileID: 1033603901549992820, guid: 12566e6656a83ff49ab0eafbc288968d, type: 3}
+      propertyPath: m_Name
+      value: Fire_Red_Brazier2_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1606538128088768465, guid: 12566e6656a83ff49ab0eafbc288968d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.0111
+      objectReference: {fileID: 0}
+    - target: {fileID: 1606538128088768465, guid: 12566e6656a83ff49ab0eafbc288968d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.1026
+      objectReference: {fileID: 0}
+    - target: {fileID: 1606538128088768465, guid: 12566e6656a83ff49ab0eafbc288968d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.0045999885
+      objectReference: {fileID: 0}
+    - target: {fileID: 1606538128088768465, guid: 12566e6656a83ff49ab0eafbc288968d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1606538128088768465, guid: 12566e6656a83ff49ab0eafbc288968d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1606538128088768465, guid: 12566e6656a83ff49ab0eafbc288968d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1606538128088768465, guid: 12566e6656a83ff49ab0eafbc288968d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1606538128088768465, guid: 12566e6656a83ff49ab0eafbc288968d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1606538128088768465, guid: 12566e6656a83ff49ab0eafbc288968d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1606538128088768465, guid: 12566e6656a83ff49ab0eafbc288968d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 230090b4e610bd845a2c8caba4dbd6ab, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 12566e6656a83ff49ab0eafbc288968d, type: 3}
+--- !u!4 &7224142625826766794 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1606538128088768465, guid: 12566e6656a83ff49ab0eafbc288968d, type: 3}
+  m_PrefabInstance: {fileID: 8217625227424915483}
+  m_PrefabAsset: {fileID: 0}

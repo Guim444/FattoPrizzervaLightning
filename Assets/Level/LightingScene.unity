@@ -20973,6 +20973,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Blizzard_Prefab_Thick
       objectReference: {fileID: 0}
+    - target: {fileID: 1403727060757231947, guid: 684dfcbd69d1f064284c6579f2d22cf2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2039400617804133022, guid: 684dfcbd69d1f064284c6579f2d22cf2, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -28299,7 +28303,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1721653708
 Transform:
   m_ObjectHideFlags: 0
@@ -28670,6 +28674,206 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1742045140
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1742045142}
+  - component: {fileID: 1742045141}
+  m_Layer: 0
+  m_Name: ============LightingManager============
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1742045141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1742045140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5cbbd11fdaea534c87c4e8ddad19f9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  states:
+  - stateName: Tapat
+    sky: {fileID: 1893225434}
+    entries:
+    - light: {fileID: 1008962379}
+      startIntensity: 2
+      targetIntensity: 2
+    - light: {fileID: 2133521484}
+      startIntensity: 0.01
+      targetIntensity: 0.01
+    - light: {fileID: 1536564590}
+      startIntensity: 2
+      targetIntensity: 2
+    - light: {fileID: 154995057}
+      startIntensity: 30
+      targetIntensity: 30
+    - light: {fileID: 1887948595}
+      startIntensity: 0.7
+      targetIntensity: 0.7
+    - light: {fileID: 196150093}
+      startIntensity: 0.5
+      targetIntensity: 0.5
+    - light: {fileID: 1422917286}
+      startIntensity: 0.4
+      targetIntensity: 0.4
+    - light: {fileID: 935956613}
+      startIntensity: 0.5
+      targetIntensity: 0.5
+    - light: {fileID: 326435112}
+      startIntensity: 10
+      targetIntensity: 10
+    - light: {fileID: 1045145048}
+      startIntensity: 20
+      targetIntensity: 20
+    - light: {fileID: 1484840918}
+      startIntensity: 10.28
+      targetIntensity: 10.28
+    - light: {fileID: 576333565}
+      startIntensity: 20
+      targetIntensity: 20
+  - stateName: Radiografia
+    sky: {fileID: 992064149}
+    entries:
+    - light: {fileID: 1008962379}
+      startIntensity: 2
+      targetIntensity: 2
+    - light: {fileID: 2133521484}
+      startIntensity: 0.01
+      targetIntensity: 0.05
+    - light: {fileID: 1536564590}
+      startIntensity: 2
+      targetIntensity: 2
+    - light: {fileID: 154995057}
+      startIntensity: 30
+      targetIntensity: 30
+    - light: {fileID: 1887948595}
+      startIntensity: 0.7
+      targetIntensity: 0.7
+    - light: {fileID: 196150093}
+      startIntensity: 0.5
+      targetIntensity: 0.5
+    - light: {fileID: 1422917286}
+      startIntensity: 0.4
+      targetIntensity: 0.4
+    - light: {fileID: 935956613}
+      startIntensity: 0.5
+      targetIntensity: 0.5
+    - light: {fileID: 326435112}
+      startIntensity: 10
+      targetIntensity: 10
+    - light: {fileID: 1045145048}
+      startIntensity: 20
+      targetIntensity: 20
+    - light: {fileID: 1484840918}
+      startIntensity: 10.28
+      targetIntensity: 10.28
+    - light: {fileID: 576333565}
+      startIntensity: 20
+      targetIntensity: 100
+    - light: {fileID: 348523459}
+      startIntensity: 0
+      targetIntensity: 50
+    - light: {fileID: 1937456010}
+      startIntensity: 0
+      targetIntensity: 100
+  - stateName: Lluna
+    sky: {fileID: 766396074}
+    entries:
+    - light: {fileID: 1008962379}
+      startIntensity: 2
+      targetIntensity: 2
+    - light: {fileID: 2133521484}
+      startIntensity: 0.01
+      targetIntensity: 0.005
+    - light: {fileID: 1536564590}
+      startIntensity: 2
+      targetIntensity: 2
+    - light: {fileID: 154995057}
+      startIntensity: 30
+      targetIntensity: 30
+    - light: {fileID: 1887948595}
+      startIntensity: 0.7
+      targetIntensity: 0.7
+    - light: {fileID: 196150093}
+      startIntensity: 0.5
+      targetIntensity: 0.5
+    - light: {fileID: 1422917286}
+      startIntensity: 0.4
+      targetIntensity: 0.4
+    - light: {fileID: 935956613}
+      startIntensity: 0.5
+      targetIntensity: 0.5
+    - light: {fileID: 326435112}
+      startIntensity: 10
+      targetIntensity: 10
+    - light: {fileID: 1045145048}
+      startIntensity: 20
+      targetIntensity: 20
+    - light: {fileID: 1484840918}
+      startIntensity: 10.28
+      targetIntensity: 10.28
+    - light: {fileID: 576333565}
+      startIntensity: 20
+      targetIntensity: 100
+    - light: {fileID: 348523459}
+      startIntensity: 0
+      targetIntensity: 50
+    - light: {fileID: 1937456010}
+      startIntensity: 0
+      targetIntensity: 100
+    - light: {fileID: 1327527242}
+      startIntensity: 0
+      targetIntensity: 50
+    - light: {fileID: 332217792}
+      startIntensity: 0
+      targetIntensity: 100
+    - light: {fileID: 783281126}
+      startIntensity: 0
+      targetIntensity: 3
+    - light: {fileID: 15175704}
+      startIntensity: 0
+      targetIntensity: 120
+    - light: {fileID: 166374252}
+      startIntensity: 0
+      targetIntensity: 195
+    - light: {fileID: 1144990746}
+      startIntensity: 0
+      targetIntensity: 197
+    - light: {fileID: 1200434554}
+      startIntensity: 0
+      targetIntensity: 33
+    - light: {fileID: 926402178}
+      startIntensity: 0
+      targetIntensity: 50
+  transitionDuration: 3
+  _previewState: 0
+--- !u!4 &1742045142
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1742045140}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1743530919
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31476,6 +31680,10 @@ PrefabInstance:
     - target: {fileID: -7010347543686968495, guid: c28529150c5d2584399837344d66d5a7, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: -6213591563774486196, guid: c28529150c5d2584399837344d66d5a7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -6213591563774486196, guid: c28529150c5d2584399837344d66d5a7, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -37866,6 +38074,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Blizzard_Prefabs_mild
       objectReference: {fileID: 0}
+    - target: {fileID: 5146599705464995421, guid: f5e3e605ad8d21747aa4e0dacc7e46d8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -39873,6 +40085,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1742045142}
   - {fileID: 266818183}
   - {fileID: 749623740}
   - {fileID: 1432079889}

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Responsabilidad única: construir la máquina de estados y gestionar sus transiciones.
+/// Single responsibility: build the state machine and manage its transitions.
 /// </summary>
 public class PlayerStateMachineController : MonoBehaviour
 {
@@ -24,8 +24,8 @@ public class PlayerStateMachineController : MonoBehaviour
         var cc = _player.cc;
         var p = _player;
 
-        // CombatAttackHandler se accede via player.combatAttackHandler en cada estado,
-        // no hace falta pasarlo explícitamente.
+        // CombatAttackHandler is accessed via player.combatAttackHandler in each state,
+        // no need to pass it explicitly.
 
         var idle = new IdleState(sm) { player = p, controller = cc };
         var moving = new MovingState(sm) { player = p, controller = cc };

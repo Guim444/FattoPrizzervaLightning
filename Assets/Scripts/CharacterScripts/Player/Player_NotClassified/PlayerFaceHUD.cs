@@ -7,18 +7,18 @@ public class PlayerFaceHUD : MonoBehaviour
     public PlayerCombat playerCombat;
     public Image faceImage;
 
-    [Header("Face Sprites (asignar cuando estén listos)")]
-    public Sprite face100; // perfecto
-    public Sprite face75;  // herido leve
-    public Sprite face50;  // herido
-    public Sprite face25;  // muy herido
-    public Sprite face0;   // casi KO
+    [Header("Face Sprites (assign when ready)")]
+    public Sprite face100; // perfect
+    public Sprite face75;  // lightly wounded
+    public Sprite face50;  // wounded
+    public Sprite face25;  // badly wounded
+    public Sprite face0;   // near KO
 
-    [Header("Placeholder Colors (mientras no hay sprites)")]
+    [Header("Placeholder Colors (while sprites are not available)")]
     public Color color100 = Color.green;
-    public Color color75  = new Color(0.6f, 1f, 0f);   // verde amarillento
+    public Color color75  = new Color(0.6f, 1f, 0f);   // yellowish green
     public Color color50  = Color.yellow;
-    public Color color25  = new Color(1f, 0.5f, 0f);   // naranja
+    public Color color25  = new Color(1f, 0.5f, 0f);   // orange
     public Color color0   = Color.red;
 
     private float _lastHP = -1f;
@@ -26,10 +26,10 @@ public class PlayerFaceHUD : MonoBehaviour
     void Update()
     {
         if (playerCombat == null || faceImage == null) return;
-        if (playerCombat.HP == _lastHP) return; // solo actualiza si cambia
+        if (playerCombat.HP == _lastHP) return; // only update on change
 
         _lastHP = playerCombat.HP;
-        UpdateFace(playerCombat.HP, playerCombat.HP); // HP actual = maxHP por ahora
+        UpdateFace(playerCombat.HP, playerCombat.HP); // current HP = maxHP for now
     }
 
     void UpdateFace(float currentHP, float maxHP)
@@ -54,7 +54,7 @@ public class PlayerFaceHUD : MonoBehaviour
             _        => color0
         };
 
-        // Usa sprite si está asignado, si no usa color placeholder
+        // Use sprite if assigned, otherwise use placeholder color
         if (targetSprite != null)
             faceImage.sprite = targetSprite;
         else

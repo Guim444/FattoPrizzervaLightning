@@ -1,10 +1,10 @@
 using UnityEngine;
 
 /// <summary>
-/// Responsabilidad única: escalar al jugador en función de su posición Z
-/// para simular profundidad en un entorno 2.5D.
-/// La escala va de maxScale (cuando Z == minZ) a minScale (cuando Z == maxZ).
-/// Preserva el signo en X para que los flips de sprite funcionen correctamente.
+/// Single responsibility: scale the player based on their Z position
+/// to simulate depth in a 2.5D environment.
+/// Scale goes from maxScale (when Z == minZ) to minScale (when Z == maxZ).
+/// Preserves the sign on X so sprite flips work correctly.
 /// </summary>
 public class PlayerDepthScaler : MonoBehaviour
 {
@@ -12,16 +12,16 @@ public class PlayerDepthScaler : MonoBehaviour
     // Z BOUNDARIES (2.5D DEPTH)
     // ==================================================
     [Header("Z Boundaries")]
-    [Tooltip("Posición Z más cercana a cámara (escala máxima).")]
+    [Tooltip("Closest Z position to camera (maximum scale).")]
     public float minZ = 0f;
 
-    [Tooltip("Posición Z más alejada de cámara (escala mínima).")]
+    [Tooltip("Farthest Z position from camera (minimum scale).")]
     public float maxZ = 100f;
 
-    [Tooltip("Escala mínima (fondo del escenario).")]
+    [Tooltip("Minimum scale (back of the stage).")]
     public float minScale = 0.3f;
 
-    [Tooltip("Escala máxima (frente del escenario).")]
+    [Tooltip("Maximum scale (front of the stage).")]
     public float maxScale = 1f;
 
     // ==================================================
@@ -29,8 +29,8 @@ public class PlayerDepthScaler : MonoBehaviour
     // ==================================================
 
     /// <summary>
-    /// Recalcula y aplica la escala del transform según la Z actual.
-    /// Debe llamarse cada frame antes de aplicar movimiento.
+    /// Recalculates and applies the transform scale based on the current Z.
+    /// Must be called every frame before applying movement.
     /// </summary>
     public void UpdateScaleBasedOnZ()
     {
@@ -38,7 +38,7 @@ public class PlayerDepthScaler : MonoBehaviour
         float t = Mathf.Clamp01(Mathf.InverseLerp(minZ, maxZ, z));
         float scaleFactor = Mathf.Lerp(maxScale, minScale, t);
 
-        // Preservamos el signo en X para no romper los flips de sprite
+        // Preserve the sign on X to avoid breaking sprite flips
         float signX = Mathf.Sign(transform.localScale.x);
         transform.localScale = new Vector3(scaleFactor * signX, scaleFactor, scaleFactor);
     }

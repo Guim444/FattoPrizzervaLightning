@@ -10,15 +10,15 @@ public class PlayableAreaManager : MonoBehaviour
     // ==================================================
     // MARCADORES DEL ÁREA
     // ==================================================
-    [Header("Marcadores del área (mover en Scene View)")]
+    [Header("Area markers (move in Scene View)")]
     public Transform leftBound;
     public Transform rightBound;
     public Transform frontBound;
     public Transform backBound;
 
-    [Header("Personaje")]
+    [Header("Character")]
     public PlayerController player;
-    [Header("Activación")]
+    [Header("Activation")]
     public bool isActive = false;
 
     private CharacterController _playerCC;
@@ -105,7 +105,7 @@ public class PlayableAreaManager : MonoBehaviour
 
         UnityEditor.Handles.Label(
             new Vector3(cx, cy + 0.4f, cz),
-            isActive ? "Área Jugable [ON]" : "Área Jugable [OFF]");
+            isActive ? "Playable Area [ON]" : "Playable Area [OFF]");
     }
 
     void DrawWall(float x, float y, float z, float length, bool wallOnX)

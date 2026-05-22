@@ -1,7 +1,7 @@
 /// <summary>
-/// Contrato para componentes que ejecutan ataques.
-/// Separado de EnemyBase mediante ISP: permite que EnemyBase consulte
-/// el estado de ataque sin acoplarse a la implementación concreta.
+/// Contract for components that execute attacks.
+/// Separated from EnemyBase via ISP: allows EnemyBase to query
+/// attack state without coupling to the concrete implementation.
 /// </summary>
 public interface IAttacker
 {

@@ -5,8 +5,8 @@ public class CameraMovement : MonoBehaviour
     [Header("Target")]
     public Transform player;
 
-    [Header("Posición inicial")]
-    [Tooltip("Offset en X respecto al jugador al activarse (ej: -11 pone la cámara a X = jugador.x - 11)")]
+    [Header("Initial Position")]
+    [Tooltip("X offset relative to player on activation (e.g.: -11 sets camera to X = player.x - 11)")]
     [SerializeField] private float startXOffset = -11f;
 
     [Header("Smoothness")]
@@ -18,30 +18,30 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float zoomInThreshold  =  0.5f;
     [SerializeField] private float zoomOutThreshold = -0.5f;
 
-    [Header("Zonas Z")]
+    [Header("Z Zones")]
     public float zTransitionMin  = 6f;
     public float zTransitionMax  = 10f;
     public float zTargetInside   = 4f;
     public float zTargetOutside  = 14f;
 
-    [Header("Posición Y")]
+    [Header("Y Position")]
     public float combatY      = 1.5f;
     public bool  followPlayerY = false;
     public float yOffset      = 1.5f;
 
-    [Header("Cámara")]
+    [Header("Camera")]
     [SerializeField] private float farClipPlane = 40f;
 
     public bool zoomed;
 
-    private float _baseX;       // X de referencia desde donde opera el zoom
+    private float _baseX;       // reference X from which the zoom operates
     private float xZoomTarget;
     private float xVel;
     private float zVel;
     private float _yVel;
     private Camera _cam;
 
-    // ── Ciclo de vida ────────────────────────────────────────────────────────
+    // ── Lifecycle ────────────────────────────────────────────────────────────
 
     private void Awake()
     {
@@ -54,7 +54,7 @@ public class CameraMovement : MonoBehaviour
     {
         if (player == null) return;
 
-        // Snap inmediato a la posición relativa al jugador
+        // Immediate snap to position relative to player
         float targetX = player.position.x + startXOffset;
         float targetY = followPlayerY ? player.position.y + yOffset : combatY;
         float targetZ = GetTargetZ();

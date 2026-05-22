@@ -15,15 +15,15 @@ public readonly struct KnockbackResult
 }
 
 /// <summary>
-/// El rango es SOLO el endurance del player (-3 a +3).
-/// No existe endurance del enemigo: solo el player controla el empuje.
+/// The range is ONLY the player's endurance (-3 to +3).
+/// Enemy endurance does not exist: only the player controls the push.
 ///
-/// Regla de diseño que la tabla respeta siempre:
+/// Design rule that the table always respects:
 ///   ForceOnTarget:  Clash  <  Punch  <  PunchRunning
 ///   ForceOnSelf:    Clash  >  Punch  >  PunchRunning
 ///
-/// End. muy negativo → player vuela, enemigo apenas se mueve.
-/// End. muy positivo → player apenas retrocede, enemigo sale disparado.
+/// Very negative End. → player flies, enemy barely moves.
+/// Very positive End. → player barely retreats, enemy launches.
 /// </summary>
 public static class KnockbackResolver
 {
@@ -33,10 +33,10 @@ public static class KnockbackResolver
     private static readonly float[,] TargetForces = new float[7, 3]
     {
         //  Clash   Punch   PunchRun    endurance
-        {    0.0f,   0.5f,   2.0f  },  // -3  player dominado → enemy apenas se mueve
+        {    0.0f,   0.5f,   2.0f  },  // -3  player dominated → enemy barely moves
         {    0.0f,   1.0f,   4.0f  },  // -2
-        {    0.5f,   8.0f,   15.0f  },  // -1  ← fase 3 RioTutte: golpes mínimos
-        {    4.0f,  10.0f,  22.0f  },  //  0  equilibrio
+        {    0.5f,   8.0f,   15.0f  },  // -1  ← RioTutte phase 3: minimal hits
+        {    4.0f,  10.0f,  22.0f  },  //  0  balanced
         {    5.5f,  16.0f,  30.0f  },  // +1
         {    8.0f,  24.0f,  38.0f  },  // +2
         {   12.0f,  32.0f,  46.0f  },  // +3  player domina → enemy sale disparado
@@ -45,10 +45,10 @@ public static class KnockbackResolver
     private static readonly float[,] SelfForces = new float[7, 3]
     {
         //  Clash   Punch   PunchRun    endurance
-        {   12.0f,  18.0f,  10.0f  },  // -3  player dominado → sale volando
+        {   12.0f,  18.0f,  10.0f  },  // -3  player dominated → flies
         {    9.0f,  12.0f,   6.0f  },  // -2
-        {    6.0f,   8.0f,   3.0f  },  // -1  ← fase 3 RioTutte: el player rebota
-        {    2.0f,   2.0f,   0.5f  },  //  0  clash equilibrado: empuje suave
+        {    6.0f,   8.0f,   3.0f  },  // -1  ← RioTutte phase 3: player bounces
+        {    2.0f,   2.0f,   0.5f  },  //  0  balanced clash: soft push
         {    1.0f,   1.0f,   0.0f  },  // +1
         {    0.5f,   0.5f,   0.0f  },  // +2
         {    0.0f,   0.0f,   0.0f  },  // +3
@@ -66,7 +66,7 @@ public static class KnockbackResolver
     };
 
     /// <summary>
-    /// Solo necesita el endurance del player — no hay endurance del enemigo.
+    /// Only needs the player's endurance — enemy endurance does not exist.
     /// </summary>
     public static KnockbackResult Resolve(
         AttackType attackType,

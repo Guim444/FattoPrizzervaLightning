@@ -1,22 +1,22 @@
 using UnityEngine;
 
 /// <summary>
-/// Clase base abstracta para todos los enemigos del juego.
+/// Abstract base class for all enemies in the game.
 ///
-/// RESPONSABILIDADES (SRP):
-///   - Estadísticas compartidas: HP, endurance, walkSpeed.
-///   - Física: gravedad propia + sistema KnockbackPhysicsBody.
-///   - Profundidad 2.5D: escala por posición Z.
-///   - Orientación: flip del sprite por dirección X.
-///   - Ciclo IA: tick del timer de ataque, bloqueo durante knockback.
+/// RESPONSIBILITIES (SRP):
+///   - Shared stats: HP, endurance, walkSpeed.
+///   - Physics: own gravity + KnockbackPhysicsBody system.
+///   - 2.5D depth: scale by Z position.
+///   - Orientation: sprite flip by X direction.
+///   - AI cycle: attack timer tick, blocking during knockback.
 ///
-/// EXTENSIÓN (OCP):
-///   Las clases derivadas implementan FollowPlayerLogic(), ExecuteAttack()
-///   y OnDamagedBehaviour() sin modificar este archivo.
+/// EXTENSION (OCP):
+///   Derived classes implement FollowPlayerLogic(), ExecuteAttack()
+///   and OnDamagedBehaviour() without modifying this file.
 ///
-/// PRINCIPIOS APLICADOS:
-///   IDamageable / IKnockbackable — interfaces del proyecto, no acoplamiento directo.
-///   PlayerController referenciado aquí porque es el único tipo de jugador en el prototipo.
+/// APPLIED PRINCIPLES:
+///   IDamageable / IKnockbackable — project interfaces, no direct coupling.
+///   PlayerController referenced here because it is the only player type in the prototype.
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
 public abstract class EnemyBase : MonoBehaviour, IDamageable, IKnockbackable
@@ -50,15 +50,15 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IKnockbackable
     [Header("Attack Cooldown")]
     public float attackCooldownMin = 2f;
     public float attackCooldownMax = 3f;
-    [Tooltip("Distancia de ataque cuerpo a cuerpo.")]
+    [Tooltip("Melee attack range.")]
     public float attackRange = 1.5f;
 
-    // ── PUBLIC STATE (leído por EnemyAnimatorDriver) ──────────────
+    // ── PUBLIC STATE (read by EnemyAnimatorDriver) ──────────────
     public bool IsMoving     { get; protected set; }
     public bool IsAttacking  { get; protected set; }
     public bool HasKnockback => _body.IsActive;
 
-    // ── PROTECTED (accesibles por clases derivadas) ───────────────
+    // ── PROTECTED (accessible by derived classes) ────────────────
     protected CharacterController _cc;
     protected KnockbackPhysicsBody _body;
     protected PlayerController _player;
@@ -88,7 +88,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IKnockbackable
         if (playerObj != null)
             _player = playerObj;
         else
-            Debug.LogWarning($"[{GetType().Name}] No se encontró PlayerController en la escena.");
+            Debug.LogWarning($"[{GetType().Name}] PlayerController not found in scene.");
     }
 
     // ────────────────────────────────────────────────────────────
@@ -102,7 +102,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IKnockbackable
 
         if (_attackTimer > 0f) _attackTimer -= Time.deltaTime;
 
-        // Knockback tiene prioridad: bloquea la IA mientras dura
+        // Knockback takes priority: blocks AI while active
         if (_body.IsActive)
         {
             Vector3 delta = _body.Tick(_cc.isGrounded, Time.deltaTime);
@@ -120,7 +120,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IKnockbackable
     }
 
     // ────────────────────────────────────────────────────────────
-    //  UTILIDADES COMPARTIDAS
+    //  SHARED UTILITIES
     // ────────────────────────────────────────────────────────────
 
     void ApplyGravity()
@@ -144,8 +144,8 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IKnockbackable
     }
 
     /// <summary>
-    /// Invierte la escala X para cambiar la orientación del sprite.
-    /// Seguro de usar junto a UpdateDepthScale: el escalado preserva el signo de X.
+    /// Flips the X scale to change the sprite orientation.
+    /// Safe to use alongside UpdateDepthScale: scaling preserves the sign of X.
     /// </summary>
     public void FlipCharacter(Vector3 direction)
     {
@@ -163,8 +163,8 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IKnockbackable
     }
 
     /// <summary>
-    /// Reinicia el cooldown de ataque con variación aleatoria.
-    /// Llamado también por componentes de ataque externos (ej: RioTutteAttacks).
+    /// Resets the attack cooldown with random variation.
+    /// Also called by external attack components (e.g.: RioTutteAttacks).
     /// </summary>
     public void ResetAttackCooldown()
         => _attackTimer = Random.Range(attackCooldownMin, attackCooldownMax);
@@ -173,13 +173,13 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IKnockbackable
     //  ABSTRACT
     // ────────────────────────────────────────────────────────────
 
-    /// <summary>IA de movimiento hacia el objetivo.</summary>
+    /// <summary>AI movement logic towards the target.</summary>
     protected abstract void FollowPlayerLogic();
 
-    /// <summary>Decide y lanza el ataque correspondiente a la fase actual.</summary>
+    /// <summary>Decides and launches the attack for the current phase.</summary>
     protected abstract void ExecuteAttack();
 
-    /// <summary>Reacción específica del enemigo al recibir daño.</summary>
+    /// <summary>Enemy-specific reaction to receiving damage.</summary>
     protected abstract void OnDamagedBehaviour(int dmg);
 
     // ────────────────────────────────────────────────────────────
@@ -201,7 +201,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IKnockbackable
     {
         _body.Receive(direction, force);
         float velEfectiva = _body.mass > 0f ? force / _body.mass : force;
-        Debug.Log($"[{GetType().Name}] Knockback | fuerza:{force:F1} masa:{_body.mass:F2} → vel:{velEfectiva:F1} u/s");
+        Debug.Log($"[{GetType().Name}] Knockback | force:{force:F1} mass:{_body.mass:F2} → vel:{velEfectiva:F1} u/s");
     }
 
     public void ApplyClashKnockback(Vector3 direction, float force, float _duration)

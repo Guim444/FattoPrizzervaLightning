@@ -2,19 +2,19 @@ using UnityEngine;
 
 public class PlayerZoneTransformation : MonoBehaviour
 {
-    [Header("Referencias")]
+    [Header("References")]
     [SerializeField] private Renderer playerRenderer;
     [SerializeField] private Transform playerTransform;
 
-    [Header("Zonas en X — posición del player")]
+    [Header("X Zones — player position")]
     [SerializeField] private float zone1End = -60f;
     [SerializeField] private float zone2End = -30f;
-    // zona 3: desde zone2End hasta la iglesia
+    // zone 3: from zone2End to the church
 
-    [Header("Materiales por zona")]
-    [SerializeField] private Material zoneMaterial1; // forma inicial
-    [SerializeField] private Material zoneMaterial2; // forma intermedia
-    [SerializeField] private Material zoneMaterial3; // blanco puro
+    [Header("Materials per zone")]
+    [SerializeField] private Material zoneMaterial1; // initial form
+    [SerializeField] private Material zoneMaterial2; // intermediate form
+    [SerializeField] private Material zoneMaterial3; // pure white
 
     private int currentZone = 0;
     private Material currentMaterial;
@@ -22,9 +22,9 @@ public class PlayerZoneTransformation : MonoBehaviour
 
     private void Start()
     {
-        // Placeholder: swap de materiales por zona
-        // Cuando definas el look visual, aquí puedes cambiar a Lerp de color,
-        // Lerp de shader property, o swap de mesh completo
+        // Placeholder: material swap per zone
+        // When you define the visual look, change this to color Lerp,
+        // shader property Lerp, or full mesh swap
         currentZone = 1;
         if (zoneMaterial1 != null)
             playerRenderer.material = zoneMaterial1;
@@ -56,8 +56,8 @@ public class PlayerZoneTransformation : MonoBehaviour
 
     private void ApplyZoneMaterial(int zone)
     {
-        // Por ahora hace un swap directo de material
-        // Reemplaza esto con un Lerp cuando tengas el shader definido
+        // Currently does a direct material swap
+        // Replace with a Lerp once the shader is defined
         switch (zone)
         {
             case 1:
@@ -72,8 +72,8 @@ public class PlayerZoneTransformation : MonoBehaviour
         }
     }
 
-    // Cuando tengas el shader, llama esto para hacer un Lerp de color
-    // en lugar del swap directo
+    // When the shader is ready, call this to do a color Lerp
+    // instead of the direct swap
     public void SetMaterialColorLerp(Color target, float duration)
     {
         StartCoroutine(LerpMaterialColor(target, duration));

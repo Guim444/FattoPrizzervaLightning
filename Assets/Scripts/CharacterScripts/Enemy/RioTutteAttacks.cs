@@ -2,32 +2,32 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// Comportamientos de ataque de RioTutte.
+/// RioTutte attack behaviours.
 ///
-/// RESPONSABILIDAD ÚNICA (SRP):
-///   Ejecutar y gestionar el ciclo de vida de cada ataque individual.
-///   No decide CUÁNDO atacar — eso lo hace RioTutteEnemy.ExecuteAttack().
+/// SINGLE RESPONSIBILITY (SRP):
+///   Execute and manage the lifecycle of each individual attack.
+///   Does NOT decide WHEN to attack — that is RioTutteEnemy.ExecuteAttack().
 ///
-/// ATAQUES:
-///   DashGrab  — Dash rápido hacia el player; al contactar, lo agarra y golpea.
-///   SuperDash — Dash en dirección opuesta al player (capa Invulnerable durante él).
+/// ATTACKS:
+///   DashGrab  — Fast dash towards the player; on contact, grabs and hits them.
+///   SuperDash — Dash in the opposite direction to the player (Invulnerable layer during it).
 ///
-/// CONVENCIÓN DEL PROYECTO:
-///   Durations hardcodeadas como campos serializables — nunca se lee .length en runtime.
-///   SetTrigger solo se llama en el momento exacto del evento (inicio de grab, golpe).
+/// PROJECT CONVENTION:
+///   Durations hardcoded as serializable fields — .length is never read at runtime.
+///   SetTrigger is only called at the exact moment of the event (grab start, hit).
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
 public class RioTutteAttacks : MonoBehaviour, IAttacker
 {
     // ── DURATIONS ────────────────────────────────────────────────
     [Header("Attack Durations (hardcoded, no .length)")]
-    [Tooltip("Tiempo máximo del DashGrab antes de cancelarse automáticamente.")]
+    [Tooltip("Maximum time for DashGrab before it cancels automatically.")]
     public float dashGrabTimeout = 2f;
 
-    [Tooltip("Tiempo que RioTutte sostiene al player antes de golpear.")]
+    [Tooltip("Time RioTutte holds the player before hitting.")]
     public float grabHoldDuration = 0.8f;
 
-    [Tooltip("Duración total del SuperDash en segundos.")]
+    [Tooltip("Total duration of SuperDash in seconds.")]
     public float superDashDuration = 0.73f;
 
     // ── SPEEDS ───────────────────────────────────────────────────
@@ -35,7 +35,7 @@ public class RioTutteAttacks : MonoBehaviour, IAttacker
     public float dashGrabSpeed  = 7.5f;
     public float superDashSpeed = 15f;
 
-    // ── PUBLIC STATE (leído por RioTutteAnimatorDriver y RioTutteEnemy) ─
+    // ── PUBLIC STATE (read by RioTutteAnimatorDriver and RioTutteEnemy) ─
     public bool IsAttacking      { get; private set; }
     public bool IsUsingDashGrab  { get; private set; }
     public bool IsGrabbing       { get; private set; }
@@ -67,16 +67,16 @@ public class RioTutteAttacks : MonoBehaviour, IAttacker
     {
         _player = FindFirstObjectByType<PlayerController>();
         if (_player == null)
-            Debug.LogWarning("[RioTutteAttacks] No se encontró PlayerController en la escena.");
+            Debug.LogWarning("[RioTutteAttacks] PlayerController not found in scene.");
     }
 
     // ────────────────────────────────────────────────────────────
-    //  API PÚBLICA
+    //  PUBLIC API
     // ────────────────────────────────────────────────────────────
 
     /// <summary>
-    /// Inicia el DashGrab: RioTutte se lanza hacia el player para agarrarlo.
-    /// Llamado desde RioTutteEnemy.ExecuteAttack().
+    /// Starts the DashGrab: RioTutte lunges towards the player to grab them.
+    /// Called from RioTutteEnemy.ExecuteAttack().
     /// </summary>
     public void StartDashGrab()
     {
@@ -91,15 +91,15 @@ public class RioTutteAttacks : MonoBehaviour, IAttacker
     }
 
     /// <summary>
-    /// Inicia el SuperDash: RioTutte se lanza en dirección opuesta al player.
-    /// Llamado desde RioTutteEnemy.ExecuteAttack().
+    /// Starts the SuperDash: RioTutte lunges in the opposite direction to the player.
+    /// Called from RioTutteEnemy.ExecuteAttack().
     /// </summary>
-    /// <param name="lastMoveDir">Última dirección de movimiento de RioTutte (para calcular opuesto).</param>
+    /// <param name="lastMoveDir">RioTutte's last movement direction (used to calculate the opposite).</param>
     public void StartSuperDash(Vector3 lastMoveDir)
     {
         if (IsAttacking) return;
 
-        // Intenta ir en dirección opuesta al último movimiento (que era hacia el player)
+        // Tries to go in the opposite direction of the last movement (which was towards the player)
         Vector3 preferred = -lastMoveDir.normalized;
         if (!TryGetValidSuperDashDir(preferred, out Vector3 dashDir))
         {
@@ -110,7 +110,7 @@ public class RioTutteAttacks : MonoBehaviour, IAttacker
                 Vector3 rnd   = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle));
                 found = TryGetValidSuperDashDir(rnd, out dashDir);
             }
-            if (!found) return; // Sin espacio libre: cancela silenciosamente
+            if (!found) return; // No free space: cancel silently
         }
 
         IsAttacking      = true;
@@ -120,30 +120,30 @@ public class RioTutteAttacks : MonoBehaviour, IAttacker
     }
 
     /// <summary>
-    /// Ejecuta la secuencia de agarre al colisionar con el player durante un DashGrab.
-    /// Llamado desde RioTutteEnemy.OnTriggerEnter / OnControllerColliderHit.
+    /// Executes the grab sequence when colliding with the player during a DashGrab.
+    /// Called from RioTutteEnemy.OnTriggerEnter / OnControllerColliderHit.
     /// </summary>
     public void GrabPlayer()
     {
         if (IsGrabbing || _player == null) return;
 
-        // Posiciona al player justo al lado de RioTutte
+        // Position the player right beside RioTutte
         int     side    = _player.transform.position.x > transform.position.x ? 1 : -1;
         Vector3 grabPos = new Vector3(transform.position.x + side * _cc.radius,
                                       _player.transform.position.y,
                                       transform.position.z);
         _player.cc.Move(grabPos - _player.transform.position);
         _player.canMove  = false;
-        IsUsingDashGrab  = false; // dashGrab → false en el animator: evita que AnyState interrumpa Grabbing
+        IsUsingDashGrab  = false; // dashGrab → false in animator: prevents AnyState from interrupting Grabbing
         IsGrabbing       = true;
 
-        // Cancela el coroutine del dash y lanza el de golpear
+        // Cancel the dash coroutine and start the hit coroutine
         if (_activeCoroutine != null) StopCoroutine(_activeCoroutine);
         _activeCoroutine = StartCoroutine(GrabHitRoutine());
     }
 
     /// <summary>
-    /// Interrumpe el ataque en curso (ej: RioTutte recibe knockback durante el dash).
+    /// Interrupts the current attack (e.g.: RioTutte receives knockback during the dash).
     /// </summary>
     public void CancelAttack()
     {
@@ -167,7 +167,7 @@ public class RioTutteAttacks : MonoBehaviour, IAttacker
             if (_cc.enabled)
                 _cc.Move(_dashDirection * dashGrabSpeed * Time.deltaTime);
 
-            // Detección por distancia directa: no depende de layers ni de callbacks de CC estáticos.
+            // Distance-based detection: does not depend on layers or static CC callbacks.
             Vector3 toPlayer2D = _player.transform.position - transform.position;
             toPlayer2D.y = 0f;
             float grabDist = _cc.radius + _player.cc.radius + 0.2f;
@@ -181,16 +181,16 @@ public class RioTutteAttacks : MonoBehaviour, IAttacker
             yield return null;
         }
 
-        // Timeout sin atrapar al player
+        // Timeout without catching the player
         ResetState();
         _enemy.ResetAttackCooldown();
     }
 
     IEnumerator GrabHitRoutine()
     {
-        // Esperamos la duración del agarre antes de golpear.
-        // GrabPunch se dispara DESPUÉS para que el animator ya esté en Grabbing
-        // cuando recibe el trigger y pueda usarlo para salir al estado siguiente.
+        // Wait for the hold duration before hitting.
+        // GrabPunch is fired AFTER so the animator is already in Grabbing
+        // when it receives the trigger and can use it to exit to the next state.
         yield return new WaitForSeconds(grabHoldDuration);
 
         _anim.SetTrigger("GrabPunch");
@@ -201,7 +201,7 @@ public class RioTutteAttacks : MonoBehaviour, IAttacker
             pushDir.y = 0f;
             if (pushDir == Vector3.zero) pushDir = transform.forward;
 
-            // Fuerza garantizada superior al endurance del player → siempre vuela
+            // Force guaranteed higher than player's endurance → always flies
             _player.knockbackHandler.ReceiveEnemyKnockback(
                 pushDir.normalized,
                 _enemy.attackKnockbackBase * 2f
@@ -248,7 +248,7 @@ public class RioTutteAttacks : MonoBehaviour, IAttacker
     }
 
     /// <summary>
-    /// Comprueba si hay una pared bloqueando la dirección del SuperDash.
+    /// Checks whether a wall is blocking the SuperDash direction.
     /// </summary>
     bool TryGetValidSuperDashDir(Vector3 dir, out Vector3 result)
     {

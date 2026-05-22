@@ -2,9 +2,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Responsabilidad única: recibir y almacenar el input del jugador en cada frame.
-/// Expone propiedades de solo lectura para que otros componentes las consulten.
-/// ConsumeFrameInputs() debe llamarse al final de Update() para resetear los inputs de un solo frame.
+/// Single responsibility: receive and store player input each frame.
+/// Exposes read-only properties for other components to query.
+/// ConsumeFrameInputs() must be called at the end of Update() to reset single-frame inputs.
 /// </summary>
 [RequireComponent(typeof(PlayerInteractor))]
 public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
@@ -23,19 +23,19 @@ public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
     // ==================================================
     private Vector2 _moveInput;
 
-    /// <summary>Input de movimiento normalizado del frame actual.</summary>
+    /// <summary>Normalized movement input for the current frame.</summary>
     public Vector2 MoveInput => _moveInput;
 
-    /// <summary>True mientras el botón de correr esté pulsado.</summary>
+    /// <summary>True while the run button is held.</summary>
     public bool IsRunInputHeld { get; private set; }
 
-    /// <summary>True mientras el botón de puñetazo esté pulsado.</summary>
+    /// <summary>True while the punch button is held.</summary>
     public bool IsPunchInputHeld { get; private set; }
 
-    /// <summary>True únicamente el frame en que se presionó el puñetazo (se consume al final del Update).</summary>
+    /// <summary>True only on the frame the punch was pressed (consumed at end of Update).</summary>
     public bool IsPunchInputPressed { get; private set; }
 
-    /// <summary>True únicamente el frame en que se presionó la acción de interacción.</summary>
+    /// <summary>True only on the frame the interaction action was pressed.</summary>
     public bool IsActionInputPressed { get; private set; }
 
     // ==================================================
@@ -50,7 +50,7 @@ public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
         _playerActions = _actions.Player;
         _playerActions.AddCallbacks(this);
 
-        // Punch y Action son opcionales en el mapa Player.
+        // Punch and Action are optional in the Player map.
         var playerMap = _playerActions.Get();
         _punchAction = playerMap.FindAction("PunchStarted", throwIfNotFound: false);
         _actionAction = playerMap.FindAction("Run", throwIfNotFound: false);
@@ -63,7 +63,7 @@ public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
         else
         {
             Debug.LogWarning(
-                "PlayerInputHandler: no se encontró la acción 'PunchStarted' en el mapa 'Player' de Actions.inputactions.");
+                "PlayerInputHandler: action 'PunchStarted' not found in 'Player' map of Actions.inputactions.");
         }
 
         if (_actionAction != null)
@@ -73,7 +73,7 @@ public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
         else
         {
             Debug.LogWarning(
-                "PlayerInputHandler: no se encontró la acción 'Run' en el mapa 'Player' de Actions.inputactions.");
+                "PlayerInputHandler: action 'Run' not found in 'Player' map of Actions.inputactions.");
         }
     }
 
@@ -145,7 +145,7 @@ public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
     // ==================================================
 
     /// <summary>
-    /// Resetea los flags de un solo frame. Debe llamarse al final de PlayerController.Update().
+    /// Resets single-frame flags. Must be called at the end of PlayerController.Update().
     /// </summary>
     public void ConsumeFrameInputs()
     {
@@ -155,7 +155,7 @@ public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
 
     public void ConsumePunchInput()
     {
-        Debug.Log("presionado el puñetazo");
+        Debug.Log("Punch input consumed");
         IsPunchInputPressed = false;
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class IntroSequenceManager : MonoBehaviour
 {
-    [Header("Referencias")]
+    [Header("References")]
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private Transform playerTransform;
@@ -14,16 +14,16 @@ public class IntroSequenceManager : MonoBehaviour
     [SerializeField] private HUDManager hudManager;
     [SerializeField] private SpriteRenderer playerSpriteRenderer;
 
-    [Header("Cámara — FOV intro")]
+    [Header("Camera — Intro FOV")]
     [SerializeField] private CinemachineVirtualCamera introVirtualCamera;
     [SerializeField] private float introStartFOV  = 30f;
     [SerializeField] private float introEndFOV    = 60f;
     [SerializeField] private Color fadeEndBgColor = Color.black;
 
-    [Header("Fase 1 — Pantalla negra")]
+    [Header("Phase 1 — Black Screen")]
     [SerializeField] private float holdBlackDuration = 1f;
 
-    [Header("Fase 2 — Fade + movimiento automático")]
+    [Header("Phase 2 — Fade + auto movement")]
     [SerializeField] private float fadeInDuration = 4f;
     [SerializeField] private float fadeExponent   = 2f;
     [SerializeField] private float autoWalkSpeed  = 3f;
@@ -34,18 +34,18 @@ public class IntroSequenceManager : MonoBehaviour
     [SerializeField] private Sprite soulSprite;
     [SerializeField] private Material humanMaterial;
 
-    [Header("Blink — Posición")]
+    [Header("Blink — Position")]
     [SerializeField] private float blinkStartX   = -100f;
     [SerializeField] private float blinkEndX     = 0f;
     [SerializeField] private float blinkInterval = 0.5f;
 
-    [Header("Blink — Ratio humano por cuarto (1=siempre humano, 0=siempre alma)")]
+    [Header("Blink — Human ratio per quarter (1=always human, 0=always soul)")]
     [SerializeField] private float ratioQ1 = 1.00f;
     [SerializeField] private float ratioQ2 = 0.85f;
     [SerializeField] private float ratioQ3 = 0.50f;
     [SerializeField] private float ratioQ4 = 0.15f;
 
-    [Header("Blink — Bloqueo de forma")]
+    [Header("Blink — Form Lock")]
     [SerializeField] private bool lockHumanForm = false;
 
     private Material _originalMaterial;
@@ -68,7 +68,7 @@ public class IntroSequenceManager : MonoBehaviour
         _spriteFadeMat = new Material(Shader.Find("Sprites/Default"));
     }
 
-    // ── Entrada pública desde HUDManager ─────────────────────────────────
+    // ── Public entry from HUDManager ────────────────────────────────────
 
     public void ShowBlackScreen()
     {

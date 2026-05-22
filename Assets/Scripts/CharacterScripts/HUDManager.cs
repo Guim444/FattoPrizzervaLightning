@@ -12,7 +12,7 @@ public class HUDManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private GameObject selectionPanel;
 
-    [Header("Referencias")]
+    [Header("References")]
     [SerializeField] private GameObject OutsideChurch;
 
     [SerializeField] private Transform playerTransform;
@@ -26,16 +26,16 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private GameObject playerTransformFront;
     [SerializeField] private Animator playerAnimator;
 
-    [Header("Configuración — Jugador")]
+    [Header("Configuration — Player")]
     [SerializeField] private float startPositionX = 0f;
 
-//Se eliminará
+// Will be removed
     private float startPositionY = 2.25f;
     private float combatStartPositionX = 0f;
     private float combatStartPositionY = 2.25f;
     private float combatStartPositionZ = -2f;
 
-    [Header("Configuración — Cámara")]
+    [Header("Configuration — Camera")]
     [SerializeField] private float freeMoveStartCameraY = 1.5f;
 
     [SerializeField] private CinemachineZoomController cinemachineZoomController;
@@ -102,14 +102,14 @@ public class HUDManager : MonoBehaviour
         introSequenceManager?.StartIntro();
     }
 
-    // Llamar desde TutorialRingManager.onEnemyOut.
-    // Desactiva el ring y pasa a modo libre manteniendo a RioTutte activo (siguiente fase).
+    // Called from TutorialRingManager.onEnemyOut.
+    // Deactivates the ring and switches to free mode keeping RioTutte active (next phase).
     public void OnRingPhaseComplete()
     {
         ringManager.enabled = false;
         playerBoundary.enabled = false;
         var rioTutte = enemyRio.GetComponent<RioTutteEnemy>();
-        rioTutte.AdvancePhase(); // 0 → 1: activa DashGrab
+        rioTutte.AdvancePhase(); // 0 → 1: activates DashGrab
         rioTutte.facePlayerByZ = true;
     }
 
@@ -132,12 +132,12 @@ public class HUDManager : MonoBehaviour
     {
         if (playerTransform == null)
         {
-            Debug.LogError("[HUDManager] playerTransform no está asignado en el Inspector.");
+            Debug.LogError("[HUDManager] playerTransform is not assigned in the Inspector.");
             return;
         }
 
         Debug.Log(
-            $"[HUDManager] MovePlayerToX — antes: {playerTransform.position}  →  destino X:{x} Y:{combatStartPositionY} Z:{combatStartPositionZ}");
+            $"[HUDManager] MovePlayerToX — before: {playerTransform.position}  →  target X:{x} Y:{combatStartPositionY} Z:{combatStartPositionZ}");
 
         CharacterController cc = playerTransform.GetComponent<CharacterController>();
         if (cc != null) cc.enabled = false;
@@ -145,19 +145,19 @@ public class HUDManager : MonoBehaviour
         Physics.SyncTransforms();
         if (cc != null) cc.enabled = true;
 
-        Debug.Log($"[HUDManager] MovePlayerToX — después: {playerTransform.position}");
+        Debug.Log($"[HUDManager] MovePlayerToX — after: {playerTransform.position}");
     }
 
     private void MoveStartPlayerToX(float x)
     {
         if (playerTransform == null)
         {
-            Debug.LogError("[HUDManager] playerTransform no está asignado en el Inspector.");
+            Debug.LogError("[HUDManager] playerTransform is not assigned in the Inspector.");
             return;
         }
 
         Debug.Log(
-            $"[HUDManager] MovePlayerToX — antes: {playerTransform.position}  →  destino X:{x} Y:{combatStartPositionY} Z:{combatStartPositionZ}");
+            $"[HUDManager] MovePlayerToX — before: {playerTransform.position}  →  target X:{x} Y:{combatStartPositionY} Z:{combatStartPositionZ}");
 
         CharacterController cc = playerTransform.GetComponent<CharacterController>();
         if (cc != null) cc.enabled = false;
@@ -165,7 +165,7 @@ public class HUDManager : MonoBehaviour
         Physics.SyncTransforms();
         if (cc != null) cc.enabled = true;
 
-        Debug.Log($"[HUDManager] MovePlayerToX — después: {playerTransform.position}");
+        Debug.Log($"[HUDManager] MovePlayerToX — after: {playerTransform.position}");
     }
 
     private void HidePanel()

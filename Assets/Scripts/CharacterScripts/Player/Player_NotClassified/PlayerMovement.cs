@@ -3,8 +3,8 @@ using UnityEngine;
 
 
 /// <summary>
-/// Responsabilidad única: gestionar la física de movimiento del jugador.
-/// Incluye gravedad, detección de suelo, inercia de dirección y utilidades de velocidad.
+/// Single responsibility: manage the player's movement physics.
+/// Includes gravity, ground detection, direction inertia, and speed utilities.
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
@@ -45,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
     // ==================================================
     // GRAVITY
     // ==================================================
-    [Header("Gravity")] 
+    [Header("Gravity")]
     public float gravity = -20f;
 
     public float groundCheckDistance = 0.2f;
@@ -88,8 +88,8 @@ public class PlayerMovement : MonoBehaviour
     // ==================================================
 
     /// <summary>
-    /// Convierte el input 2D del jugador en una dirección 3D normalizada.
-    /// Retorna Vector3.zero si el input es menor al umbral mínimo.
+    /// Converts the player's 2D input into a normalized 3D direction.
+    /// Returns Vector3.zero if input is below the minimum threshold.
     /// </summary>
     public Vector3 GetDirectionalInput()
     {
@@ -100,10 +100,10 @@ public class PlayerMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Aplica inercia suave a la dirección de movimiento.
-    /// Usa MoveTowards para una transición fluida entre direcciones.
+    /// Applies smooth inertia to the movement direction.
+    /// Uses MoveTowards for a fluid transition between directions.
     /// </summary>
-    // Reemplaza el ApplyInertia actual por este
+    // Replaces the current ApplyInertia with this one
     public Vector3 ApplyInertia(Vector3 inputDir, float deltaTime, float turnSpeed)
     {
         if (inputDir.magnitude > 0.1f)
@@ -123,13 +123,13 @@ public class PlayerMovement : MonoBehaviour
         UpdateSpriteFlip(LastFacingDirection.z);
     }
 
-    // Para sprites con orientación natural invertida (idle, punch estático, etc.)
+    // For sprites with naturally inverted orientation (idle, static punch, etc.)
     public void EnforceInvertedSpriteFlip()
     {
         float dirZ = LastFacingDirection.z;
         float dirX = LastFacingDirection.x;
 
-        // IdleFront: activo cuando la última dirección es principalmente en X (profundidad)
+        // IdleFront: active when the last direction is mainly in X (depth)
         _playerController?.animator?.SetBool("IdleFront",
             Mathf.Abs(dirX) > Mathf.Abs(dirZ));
 
@@ -142,16 +142,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void UpdateSpriteFlip(float directionZ)
     {
-        // IdleFront: activo cuando el jugador se mueve en profundidad (X), no en horizontal (Z)
+        // IdleFront: active when the player moves in depth (X), not horizontal (Z)
         _playerController?.animator?.SetBool("IdleFront",
             Mathf.Abs(LastFacingDirection.x) > Mathf.Abs(directionZ));
 
         if (spriteRenderer == null) return;
         if (Mathf.Abs(directionZ) < 0.1f) return;
 
-        // En este juego la cámara mira a lo largo de X → Z es izquierda/derecha en pantalla.
-        // Z < 0 → player mira a la izquierda (escala positiva)
-        // Z > 0 → player mira a la derecha (escala negativa)
+        // In this game the camera looks along X → Z is left/right on screen.
+        // Z < 0 → player faces left (positive scale)
+        // Z > 0 → player faces right (negative scale)
         Vector3 scale = transform.localScale;
         scale.x = directionZ < 0
             ? Mathf.Abs(scale.x)
@@ -160,8 +160,8 @@ public class PlayerMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Aplica gravedad y mueve el CharacterController en el eje Y.
-    /// Llamar una vez por Update(), después de cualquier movimiento horizontal.
+    /// Applies gravity and moves the CharacterController on the Y axis.
+    /// Call once per Update(), after any horizontal movement.
     /// </summary>
     public void ApplyGravity()
     {
@@ -178,7 +178,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Comprueba si el jugador está sobre el suelo usando un SphereCast.
+    /// Checks whether the player is on the ground using a SphereCast.
     /// </summary>
     public bool IsGrounded()
     {
@@ -195,7 +195,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Actualiza el display de velocidad en pantalla (solo si está asignado).
+    /// Updates the on-screen speed display (only if assigned).
     /// </summary>
     public void SpeedManagement()
     {

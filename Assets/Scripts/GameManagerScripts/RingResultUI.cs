@@ -22,12 +22,12 @@ public class RingResultUI : MonoBehaviour
     public GameObject gameWinPanel;
 
     [Header("Settings")]
-    [Tooltip("Pausa el juego (timeScale = 0) al mostrar el resultado.")]
+    [Tooltip("Pauses the game (timeScale = 0) when showing the result.")]
     public bool pauseOnResult = true;
 
     [Header("Reset Event")]
-    [Tooltip("Conecta aquí todo lo que necesita resetearse al reiniciar: " +
-             "TutorialRingManager.ResetRing, reposición de player/enemy, etc.")]
+    [Tooltip("Connect here everything that needs to reset on restart: " +
+             "TutorialRingManager.ResetRing, player/enemy repositioning, etc.")]
     public UnityEvent onReset;
 
     // --------------------------------------------------
@@ -41,7 +41,7 @@ public class RingResultUI : MonoBehaviour
     }
 
     // --------------------------------------------------
-    // API PÚBLICA  (conectar a TutorialRingManager events)
+    // PUBLIC API  (connect to TutorialRingManager events)
     // --------------------------------------------------
 
     public void ShowGameOver()

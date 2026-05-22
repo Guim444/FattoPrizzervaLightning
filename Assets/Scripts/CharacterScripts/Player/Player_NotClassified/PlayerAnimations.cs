@@ -13,14 +13,14 @@ public class PlayerAnimations : MonoBehaviour
     [SerializeField] private float defaultCenterX = -1f;
 
     // ── BLEND TREE THRESHOLDS ────────────────────────────────────
-    [Header("Blend Tree: Umbrales de velocidad")]
+    [Header("Blend Tree: Speed Thresholds")]
     public float walkThreshold   = 4.4f;
     public float runThreshold    = 9f;
     public float runMidThreshold = 11f;
     public float runMaxThreshold = 13.5f;
 
-    // ── ACELERACIÓN POR TRAMO (unidades/segundo con Time.deltaTime) ──
-    [Header("Blend Tree: Aceleración por tramo (u/s)")]
+    // ── ACCELERATION PER SEGMENT (units/second with Time.deltaTime) ──
+    [Header("Blend Tree: Acceleration per segment (u/s)")]
     public float accelToWalk     = 8f;
     public float accelWalkToRun  = 3.5f;
     public float accelRunToMid   = 4.5f;
@@ -115,22 +115,22 @@ public class PlayerAnimations : MonoBehaviour
 
         if (!isWalking && !isRunning)
         {
-            _blendSpeed = 0f; // frenado inmediato
+            _blendSpeed = 0f; // immediate stop
             return;
         }
 
-        // Sin tecla de correr: acelera suavemente hasta walkThreshold
+        // No run key: smoothly accelerate to walkThreshold
         if (isWalking)
         {
             _blendSpeed = Mathf.MoveTowards(_blendSpeed, walkThreshold, accelToWalk * Time.deltaTime);
             return;
         }
 
-        // Tecla de correr: salto inmediato a walk si venía de parado
+        // Run key held: immediate jump to walk if coming from stopped
         if (_blendSpeed < walkThreshold)
             _blendSpeed = walkThreshold;
 
-        // Aceleración progresiva por tramo
+        // Progressive acceleration per segment
         float accel = _blendSpeed < runThreshold    ? accelWalkToRun
                     : _blendSpeed < runMidThreshold  ? accelRunToMid
                     :                                  accelMidToMax;

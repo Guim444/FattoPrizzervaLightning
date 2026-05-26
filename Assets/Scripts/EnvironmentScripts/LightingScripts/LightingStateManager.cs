@@ -9,7 +9,7 @@ using UnityEngine;
 /// Inspector setup:
 /// - Each state defines a Sky to activate and which lights change with their range (from → to).
 /// - In Tapat, startIntensity = targetIntensity (fixed value).
-/// - In Radiografia and Lluna, startIntensity and targetIntensity define the PDF range.
+/// - In Radiografia and Lluna, startIntensity and targetIntensity define the lerp range.
 /// - transitionDuration controls the default duration of each transition.
 /// </summary>
 public class LightingStateManager : MonoBehaviour
@@ -20,15 +20,15 @@ public class LightingStateManager : MonoBehaviour
     public struct LightEntry
     {
         public Light light;
-        public float startIntensity;   // "from" value in the PDF
-        public float targetIntensity;  // "to" value in the PDF (or fixed value if Tapat)
+        public float startIntensity;
+        public float targetIntensity;
     }
 
     [System.Serializable]
     public struct LightingStateData
     {
         public string stateName;
-        public GameObject sky;         // Sky to activate when entering this state
+        public GameObject sky;
         public LightEntry[] entries;
     }
 
@@ -40,17 +40,22 @@ public class LightingStateManager : MonoBehaviour
 
     [Header("Play Mode Test")]
     [SerializeField] private LightingState _previewState;
+    [SerializeField] private bool enableKeyboardShortcuts = true;
 
     private int _currentStateIndex = -1;
     private Coroutine _activeTransition;
     private readonly List<GameObject> _activatedByManager = new List<GameObject>();
 
-    // ── Public API ───────────────────────────────────────────────────────────
+    private void Update()
+    {
+        if (!enableKeyboardShortcuts) return;
 
-    /// <summary>
-    /// Transitions to the given state, interpolating from startIntensity to targetIntensity.
-    /// Does nothing if already in that state.
-    /// </summary>
+        if      (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1)) TransitionTo(LightingState.Tapat);
+        else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2)) TransitionTo(LightingState.Radiografia);
+        else if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)) TransitionTo(LightingState.Lluna);
+    }
+
+    /// <summary>Transitions to the given state, interpolating from startIntensity to targetIntensity. Does nothing if already in that state.</summary>
     public void TransitionTo(LightingState state, float duration = -1f)
     {
         int idx = (int)state;
@@ -67,19 +72,14 @@ public class LightingStateManager : MonoBehaviour
         _activeTransition = StartCoroutine(TransitionCoroutine(states[idx], dur));
     }
 
-    /// <summary>
-    /// Advances to the next state (Tapat → Radiografia → Lluna).
-    /// </summary>
+    /// <summary>Advances to the next state (Tapat → Radiografia → Lluna).</summary>
     public void AdvanceState()
     {
         if (_currentStateIndex < states.Length - 1)
             TransitionTo((LightingState)(_currentStateIndex + 1));
     }
 
-    /// <summary>
-    /// Forces the given state instantly (no interpolation).
-    /// Useful for initializing the scene to the Tapat state at startup.
-    /// </summary>
+    /// <summary>Forces the given state instantly (no interpolation). Useful for initializing the scene at startup.</summary>
     public void SnapToState(LightingState state)
     {
         int idx = (int)state;
@@ -99,8 +99,6 @@ public class LightingStateManager : MonoBehaviour
         }
         _currentStateIndex = idx;
     }
-
-    // ── Internal ─────────────────────────────────────────────────────────────
 
     private void SwitchSky(int stateIndex)
     {
@@ -155,7 +153,6 @@ public class LightingStateManager : MonoBehaviour
             yield return null;
         }
 
-        // Guarantee the exact PDF values on completion
         foreach (var entry in target.entries)
         {
             if (entry.light != null)

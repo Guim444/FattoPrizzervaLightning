@@ -29,11 +29,6 @@ public class IntroSequenceManager : MonoBehaviour
     [SerializeField] private float autoWalkSpeed  = 3f;
     [SerializeField] private float introPlayerZ   = 0f;
 
-   [Header("Blink — Sprites")]
-    [SerializeField] private Sprite humanSprite;
-    [SerializeField] private Sprite soulSprite;
-    [SerializeField] private Material humanMaterial;
-
     [Header("Blink — Position")]
     [SerializeField] private float blinkStartX   = -100f;
     [SerializeField] private float blinkEndX     = 0f;
@@ -55,7 +50,6 @@ public class IntroSequenceManager : MonoBehaviour
 
     private void Awake()
     {
-        // Fallback: buscar el SpriteRenderer automáticamente si no está asignado en Inspector
         if (playerSpriteRenderer == null && playerTransform != null)
             playerSpriteRenderer = playerTransform.GetComponentInChildren<SpriteRenderer>();
 
@@ -68,15 +62,13 @@ public class IntroSequenceManager : MonoBehaviour
         _spriteFadeMat = new Material(Shader.Find("Sprites/Default"));
     }
 
-    // ── Public entry from HUDManager ────────────────────────────────────
-
     public void ShowBlackScreen()
     {
         if (mainCamera != null)
         {
             mainCamera.clearFlags      = CameraClearFlags.SolidColor;
             mainCamera.backgroundColor = Color.black;
-            introVirtualCamera.m_Lens.FieldOfView     = introStartFOV;
+            introVirtualCamera.m_Lens.FieldOfView = introStartFOV;
         }
 
         if (playerAnimator != null)     playerAnimator.enabled = false;
@@ -90,36 +82,28 @@ public class IntroSequenceManager : MonoBehaviour
         StartCoroutine(PlayIntroSequence());
     }
 
-    // ── Secuencia principal ───────────────────────────────────────────────
-
     private IEnumerator PlayIntroSequence()
     {
-
-        ActivatePlayerInvisible(); 
+        ActivatePlayerInvisible();
 
         yield return StartCoroutine(HoldBlack());
         yield return StartCoroutine(FadeFromBlack());
 
         if (playerInputHandler != null) playerInputHandler.enabled = true;
+
         _blinkCoroutine = StartCoroutine(BlinkCoroutine());
     }
-
-    // ── Fase 1: pantalla negra + lerp de FOV ─────────────────────────────
 
     private IEnumerator HoldBlack()
     {
         if (holdBlackDuration <= 0f) yield break;
 
-        // Fijar FOV de inicio — el lerp ocurre en FadeFromBlack para que sea visible
         if (mainCamera != null)
             introVirtualCamera.m_Lens.FieldOfView = introStartFOV;
 
         yield return new WaitForSecondsRealtime(holdBlackDuration);
     }
 
-    // ── Fase 2: fade de fondo + jugador aparece caminando ────────────────
-
-    // Ajusta posición Z mientras el jugador sigue inactivo — NO lo activa
     private void ActivatePlayerInvisible()
     {
         if (playerTransform == null) return;
@@ -133,23 +117,26 @@ public class IntroSequenceManager : MonoBehaviour
 
     private IEnumerator FadeFromBlack()
     {
-        // Orden deliberado para blindar contra OnEnable que resetee el color:
-        // 1) Apagar el renderer antes de activar el objeto
         if (playerSpriteRenderer != null) playerSpriteRenderer.enabled = false;
-        // 2) Activar el objeto — todos los OnEnable disparan aquí de forma síncrona
         playerTransform.gameObject.SetActive(true);
-        // 3) Usar material de fade — Sprites/Default respeta SpriteRenderer.color.a
         if (playerSpriteRenderer != null && _spriteFadeMat != null)
             playerSpriteRenderer.sharedMaterial = _spriteFadeMat;
-        // 4) Forzar color a transparente con RGB limpio (fade IN: empieza invisible)
         if (playerSpriteRenderer != null)
             playerSpriteRenderer.color = new Color(1f, 1f, 1f, 0f);
-        // 5) Reactivar renderer — el player renderiza a alpha=0 (invisible)
         if (playerSpriteRenderer != null) playerSpriteRenderer.enabled = true;
+
+        // Enable human animation during auto-walk. Animator drives the sprite frame;
+        // SpriteRenderer.color.a is independent so the fade still works correctly.
+        if (playerAnimator != null)
+        {
+            playerAnimator.enabled = true;
+            playerAnimator.SetBool("IdleFrontHuman", true);
+            playerAnimator.SetBool("IdleFront", false);
+        }
+
         yield return null;
 
         float elapsed = 0f;
-
         while (elapsed < fadeInDuration)
         {
             elapsed += Time.unscaledDeltaTime;
@@ -159,7 +146,7 @@ public class IntroSequenceManager : MonoBehaviour
             if (mainCamera != null)
             {
                 mainCamera.backgroundColor = Color.Lerp(Color.black, fadeEndBgColor, reveal);
-                introVirtualCamera.m_Lens.FieldOfView     = Mathf.Lerp(introStartFOV, introEndFOV, reveal);
+                introVirtualCamera.m_Lens.FieldOfView = Mathf.Lerp(introStartFOV, introEndFOV, reveal);
             }
 
             SetPlayerAlpha(reveal);
@@ -169,7 +156,6 @@ public class IntroSequenceManager : MonoBehaviour
         }
 
         SetPlayerAlpha(1f);
-        // Restaurar material original ahora que el fade terminó
         if (playerSpriteRenderer != null && _originalMaterial != null)
             playerSpriteRenderer.sharedMaterial = _originalMaterial;
         if (mainCamera != null)
@@ -186,8 +172,6 @@ public class IntroSequenceManager : MonoBehaviour
         c.a = alpha;
         playerSpriteRenderer.color = c;
     }
-
-    // ── Blink ─────────────────────────────────────────────────────────────
 
     private IEnumerator BlinkCoroutine()
     {
@@ -222,16 +206,16 @@ public class IntroSequenceManager : MonoBehaviour
 
     private void SetHumanForm()
     {
-        if (playerSpriteRenderer == null) return;
-        if (humanSprite != null)   playerSpriteRenderer.sprite = humanSprite;
-        if (humanMaterial != null) playerSpriteRenderer.sharedMaterial = _spriteFadeMat;
+        if (playerAnimator == null || !playerAnimator.enabled) return;
+        playerAnimator.SetBool("IdleFrontHuman", true);
+        playerAnimator.SetBool("IdleFront", false);
     }
 
     private void SetSoulForm()
     {
-        if (playerSpriteRenderer == null) return;
-        if (soulSprite != null) playerSpriteRenderer.sprite = soulSprite;
-        playerSpriteRenderer.sharedMaterial = _originalMaterial;
+        if (playerAnimator == null || !playerAnimator.enabled) return;
+        playerAnimator.SetBool("IdleFront", true);
+        playerAnimator.SetBool("IdleFrontHuman", false);
     }
 
     private float GetHumanRatio()
@@ -239,13 +223,11 @@ public class IntroSequenceManager : MonoBehaviour
         float x             = playerTransform.position.x;
         float quarterLength = (blinkEndX - blinkStartX) / 4f;
 
-        if (x < blinkStartX + quarterLength)       return ratioQ1;
-        if (x < blinkStartX + quarterLength * 2f)  return ratioQ2;
-        if (x < blinkStartX + quarterLength * 3f)  return ratioQ3;
+        if (x < blinkStartX + quarterLength)      return ratioQ1;
+        if (x < blinkStartX + quarterLength * 2f) return ratioQ2;
+        if (x < blinkStartX + quarterLength * 3f) return ratioQ3;
         return ratioQ4;
     }
-
-    // ── Church ────────────────────────────────────────────────────────────
 
     public void OnPlayerEnterChurch(Transform churchPosition)
     {
@@ -259,9 +241,9 @@ public class IntroSequenceManager : MonoBehaviour
             StopCoroutine(_blinkCoroutine);
             _blinkCoroutine = null;
         }
-        SetSoulForm();
 
         if (playerAnimator != null) playerAnimator.enabled = true;
+        SetSoulForm();
 
         playerInputHandler.enabled = false;
         boundaryClamp.enabled = false;

@@ -14,7 +14,7 @@ using UnityEngine;
 /// </summary>
 public class LightingStateManager : MonoBehaviour
 {
-    public enum LightingState { Tapat = 0, Radiografia = 1, Lluna = 2 }
+    public enum LightingState { Tapat = 0, Radiografia = 1, Lluna = 2, Blue = 3 }
 
     [System.Serializable]
     public struct LightEntry
@@ -28,22 +28,41 @@ public class LightingStateManager : MonoBehaviour
     public struct LightingStateData
     {
         public string stateName;
-        public GameObject sky;
+        [Tooltip("Trigger del Animator del cielo. Vacío = no dispara nada (ej: estado 1, cielo en reposo).")]
+        public string skyAnimatorTrigger;
         public LightEntry[] entries;
     }
 
+    [Header("Sky")]
+    [Tooltip("El único Animator del cielo. Comparte el mismo objeto para todos los estados.")]
+    [SerializeField] private Animator skyAnimator;
+
+    [Header("Lights Objects")]
+    [Tooltip("Activo en estados 1-3 (Tapat, Radiografia, Lluna).")]
+    [SerializeField] private GameObject redLightsObject;
+    [Tooltip("Activo solo en estado 4 (Azul).")]
+    [SerializeField] private GameObject blueLightsObject;
+    [SerializeField] private GameObject redSource;
+    [SerializeField] private GameObject blueSource;
+
     [Header("Lighting States")]
-    [SerializeField] private LightingStateData[] states = new LightingStateData[3];
+    [SerializeField] private LightingStateData[] states = new LightingStateData[4];
 
     [Header("Transition")]
     [SerializeField] private float transitionDuration = 3f;
+
+    [Header("Blue State — Delay")]
+    [Tooltip("Segundos entre pulsar tecla 4 y el snap a luces azules. El cielo y los objetos cambian al instante.")]
+    [SerializeField] private float blueLightsDelay = 2f;
 
     [Header("Play Mode Test")]
     [SerializeField] private LightingState _previewState;
     [SerializeField] private bool enableKeyboardShortcuts = true;
 
     private int _currentStateIndex = -1;
+    private int _currentSkyIndex = -1;
     private Coroutine _activeTransition;
+    private Coroutine _blueTransitionCoroutine;
     private readonly List<GameObject> _activatedByManager = new List<GameObject>();
 
     private void Update()
@@ -53,6 +72,23 @@ public class LightingStateManager : MonoBehaviour
         if      (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1)) TransitionTo(LightingState.Tapat);
         else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2)) TransitionTo(LightingState.Radiografia);
         else if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)) TransitionTo(LightingState.Lluna);
+        else if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4)) StartBlueTransition();
+    }
+
+    /// <summary>Dispara el cielo azul al instante y aplica el snap de luces tras blueLightsDelay segundos.</summary>
+    public void StartBlueTransition()
+    {
+        if (_blueTransitionCoroutine != null)
+            StopCoroutine(_blueTransitionCoroutine);
+        _blueTransitionCoroutine = StartCoroutine(BlueTransitionCoroutine());
+    }
+
+    private IEnumerator BlueTransitionCoroutine()
+    {
+        TriggerSkyOnly(LightingState.Blue);
+        yield return new WaitForSeconds(blueLightsDelay);
+        SnapToState(LightingState.Blue);
+        _blueTransitionCoroutine = null;
     }
 
     /// <summary>Transitions to the given state, interpolating from startIntensity to targetIntensity. Does nothing if already in that state.</summary>
@@ -100,13 +136,33 @@ public class LightingStateManager : MonoBehaviour
         _currentStateIndex = idx;
     }
 
+    /// <summary>Dispara únicamente el trigger del Animator del cielo, sin tocar lightsObject ni intensidades.
+    /// Úsalo cuando el trigger debe adelantarse al cambio de luces (ej: estado 4).</summary>
+    public void TriggerSkyOnly(LightingState state)
+    {
+        int idx = (int)state;
+        if (idx < 0 || idx >= states.Length) return;
+        _currentSkyIndex = idx;
+        var s = states[idx];
+        if (skyAnimator != null && !string.IsNullOrEmpty(s.skyAnimatorTrigger))
+            skyAnimator.SetTrigger(s.skyAnimatorTrigger);
+    }
+
     private void SwitchSky(int stateIndex)
     {
-        for (int i = 0; i < states.Length; i++)
-        {
-            if (states[i].sky != null)
-                states[i].sky.SetActive(i == stateIndex);
-        }
+        bool isBlue = stateIndex == (int)LightingState.Blue;
+        if (redLightsObject  != null) redLightsObject.SetActive(!isBlue);
+        if (blueLightsObject != null) blueLightsObject.SetActive(isBlue);
+        if (redSource        != null) redSource.SetActive(!isBlue);
+        if (blueSource       != null) blueSource.SetActive(isBlue);
+
+        // Si TriggerSkyOnly ya disparó el trigger de este estado, no lo repetimos.
+        if (_currentSkyIndex == stateIndex) return;
+
+        _currentSkyIndex = stateIndex;
+        var current = states[stateIndex];
+        if (skyAnimator != null && !string.IsNullOrEmpty(current.skyAnimatorTrigger))
+            skyAnimator.SetTrigger(current.skyAnimatorTrigger);
     }
 
     [ContextMenu("Apply State")]

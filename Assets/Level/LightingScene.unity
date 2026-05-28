@@ -1147,7 +1147,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &101215753
 Transform:
   m_ObjectHideFlags: 0
@@ -1205,7 +1205,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 101215752}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9708cee4a95cf241a796f82b2a38ea3, type: 3}
   m_Name: 
@@ -7476,6 +7476,116 @@ Transform:
   - {fileID: 1667700038}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &270144982
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 270144983}
+  - component: {fileID: 270144985}
+  - component: {fileID: 270144984}
+  m_Layer: 0
+  m_Name: Sky04
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &270144983
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 270144982}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 54, y: 6.7, z: -0.9}
+  m_LocalScale: {x: 12.0756235, y: 9.767851, z: 12.0756235}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1507914322}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!95 &270144984
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 270144982}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0adab7717b65f2f419c1a2d8c2e49811, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!212 &270144985
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 270144982}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: e81587b6dedb515439b2356bde95ffb3, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 9.6, y: 5.4}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1001 &284094561
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9013,7 +9123,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &392203486
 Transform:
   m_ObjectHideFlags: 0
@@ -10126,7 +10236,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &499184187
 Transform:
   m_ObjectHideFlags: 0
@@ -11815,6 +11925,7 @@ GameObject:
   m_Component:
   - component: {fileID: 766396075}
   - component: {fileID: 766396076}
+  - component: {fileID: 766396077}
   m_Layer: 0
   m_Name: Sky03
   m_TagString: Untagged
@@ -11881,7 +11992,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 196100759, guid: 07ad0d99e90c77b4f9e800476273e8f3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f2bc8ad2bca05c64a83964b1b09182d9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -11892,6 +12003,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &766396077
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766396074}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0adab7717b65f2f419c1a2d8c2e49811, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &767441491
 GameObject:
   m_ObjectHideFlags: 0
@@ -18463,13 +18596,14 @@ GameObject:
   m_Component:
   - component: {fileID: 992064150}
   - component: {fileID: 992064151}
+  - component: {fileID: 992064152}
   m_Layer: 0
   m_Name: Sky02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &992064150
 Transform:
   m_ObjectHideFlags: 0
@@ -18529,7 +18663,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 239836435, guid: 31724362c50c0124088f094cdcedb4ba, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0d8ea366710748544843d0fb840e5556, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -18540,6 +18674,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &992064152
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 992064149}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0adab7717b65f2f419c1a2d8c2e49811, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &997182295
 GameObject:
   m_ObjectHideFlags: 0
@@ -25308,6 +25464,7 @@ Transform:
   - {fileID: 1893225435}
   - {fileID: 992064150}
   - {fileID: 766396075}
+  - {fileID: 270144983}
   - {fileID: 1721653708}
   - {fileID: 499184187}
   m_Father: {fileID: 1432079889}
@@ -27239,7 +27396,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1721653708
 Transform:
   m_ObjectHideFlags: 0
@@ -27620,6 +27777,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1742045142}
   - component: {fileID: 1742045141}
+  - component: {fileID: 1742045145}
+  - component: {fileID: 1742045144}
   m_Layer: 0
   m_Name: ============LightingManager============
   m_TagString: Untagged
@@ -27639,9 +27798,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5cbbd11fdaea534c87c4e8ddad19f9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skyAnimator: {fileID: 1893225437}
+  redLightsObject: {fileID: 1721653707}
+  blueLightsObject: {fileID: 499184186}
+  redSource: {fileID: 392203485}
+  blueSource: {fileID: 1985689987}
   states:
   - stateName: Tapat
-    sky: {fileID: 1893225434}
+    skyAnimatorTrigger: Tapat
     entries:
     - light: {fileID: 1008962379}
       startIntensity: 2
@@ -27680,7 +27844,7 @@ MonoBehaviour:
       startIntensity: 20
       targetIntensity: 20
   - stateName: Radiografia
-    sky: {fileID: 992064149}
+    skyAnimatorTrigger: Radiog
     entries:
     - light: {fileID: 1008962379}
       startIntensity: 2
@@ -27725,7 +27889,7 @@ MonoBehaviour:
       startIntensity: 0
       targetIntensity: 100
   - stateName: Lluna
-    sky: {fileID: 766396074}
+    skyAnimatorTrigger: Lluna
     entries:
     - light: {fileID: 1008962379}
       startIntensity: 2
@@ -27793,7 +27957,62 @@ MonoBehaviour:
     - light: {fileID: 926402178}
       startIntensity: 0
       targetIntensity: 50
+  - stateName: Blue
+    skyAnimatorTrigger: Blue
+    entries:
+    - light: {fileID: 573897481}
+      startIntensity: 0
+      targetIntensity: 0
+    - light: {fileID: 1393276730}
+      startIntensity: 0
+      targetIntensity: 0
+    - light: {fileID: 368022821}
+      startIntensity: 0
+      targetIntensity: 0
+    - light: {fileID: 1321965284}
+      startIntensity: 0
+      targetIntensity: 0
+    - light: {fileID: 2024400287}
+      startIntensity: 0
+      targetIntensity: 0
+    - light: {fileID: 1488175661}
+      startIntensity: 0
+      targetIntensity: 0
+    - light: {fileID: 1955986774}
+      startIntensity: 0
+      targetIntensity: 0
+    - light: {fileID: 689174765}
+      startIntensity: 0
+      targetIntensity: 0
+    - light: {fileID: 1340697781}
+      startIntensity: 0
+      targetIntensity: 0
+    - light: {fileID: 1665616941}
+      startIntensity: 0
+      targetIntensity: 0
+    - light: {fileID: 1926480973}
+      startIntensity: 0
+      targetIntensity: 0
+    - light: {fileID: 1863566057}
+      startIntensity: 0
+      targetIntensity: 0
+    - light: {fileID: 183820003}
+      startIntensity: 0
+      targetIntensity: 0
+    - light: {fileID: 1485772453}
+      startIntensity: 0
+      targetIntensity: 0
+    - light: {fileID: 223620035}
+      startIntensity: 0
+      targetIntensity: 0
+    - light: {fileID: 243499670}
+      startIntensity: 0
+      targetIntensity: 0
+    - light: {fileID: 1861817577}
+      startIntensity: 0
+      targetIntensity: 0
   transitionDuration: 3
+  blueLightsDelay: 2
   _previewState: 0
   enableKeyboardShortcuts: 1
 --- !u!4 &1742045142
@@ -27811,6 +28030,44 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1742045144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1742045140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5371d418928ed1446ad267ad7ee60889, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightingManager: {fileID: 1742045141}
+  windManager: {fileID: 1742045145}
+  windTransitionDuration: 2
+  enableKeyboardShortcuts: 0
+--- !u!114 &1742045145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1742045140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a6e27b6a9d6a1d40ab4cdfdb15f6499, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windStates:
+  - stateName: Max
+    intensityValue: 1
+  - stateName: Medium
+    intensityValue: 0.5
+  - stateName: Min
+    intensityValue: 0.1
+  windAnimators: []
+  intensityParam: WindIntensity
+  defaultTransitionDuration: 2
 --- !u!1001 &1743530919
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29575,13 +29832,14 @@ GameObject:
   m_Component:
   - component: {fileID: 1893225435}
   - component: {fileID: 1893225436}
+  - component: {fileID: 1893225437}
   m_Layer: 0
   m_Name: Sky01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1893225435
 Transform:
   m_ObjectHideFlags: 0
@@ -29641,7 +29899,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 2060856084, guid: e3e8dd2f9279552468c7966140b630d2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0d8ea366710748544843d0fb840e5556, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -29652,6 +29910,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &1893225437
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1893225434}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0adab7717b65f2f419c1a2d8c2e49811, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &1894610143
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30660,7 +30940,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1985689988
 Transform:
   m_ObjectHideFlags: 0

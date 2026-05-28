@@ -24,6 +24,9 @@ public class LightingStateManagerEditor : Editor
         if (GUILayout.Button("→ Lluna"))
             manager.TransitionTo(LightingStateManager.LightingState.Lluna);
 
+        if (GUILayout.Button("→ Azul (snap)"))
+            manager.SnapToState(LightingStateManager.LightingState.Blue);
+
         if (!Application.isPlaying)
             EditorGUILayout.HelpBox("Entra en Play Mode para usar los botones.", MessageType.Info);
 

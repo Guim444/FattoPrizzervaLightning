@@ -31,6 +31,9 @@ public class CameraMovement : MonoBehaviour
 
     [Header("Camera")]
     [SerializeField] private float farClipPlane = 40f;
+    [SerializeField] private float rotationX = 6.234f;
+    [SerializeField] private float rotationY = 89.006f;
+    [SerializeField] private float rotationZ = 359.892f;
 
     public bool zoomed;
 
@@ -60,6 +63,7 @@ public class CameraMovement : MonoBehaviour
         float targetZ = GetTargetZ();
 
         transform.position = new Vector3(targetX, targetY, targetZ);
+        transform.rotation = Quaternion.Euler(rotationX, rotationY, rotationZ);
 
         _baseX      = targetX;
         xZoomTarget = targetX;
@@ -89,6 +93,7 @@ public class CameraMovement : MonoBehaviour
         }
 
         transform.position = new Vector3(newX, newY, newZ);
+        transform.rotation = Quaternion.Euler(rotationX, rotationY, rotationZ);
     }
 
     private void LateUpdate()

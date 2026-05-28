@@ -4609,7 +4609,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1884281755}
-  m_LocalEulerAnglesHint: {x: 3.913, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 6.234, y: 88.98, z: -0.108}
 --- !u!114 &1613816020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4770,10 +4770,13 @@ MonoBehaviour:
   zTransitionMax: 10
   zTargetInside: 0.15
   zTargetOutside: 16
-  combatY: 3
+  combatY: 4
   followPlayerY: 0
   yOffset: 2.4
   farClipPlane: 200
+  rotationX: 1
+  rotationY: 89.006
+  rotationZ: 359.892
   zoomed: 0
 --- !u!1001 &1656278488
 PrefabInstance:
@@ -6273,7 +6276,7 @@ MonoBehaviour:
   playerTransformFront: {fileID: 1426844573}
   playerAnimator: {fileID: 2004004937}
   startPositionX: -102
-  freeMoveStartCameraY: 5
+  freeMoveStartCameraY: 3
   cinemachineZoomController: {fileID: 685871263}
   cinemachineBrain: {fileID: 1613816023}
   cameraMovement: {fileID: 1613816024}

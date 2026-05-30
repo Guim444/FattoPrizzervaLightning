@@ -1,8 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// Responsabilidad única: gestionar la detección e inicio de interacciones con el entorno.
-/// Lanza un raycast desde la posición del jugador y delega en la interfaz IInteractable.
+/// Single responsibility: manage detection and initiation of environment interactions.
+/// Casts a raycast from the player's position and delegates to the IInteractable interface.
 /// </summary>
 public class PlayerInteractor : MonoBehaviour
 {
@@ -10,13 +10,13 @@ public class PlayerInteractor : MonoBehaviour
     // INTERACTION CONFIG
     // ==================================================
     [Header("Interaction")]
-    [Tooltip("Capas con las que el raycast de interacción puede colisionar.")]
+    [Tooltip("Layers the interaction raycast can collide with.")]
     public LayerMask interactMask;
 
-    [Tooltip("Distancia máxima de interacción en unidades de mundo.")]
+    [Tooltip("Maximum interaction distance in world units.")]
     public float interactRange = 3f;
 
-    [Tooltip("Altura desde la que se lanza el raycast (relativa al pivote del jugador).")]
+    [Tooltip("Height from which the raycast is cast (relative to player pivot).")]
     public float raycastHeight = 1.5f;
 
     // ==================================================
@@ -24,8 +24,8 @@ public class PlayerInteractor : MonoBehaviour
     // ==================================================
 
     /// <summary>
-    /// Intenta interactuar con el objeto frente al jugador.
-    /// Se llama desde PlayerInputHandler cuando se detecta la acción de interacción.
+    /// Tries to interact with the object in front of the player.
+    /// Called from PlayerInputHandler when the interaction action is detected.
     /// </summary>
     public void TryInteract()
     {
@@ -33,7 +33,7 @@ public class PlayerInteractor : MonoBehaviour
 
         if (Physics.Raycast(origin, transform.forward, out var hit, interactRange, interactMask))
         {
-            // TODO: implementar IInteractable y llamar a hit.collider.GetComponent<IInteractable>()?.Interact()
+            // TODO: implement IInteractable and call hit.collider.GetComponent<IInteractable>()?.Interact()
         }
     }
 }

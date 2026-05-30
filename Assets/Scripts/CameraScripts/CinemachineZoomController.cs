@@ -2,31 +2,31 @@ using Cinemachine;
 using UnityEngine;
 
 /// <summary>
-/// Controla el zoom moviendo físicamente la cámara (CameraDistance) según la
-/// profundidad del jugador en X. Al no cambiar el FOV, el fondo no sufre
-/// distorsión de perspectiva.
+/// Controls zoom by physically moving the camera (CameraDistance) based on
+/// the player's X depth. By not changing the FOV, the background avoids
+/// perspective distortion.
 /// </summary>
 public class CinemachineZoomController : MonoBehaviour
 {
-    [Header("Referencias")]
+    [Header("References")]
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private Transform player;
 
-    [Header("Zonas de profundidad (eje X del jugador)")]
-    [Tooltip("Por debajo de este X el jugador está 'cerca' de la cámara")]
+    [Header("Depth Zones (player X axis)")]
+    [Tooltip("Below this X the player is 'close' to the camera")]
     [SerializeField] private float xTransitionMin = 6f;
 
-    [Tooltip("Por encima de este X el jugador está 'lejos' de la cámara")]
+    [Tooltip("Above this X the player is 'far' from the camera")]
     [SerializeField] private float xTransitionMax = 10f;
 
-    [Header("Distancia de cámara")]
-    [Tooltip("Distancia cuando el jugador está cerca (zoom in)")]
+    [Header("Camera Distance")]
+    [Tooltip("Distance when the player is close (zoom in)")]
     [SerializeField] private float distanceClose = 7f;
 
-    [Tooltip("Distancia cuando el jugador está lejos (zoom out)")]
+    [Tooltip("Distance when the player is far (zoom out)")]
     [SerializeField] private float distanceFar = 13f;
 
-    [Tooltip("Velocidad de la transición")]
+    [Tooltip("Transition speed")]
     [SerializeField] private float smoothTime = 0.3f;
 
     private CinemachineFramingTransposer _transposer;
@@ -36,7 +36,7 @@ public class CinemachineZoomController : MonoBehaviour
     {
         if (virtualCamera == null)
         {
-            Debug.LogError("[CinemachineZoomController] Virtual Camera no asignada.");
+            Debug.LogError("[CinemachineZoomController] Virtual Camera not assigned.");
             enabled = false;
             return;
         }
@@ -44,7 +44,7 @@ public class CinemachineZoomController : MonoBehaviour
         _transposer = virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         if (_transposer == null)
         {
-            Debug.LogError("[CinemachineZoomController] No se encontró CinemachineFramingTransposer.");
+            Debug.LogError("[CinemachineZoomController] CinemachineFramingTransposer not found.");
             enabled = false;
             return;
         }

@@ -26,7 +26,6 @@ public class PunchRunningState : IStateActions
         if (punchExecuted) return;
         punchExecuted = true;
 
-        player.movement.EnforceInvertedSpriteFlip();
         player.animator.SetTrigger("isPunching");
 
         var combat   = player.combat;

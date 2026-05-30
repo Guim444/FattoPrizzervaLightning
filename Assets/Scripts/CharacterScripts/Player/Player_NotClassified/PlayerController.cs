@@ -1,9 +1,9 @@
 using UnityEngine;
 
 /// <summary>
-/// Orquestador principal del jugador.
-/// Responsabilidad única: mantener referencias y coordinar el ciclo de vida (Awake/Update).
-/// Toda la lógica específica vive en los componentes especializados.
+/// Main player orchestrator.
+/// Single responsibility: maintain references and coordinate the lifecycle (Awake/Update).
+/// All specific logic lives in the specialized components.
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(PlayerInputHandler))]
@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public CombatAttackHandler combatAttackHandler;
 
     // ==================================================
-    // SHARED STATE (leído por múltiples componentes)
+    // SHARED STATE (read by multiple components)
     // ==================================================
     internal State currentState = State.Idle;
     public bool canMove = true;
@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
     [Header("Ring System")]
     public bool isInsideRing = false;
 
-    // TODO: reconectar con RingSlopeHandler cuando se implemente el slope system
+    // TODO: reconnect with RingSlopeHandler when slope system is implemented
     public bool isOnSlope => false;
     public Transform ringCenter => null;
 
@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviour
         inputHandler.ConsumeFrameInputs();
     }
 
-    // Llamado por Animation Event al final de ExitDeenergized
+    // Called by Animation Event at the end of ExitDeenergized
     public void OnDeenergizedExitDone()
     {
         canMove = true;

@@ -49,6 +49,22 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   ignoreReflectionProbes: 1
+--- !u!114 &-1115646273603524127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc4e184190cdd074990069719b5d0ac2, type: 3}
+  m_Name: MaskRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  layerMask:
+    m_Bits: 4096
+  maskMaterial: {fileID: 2100000, guid: 31913ab930fca6f46a6916e8f1409a6a, type: 2}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,7 +96,8 @@ MonoBehaviour:
   - {fileID: 1389611827884782644}
   - {fileID: 5993250553209430498}
   - {fileID: 9019489105833884506}
-  m_RendererFeatureMap: 4cdbace031c18c8d908feb7af477c316b08bf8454bd4add034f4c05098e44813e221f6e19f4d2c535afbbbf08da92b7d
+  - {fileID: 8884217464984721623}
+  m_RendererFeatureMap: 4cdbace031c18c8d908feb7af477c316b08bf8454bd4add034f4c05098e44813e221f6e19f4d2c535afbbbf08da92b7dd758bcbbb6144b7b
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -118,7 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
   m_Name: RenderObjects
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     passTag: RenderObjects
     Event: 300
@@ -175,7 +192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
   m_Name: Black Outline
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 450
   fetchColorBuffer: 1
   requirements: 0
@@ -183,6 +200,48 @@ MonoBehaviour:
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
+--- !u!114 &8884217464984721623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
+  m_Name: RenderObjects
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    passTag: RenderObjects
+    Event: 300
+    filterSettings:
+      RenderQueueType: 0
+      LayerMask:
+        serializedVersion: 2
+        m_Bits: 4096
+      PassNames: []
+    overrideMaterial: {fileID: 2100000, guid: 985ee7f2a3caf4043bead8b6091893ed, type: 2}
+    overrideMaterialPassIndex: 0
+    overrideShader: {fileID: 0}
+    overrideShaderPassIndex: 0
+    overrideMode: 1
+    overrideDepthState: 0
+    depthCompareFunction: 4
+    enableWrite: 1
+    stencilSettings:
+      overrideStencilState: 0
+      stencilReference: 0
+      stencilCompareFunction: 8
+      passOperation: 0
+      failOperation: 0
+      zFailOperation: 0
+    cameraSettings:
+      overrideCamera: 0
+      restoreCamera: 1
+      offset: {x: 0, y: 0, z: 0, w: 0}
+      cameraFieldOfView: 60
 --- !u!114 &9019489105833884506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,11 +254,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
   m_Name: WhiteOutline
   m_EditorClassIdentifier: 
-  m_Active: 1
-  injectionPoint: 600
+  m_Active: 0
+  injectionPoint: 450
   fetchColorBuffer: 1
   requirements: 0
   passMaterial: {fileID: 2100000, guid: 1801ce0ed11b1bd4f9c64d3237e61f93, type: 2}
   passIndex: 0
-  bindDepthStencilAttachment: 1
+  bindDepthStencilAttachment: 0
   m_Version: 1

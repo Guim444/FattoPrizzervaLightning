@@ -1,35 +1,35 @@
 using UnityEngine;
 
 /// <summary>
-/// Responsabilidad única: ejecutar un ataque del jugador.
-/// Detecta al objetivo con Raycast/OverlapSphere, llama a KnockbackResolver,
-/// aplica daño + knockback al target y reacción (recoil) al propio player.
+/// Single responsibility: execute a player attack.
+/// Detects the target with Raycast/OverlapSphere, calls KnockbackResolver,
+/// applies damage + knockback to the target and recoil to the player.
 ///
-/// Reemplaza a PlayerCombat.ExecutePunch().
-/// ClashHandler sigue siendo independiente (gestiona colisión física continua).
+/// Replaces PlayerCombat.ExecutePunch().
+/// ClashHandler remains independent (handles continuous physical collision).
 ///
-/// SETUP: añadir al mismo GameObject que PlayerController.
+/// SETUP: add to the same GameObject as PlayerController.
 /// </summary>
 [RequireComponent(typeof(PlayerController))]
 public class CombatAttackHandler : MonoBehaviour
 {
     // --------------------------------------------------------
-    //  REFERENCIAS
+    //  REFERENCES
     // --------------------------------------------------------
 
     [Header("References")]
-    [Tooltip("Opcional. Si es null se usan los valores por defecto del KnockbackResolver.")]
+    [Tooltip("Optional. If null, KnockbackResolver default values are used.")]
     public KnockbackResolverConfig resolverConfig;
 
     // --------------------------------------------------------
-    //  PARÁMETROS DE DISEÑO
+    //  DESIGN PARAMETERS
     // --------------------------------------------------------
 
     [Header("Game Design: Attack Detection")]
     public float punchRange = 1.8f;
 
-    public float punchRangeRunning = 2.6f; // PunchRunning tiene más alcance
-    public float edgeThresholdRatio = 0.6f; // hits por encima de este ratio = borde (½ daño)
+    public float punchRangeRunning = 2.6f; // PunchRunning has longer range
+    public float edgeThresholdRatio = 0.6f; // hits above this ratio = edge (½ damage)
     public LayerMask enemyLayer;
 
     [Header("Game Design: Damage Values")]
@@ -39,8 +39,8 @@ public class CombatAttackHandler : MonoBehaviour
     public float edgeDamageMultiplier = 0.5f;
 
     [Header("Game Design: Knockback Multiplier")]
-    [Tooltip("Multiplicador de knockback adicional al atacar (vs colisionar).\n" +
-             "Ejemplo: si ClashHandler da 8, atacar dará 8 * attackKnockbackMultiplier")]
+    [Tooltip("Additional knockback multiplier when attacking (vs colliding).\n" +
+             "Example: if ClashHandler gives 8, attacking gives 8 * attackKnockbackMultiplier")]
     public float attackKnockbackMultiplier = 1.5f;
 
     // --------------------------------------------------------
@@ -56,14 +56,14 @@ public class CombatAttackHandler : MonoBehaviour
     void Awake() => _player = GetComponent<PlayerController>();
 
     // --------------------------------------------------------
-    //  API PÚBLICA
+    //  PUBLIC API
     // --------------------------------------------------------
 
     /// <summary>
-    /// Punto de entrada único para cualquier ataque del jugador.
-    /// Llamar desde el estado correspondiente de la StateMachine
-    /// (PunchingState, PunchRunningState) en su Enter() o en el
-    /// frame de impacto según la animación.
+    /// Single entry point for any player attack.
+    /// Call from the corresponding StateMachine state
+    /// (PunchingState, PunchRunningState) in its Enter() or on the
+    /// impact frame according to the animation.
     /// </summary>
     public void ExecuteAttack()
     {
@@ -73,8 +73,8 @@ public class CombatAttackHandler : MonoBehaviour
         AttackType attackType = KnockbackResolver.StateToAttackType(_player.currentState);
         Vector3 direction = GetAttackDirection();
 
-        // Esfera proyectada hacia adelante: el origen se desplaza la mitad del radio
-        // en la dirección de ataque, así el alcance efectivo = radius * 1.5 en vez de radius.
+        // Sphere projected forward: origin is offset half the radius
+        // in the attack direction, so effective range = radius * 1.5 instead of radius.
         float radius = attackType == AttackType.PunchRunning ? punchRangeRunning : punchRange;
         Vector3 origin = transform.position + Vector3.up * 0.5f + direction * (radius * 0.5f);
 
@@ -83,7 +83,7 @@ public class CombatAttackHandler : MonoBehaviour
         LayerMask mask = enemyLayer.value == 0 ? ~0 : enemyLayer;
         Collider[] all = Physics.OverlapSphere(origin, radius, mask);
 
-        // Solo colliders de otros GameObjects y que estén en la dirección de ataque
+        // Only colliders from other GameObjects that are in the attack direction
         Collider[] hits = System.Array.FindAll(all, c =>
             c.gameObject != gameObject &&
             Vector3.Dot((c.transform.position - transform.position).normalized, direction) > 0.3f
@@ -91,14 +91,14 @@ public class CombatAttackHandler : MonoBehaviour
 
         if (hits.Length == 0)
         {
-            Debug.Log($"[Attack] Sin impacto — origin:{origin} radius:{radius} dir:{direction}");
+            Debug.Log($"[Attack] No hit — origin:{origin} radius:{radius} dir:{direction}");
             return;
         }
 
         Collider closest = GetClosest(hits);
         float damage = CalculateDamage(attackType, true);
 
-        // El endurance del enemigo ya no existe — solo importa el del player
+        // Enemy endurance no longer exists — only the player's matters
         KnockbackResult result = KnockbackResolver.Resolve(
             attackType,
             _player.combat.endurance,
@@ -120,7 +120,7 @@ public class CombatAttackHandler : MonoBehaviour
                   $"forceEnemy:{result.ForceOnTarget:F1} forceSelf:{result.ForceOnSelf:F1}");
     }
 
-    // CombatAttackHandler.cs — método GetClosest completo
+    // CombatAttackHandler.cs — full GetClosest method
     private Collider GetClosest(Collider[] hits)
     {
         Collider closest = hits[0];

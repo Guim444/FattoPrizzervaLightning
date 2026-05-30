@@ -1,24 +1,24 @@
 using UnityEngine;
 
 /// <summary>
-/// Detects direct physical contact (clash) between the player and RioTutte
-/// and delegates force calculations to KnockbackResolver.
+/// Detecta el contacto físico directo (clash) entre el player y RioTutte
+/// y delega el cálculo de fuerzas a KnockbackResolver.
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
 public class ClashHandler : MonoBehaviour
 {
     // --------------------------------------------------------
-    //  CONFIGURATION
+    //  CONFIGURACIÓN
     // --------------------------------------------------------
 
     [Header("References")]
     public PlayerController player;
 
-    [Tooltip("Optional. If null, KnockbackResolver default values are used.")]
+    [Tooltip("Opcional. Si es null se usan los valores por defecto del KnockbackResolver.")]
     public KnockbackResolverConfig resolverConfig;
 
     [Header("Game Design: Clash")]
-    [Tooltip("Minimum time between two consecutive clashes.")]
+    [Tooltip("Tiempo mínimo entre dos choques consecutivos.")]
     public float clashCooldown = 0.6f;
 
     // --------------------------------------------------------
@@ -54,8 +54,8 @@ public class ClashHandler : MonoBehaviour
         if (_cooldownTimer > 0f) return;
         if (!player.canMove) return;
 
-        // Pure Running only. In PunchRunning, knockback is handled by ExecuteAttack (animation event)
-        // — if both fired, RioTutte would receive double knockback.
+        // Solo Running puro. En PunchRunning el knockback lo gestiona ExecuteAttack (animation event)
+        // — si dispararan ambos, RioTutte recibiría doble knockback.
         if (player.currentState != State.Running) return;
 
         var enemy = hit.collider.GetComponent<RioTutteEnemy>();

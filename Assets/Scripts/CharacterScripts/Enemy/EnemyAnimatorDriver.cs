@@ -1,20 +1,20 @@
 using UnityEngine;
 
 /// <summary>
-/// Abstract base class for enemy animator controllers.
+/// Clase base abstracta del controlador de animaciones para enemigos.
 ///
-/// SINGLE RESPONSIBILITY (SRP):
-///   Reads EnemyBase state and pushes common parameters
-///   to the Animator each frame. Contains no gameplay logic.
+/// RESPONSABILIDAD ÚNICA (SRP):
+///   Leer el estado de EnemyBase y volcar los parámetros comunes
+///   al Animator cada frame. No contiene lógica de juego.
 ///
-/// EXTENSION (OCP):
-///   Each concrete enemy implements DriveSpecificParams() to
-///   write its own parameters without modifying this class.
+/// EXTENSIÓN (OCP):
+///   Cada enemigo concreto implementa DriveSpecificParams() para
+///   escribir sus propios parámetros sin modificar esta clase.
 ///
-/// PROJECT CONVENTION:
-///   Only write continuous-state bools/ints here.
-///   SetTrigger (point-in-time events) are called from the code
-///   that generates the event (e.g.: RioTutteAttacks, RioTutteEnemy).
+/// CONVENCIÓN DEL PROYECTO:
+///   Solo escribe bools/ints de estado continuo aquí.
+///   Los SetTrigger (eventos puntuales) se llaman desde el código
+///   que genera el evento (ej: RioTutteAttacks, RioTutteEnemy).
 /// </summary>
 public abstract class EnemyAnimatorDriver : MonoBehaviour
 {
@@ -39,8 +39,8 @@ public abstract class EnemyAnimatorDriver : MonoBehaviour
     }
 
     /// <summary>
-    /// Writes the Animator parameters specific to this enemy.
-    /// Called every frame after the common parameters.
+    /// Escribe los parámetros del Animator específicos de este enemigo.
+    /// Llamado cada frame después de los parámetros comunes.
     /// </summary>
     protected abstract void DriveSpecificParams();
 }

@@ -1,42 +1,42 @@
 using UnityEngine;
 
 /// <summary>
-/// Manages the player's knockback.
-/// No longer calculates forces: receives them pre-resolved from CombatAttackHandler
-/// or ClashHandler via ReceiveKnockback().
+/// Gestiona el knockback del jugador.
+/// Ya no calcula fuerzas: las recibe ya resueltas desde CombatAttackHandler
+/// o ClashHandler vía ReceiveKnockback().
 ///
-/// CHANGES from the previous version:
-///   - All physics delegated to KnockbackPhysicsBody (shared struct).
-///   - ReceiveKnockback(direction, force) receives direct force, no internal lookup.
-///   - Mass is auto-configured from the player's endurance in Awake().
-///   - Removed TypeOfDamage / pushForce* system — that logic
-///     now lives in KnockbackResolver + KnockbackResolverConfig.
+/// CAMBIOS respecto a la versión anterior:
+///   - Toda la física delegada a KnockbackPhysicsBody (struct compartido).
+///   - ReceiveKnockback(direction, force) recibe fuerza directa, sin lookup interno.
+///   - La masa se auto-configura desde el endurance del jugador en Awake().
+///   - Eliminado el sistema de TypeOfDamage / pushForce* — esa lógica
+///     vive ahora en KnockbackResolver + KnockbackResolverConfig.
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
 public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
 {
     // --------------------------------------------------------
-    //  CONFIGURATION
+    //  CONFIGURACIÓN
     // --------------------------------------------------------
 
     [Header("Physics")]
-    [Tooltip("If true, mass is automatically calculated from the player's endurance.")]
+    [Tooltip("Si true, la masa se calcula automáticamente desde el endurance del jugador.")]
     public bool autoMassFromEndurance = true;
 
-    [Tooltip("Manual mass (only if autoMassFromEndurance = false).")]
+    [Tooltip("Masa manual (solo si autoMassFromEndurance = false).")]
     public float manualMass = 1f;
 
-    [Tooltip("Ground friction. Higher = harder, heavier stop.")]
+    [Tooltip("Fricción en suelo. Mayor = parada más brusca y con más peso.")]
     public float groundFriction = 5f;
 
-    [Tooltip("Air friction. Lower = more glide.")]
+    [Tooltip("Fricción en aire. Menor = más planeo.")]
     public float airFriction = 1.5f;
 
-    [Tooltip("Speed threshold below which knockback is considered finished.")]
+    [Tooltip("Umbral de velocidad para considerar el knockback terminado.")]
     public float stopThreshold = 0.15f;
 
     // --------------------------------------------------------
-    //  STATE (visible in Inspector for debug)
+    //  ESTADO (visible en Inspector para debug)
     // --------------------------------------------------------
 
     [Header("Debug (read-only)")]
@@ -51,13 +51,13 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
     private PlayerController         _player;
     private KnockbackPhysicsBody     _body;
 
-    /// <summary>True while knockback is active.</summary>
+    /// <summary>True mientras el knockback esté activo.</summary>
     public bool IsKnockedBack => _body.IsActive;
 
     /// <summary>
-    /// True only when knockback comes from an enemy attack.
-    /// False for own punch recoil or collision (ClashHandler).
-    /// Read by PlayerAnimations to decide whether to show the animation.
+    /// True solo cuando el knockback proviene de un ataque de enemigo.
+    /// False para recoil de puñetazo propio o colisión (ClashHandler).
+    /// Lo lee PlayerAnimations para decidir si muestra la animación.
     /// </summary>
     public bool ShowKnockbackAnim { get; private set; }
 
@@ -78,7 +78,7 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
 
     void Start()
     {
-        // Auto-mass from endurance (requires PlayerCombat to already be initialized)
+        // Auto-masa desde endurance (necesita que PlayerCombat ya esté inicializado)
         if (autoMassFromEndurance && _player.combat != null)
             _body.mass = Mathf.Max(0.6f, KnockbackPhysicsBody.MassFromEndurance(_player.combat.endurance));
         else
@@ -90,14 +90,14 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
     // --------------------------------------------------------
 
     /// <summary>
-    /// Receives pre-resolved knockback (direct force).
-    /// Called by CombatAttackHandler (attacker reaction)
-    /// or by RioTutteEnemy (when attacking the player).
+    /// Recibe knockback ya resuelto (fuerza directa).
+    /// Llamado por CombatAttackHandler (reacción del atacante)
+    /// o por RioTutteEnemy (cuando ataca al player).
     ///
-    /// NOTE: the second parameter is called 'preResolvedForce' to make clear
-    /// that it is NOT the attacker's endurance — it is the final force.
-    /// The IKnockbackable interface keeps the (Vector3, int) signature for
-    /// compatibility; we cast to float internally.
+    /// NOTA: el segundo parámetro se llama 'preResolvedForce' para dejar
+    /// claro que NO es el endurance del atacante — ya es la fuerza final.
+    /// La interfaz IKnockbackable mantiene la firma (Vector3, int) para
+    /// compatibilidad; usamos un cast a float internamente.
     /// </summary>
     public void ReceiveKnockback(Vector3 direction, float force)
     {
@@ -106,8 +106,8 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
     }
 
     /// <summary>
-    /// Call only from RioTutteEnemy (direct attack on player).
-    /// Activates the knockback animation in addition to the physics.
+    /// Llamar solo desde RioTutteEnemy (ataque directo al player).
+    /// Activa la animación de knockback además de la física.
     /// </summary>
     public void ReceiveEnemyKnockback(Vector3 direction, float force)
     {
@@ -117,7 +117,7 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
 
     private void ApplyKnockback(Vector3 direction, float force)
     {
-        // Recalculate mass in case endurance changed at runtime
+        // Recalcula masa por si el endurance cambió en runtime
         if (autoMassFromEndurance && _player.combat != null)
             _body.mass = Mathf.Max(0.6f, KnockbackPhysicsBody.MassFromEndurance(_player.combat.endurance));
 
@@ -131,7 +131,7 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
     // --------------------------------------------------------
 
     /// <summary>
-    /// Called every frame from PlayerController.Update().
+    /// Llamado cada frame desde PlayerController.Update().
     /// </summary>
     public void HandleKnockback()
     {
@@ -142,15 +142,15 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
         if (_cc.enabled)
             _cc.Move(delta);
 
-        // Block normal movement during knockback
+        // Bloquea el movimiento normal durante knockback
         _player.movement.LastDirection = Vector3.zero;
         _player.movement.CurrentSpeed  = Vector3.zero;
 
-        // Update debug
+        // Actualiza debug
         _isKnockedBack   = _body.IsActive;
         _debugVelocity   = _body.Velocity;
 
-        // When knockback ends, return to Idle
+        // Cuando termina el knockback, vuelve a Idle
         if (!_body.IsActive)
         {
             ShowKnockbackAnim = false;
@@ -160,7 +160,7 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
     }
 
     /// <summary>
-    /// Cancels knockback immediately (e.g.: player death).
+    /// Cancela el knockback inmediatamente (ej: muerte del jugador).
     /// </summary>
     public void CancelKnockback() => _body.Cancel();
 }

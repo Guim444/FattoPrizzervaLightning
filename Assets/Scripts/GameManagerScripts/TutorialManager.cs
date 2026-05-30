@@ -26,17 +26,17 @@ public class TutorialManager : MonoBehaviour
     [System.Serializable]
     public class EnduranceMilestone
     {
-        [Tooltip("Descriptive name of the milestone (Inspector only).")]
-        public string label = "Milestone";
+        [Tooltip("Nombre descriptivo del hito (solo para el Inspector).")]
+        public string label = "Hito";
 
-        [Tooltip("Endurance value the player reaches when this milestone is hit.")]
+        [Tooltip("Valor al que sube el Endurance del player al alcanzar este hito.")]
         public int newEndurance = 1;
 
-        [Tooltip("Seconds to wait before applying the change " +
-                 "(time for prior visual/SFX feedback).")]
+        [Tooltip("Segundos de espera antes de aplicar el cambio " +
+                 "(tiempo para feedback visual/SFX previo).")]
         public float delaySeconds = 0.5f;
 
-        [Tooltip("Optional event on activation (show UI, SFX, particle effect, etc.).")]
+        [Tooltip("Evento opcional al activar (mostrar UI, SFX, efecto de partículas, etc.).")]
         public UnityEvent onTriggered;
     }
 
@@ -47,7 +47,7 @@ public class TutorialManager : MonoBehaviour
     [Header("References")]
     public PlayerController player;
 
-    [Header("Endurance Milestones (chronological order)")]
+    [Header("Endurance Milestones (orden cronológico)")]
     public List<EnduranceMilestone> milestones = new List<EnduranceMilestone>
     {
         new EnduranceMilestone { label = "Endurance 0 → 1", newEndurance = 1, delaySeconds = 0.5f },
@@ -72,7 +72,7 @@ public class TutorialManager : MonoBehaviour
     {
         if (_nextMilestoneIndex >= milestones.Count)
         {
-            Debug.Log("[TutorialManager] All milestones completed.");
+            Debug.Log("[TutorialManager] Todos los milestones completados.");
             return;
         }
 
@@ -88,7 +88,7 @@ public class TutorialManager : MonoBehaviour
     {
         if (index < 0 || index >= milestones.Count)
         {
-            Debug.LogWarning($"[TutorialManager] Index {index} out of range.");
+            Debug.LogWarning($"[TutorialManager] Índice {index} fuera de rango.");
             return;
         }
 
@@ -101,7 +101,7 @@ public class TutorialManager : MonoBehaviour
     public void ResetMilestones()
     {
         _nextMilestoneIndex = 0;
-        Debug.Log("[TutorialManager] Milestones reset.");
+        Debug.Log("[TutorialManager] Milestones reiniciados.");
     }
 
     // ==================================================

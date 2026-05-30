@@ -1,12 +1,12 @@
 using UnityEngine;
 
 /// <summary>
-/// Clamps the player's Z position (free movement zone).
-/// Used by HUDManager to restrict movement outside of combat.
+/// Clampea la posición del jugador en Z (zona de movimiento libre).
+/// Usado por HUDManager para restringir el movimiento fuera del combate.
 /// </summary>
 public class PlayerBoundaryClamp : MonoBehaviour
 {
-    [Header("Z Limits")]
+    [Header("Límites en Z")]
     public float minZ = -5f;
     public float maxZ =  5f;
 

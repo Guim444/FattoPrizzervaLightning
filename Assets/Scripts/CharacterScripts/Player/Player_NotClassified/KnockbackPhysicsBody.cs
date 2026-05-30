@@ -1,55 +1,55 @@
 using UnityEngine;
 
 /// <summary>
-/// Knockback physics engine shared by the player and any enemy.
-/// Not a MonoBehaviour: it is a struct that lives inside the handlers.
+/// Motor de física de knockback compartido por el player y cualquier enemigo.
+/// No es un MonoBehaviour: es un struct que vive dentro de los handlers.
 ///
-/// PHYSICS:
-///   - Real friction decay:      v -= v * friction * dt
-///     (not Lerp, which never reaches 0 and produces ghost movement)
-///   - Ground vs air friction:   groundFriction >> airFriction
-///   - Mass:                     initial impulse = force / mass
-///     A heavy character (high endurance) absorbs more force.
-///   - Gravity:                  Y component drops to -gravityPull when airborne.
-///     When CC detects ground it resets to -2 (Unity standard).
+/// FÍSICA:
+///   - Decaimiento por fricción real:  v -= v * friction * dt
+///     (no Lerp, que nunca llega a 0 y produce movimiento fantasma)
+///   - Fricción de suelo vs aire:      groundFriction >> airFriction
+///   - Masa:                           impulso inicial = force / mass
+///     Un personaje pesado (endurance alto) absorbe más fuerza.
+///   - Gravedad:                       componente Y baja a -gravityPull cuando está en aire.
+///     Cuando el CC detecta suelo se resetea a -2 (estándar Unity).
 ///
-/// USAGE:
-///   1. Call Receive() on impact.
-///   2. Call Tick() every frame in Update() while IsActive is true.
-///   3. Caller applies the resulting cc.Move.
+/// USO:
+///   1. Llamar Receive() al impactar.
+///   2. Llamar Tick() cada frame en Update() mientras IsActive sea true.
+///   3. El caller aplica el cc.Move resultante.
 /// </summary>
 [System.Serializable]
 public struct KnockbackPhysicsBody
 {
     // --------------------------------------------------------
-    //  CONFIGURATION (editable via Inspector in the handler)
+    //  CONFIGURACIÓN (editable por Inspector en el handler)
     // --------------------------------------------------------
 
-    [Tooltip("Higher mass → less displacement when receiving the same impulse.\n" +
-             "Suggested value: 1 + endurance * 0.4")]
+    [Tooltip("A mayor masa, menor desplazamiento al recibir el mismo impulso.\n" +
+             "Valor sugerido: 1 + endurance * 0.4")]
     public float mass;
 
-    [Tooltip("Friction when CC is grounded. Fast decay = feeling of weight.")]
+    [Tooltip("Fricción cuando el CC está en suelo. Decaimiento rápido = sensación de peso.")]
     public float groundFriction;
 
-    [Tooltip("Friction in the air. Lower than groundFriction to preserve inertia.")]
+    [Tooltip("Fricción en el aire. Menor que groundFriction para conservar inercia.")]
     public float airFriction;
 
-    [Tooltip("Minimum speed before stopping the knockback (avoids micro-vibrations).")]
+    [Tooltip("Velocidad mínima antes de detener el knockback (evita micro-vibraciones).")]
     public float stopThreshold;
 
     // --------------------------------------------------------
-    //  RUNTIME STATE (do not touch from Inspector)
+    //  ESTADO RUNTIME (no tocar desde Inspector)
     // --------------------------------------------------------
 
-    /// <summary>Horizontal knockback velocity in world space.</summary>
+    /// <summary>Velocidad horizontal de knockback en world space.</summary>
     public Vector3 Velocity { get; private set; }
 
-    /// <summary>True while knockback is active.</summary>
+    /// <summary>True mientras haya knockback activo.</summary>
     public bool IsActive { get; private set; }
 
     // --------------------------------------------------------
-    //  DEFAULT VALUES CONSTRUCTOR
+    //  CONSTRUCTOR DE VALORES POR DEFECTO
     // --------------------------------------------------------
 
     public static KnockbackPhysicsBody Default => new KnockbackPhysicsBody
@@ -61,41 +61,41 @@ public struct KnockbackPhysicsBody
     };
 
     // --------------------------------------------------------
-    //  PUBLIC API
+    //  API PÚBLICA
     // --------------------------------------------------------
 
     /// <summary>
-    /// Receives a knockback impulse.
-    /// direction must be normalized and without Y component (horizontal only).
+    /// Recibe un impulso de knockback.
+    /// direction debe estar normalizado y sin componente Y (horizontal puro).
     /// </summary>
     public void Receive(Vector3 direction, float force)
     {
         if (mass <= 0f) mass = 1f;
         float effectiveForce = force / mass;
 
-        // We add instead of replace so two rapid impacts accumulate
+        // Sumamos en lugar de reemplazar para que dos impactos rápidos acumulen
         Velocity  += direction.normalized * effectiveForce;
-        Velocity   = new Vector3(Velocity.x, 0f, Velocity.z); // horizontal plane only
+        Velocity   = new Vector3(Velocity.x, 0f, Velocity.z); // solo plano horizontal
         IsActive   = true;
     }
 
     /// <summary>
-    /// Updates physics each frame. Returns the movement delta
-    /// that the caller must pass to cc.Move().
+    /// Actualiza la física cada frame. Devuelve el delta de movimiento
+    /// que el caller debe pasar a cc.Move().
     /// </summary>
-    /// <param name="isGrounded">cc.isGrounded from the CharacterController.</param>
+    /// <param name="isGrounded">cc.isGrounded del CharacterController.</param>
     /// <param name="deltaTime">Time.deltaTime.</param>
-    /// <returns>Displacement to apply with cc.Move().</returns>
+    /// <returns>Desplazamiento a aplicar con cc.Move().</returns>
     public Vector3 Tick(bool isGrounded, float deltaTime)
     {
         if (!IsActive) return Vector3.zero;
 
         float friction = isGrounded ? groundFriction : airFriction;
 
-        // Real physical decay: implicit exponential with explicit Euler
+        // Decaimiento físico real: exponencial implícito con Euler explícito
         Velocity -= Velocity * friction * deltaTime;
 
-        // Stop threshold to avoid micro-vibrations
+        // Umbral de parada para evitar micro-vibraciones
         if (Velocity.magnitude < stopThreshold)
         {
             Velocity = Vector3.zero;
@@ -107,7 +107,7 @@ public struct KnockbackPhysicsBody
     }
 
     /// <summary>
-    /// Cancels knockback immediately (e.g.: character dies or grabs something).
+    /// Cancela el knockback inmediatamente (ej: el personaje muere o se agarra a algo).
     /// </summary>
     public void Cancel()
     {
@@ -116,8 +116,8 @@ public struct KnockbackPhysicsBody
     }
 
     /// <summary>
-    /// Helper: returns the suggested mass for an endurance value.
-    /// Can be used in the handler's Awake() to auto-configure mass.
+    /// Helper: devuelve la masa sugerida para un valor de endurance.
+    /// Puede usarse en Awake() del handler para auto-configurar la masa.
     /// </summary>
     public static float MassFromEndurance(int endurance)
         => 1f + endurance * 0.4f;

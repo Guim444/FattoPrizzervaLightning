@@ -1,20 +1,20 @@
 using UnityEngine;
 
 /// <summary>
-/// RioTutte-specific animation controller.
-/// Extends EnemyAnimatorDriver adding parameters specific to this enemy.
+/// Controlador de animaciones específico de RioTutte.
+/// Extiende EnemyAnimatorDriver añadiendo los parámetros propios de este enemigo.
 ///
-/// PARAMETERS MANAGED (in addition to the common ones in EnemyAnimatorDriver):
-///   dashGrab      (bool) — during the grab dash
-///   isGrabbing    (bool) — holding the player
-///   superDash     (bool) — during the super dash
-///   knockDownFront (bool) — knocked down face-forward (phase 2)
-///   knockDownBack  (bool) — knocked down face-backward (phase 2)
-///   phase         (int)  — current phase (0-3)
+/// PARÁMETROS QUE GESTIONA (además de los comunes en EnemyAnimatorDriver):
+///   dashGrab      (bool) — durante el dash de agarre
+///   isGrabbing    (bool) — sosteniendo al player
+///   superDash     (bool) — durante el super dash
+///   knockDownFront (bool) — caído al suelo de frente (fase 2)
+///   knockDownBack  (bool) — caído al suelo de espaldas (fase 2)
+///   phase         (int)  — fase actual (0-3)
 ///
-/// CONVENTION:
-///   Only continuous-state bools/ints. Punctual SetTriggers
-///   (GrabPunch, Hit, Punch) are fired from event code.
+/// CONVENCIÓN:
+///   Solo bools/ints de estado continuo. Los SetTrigger puntuales
+///   (GrabPunch, Hit, Punch) se lanzan desde el código del evento.
 /// </summary>
 public class RioTutteAnimatorDriver : EnemyAnimatorDriver
 {

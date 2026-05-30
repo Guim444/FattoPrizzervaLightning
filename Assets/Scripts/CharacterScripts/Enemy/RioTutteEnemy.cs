@@ -1,24 +1,24 @@
 using UnityEngine;
 
 /// <summary>
-/// RioTutte — tutorial enemy in Fatto Prizzerva Lightning.
+/// RioTutte — enemigo tutorial de Fatto Prizzerva Lightning.
 ///
-/// RESPONSIBILITY (SRP):
-///   Orchestrates RioTutte's behaviour: follow AI,
-///   attack selection by phase, damage reaction, and phase change.
-///   Attack physics live in RioTutteAttacks.
-///   Animations live in RioTutteAnimatorDriver.
+/// RESPONSABILIDAD (SRP):
+///   Orquestar el comportamiento de RioTutte: IA de seguimiento,
+///   selección de ataque por fase, reacción al daño y cambio de fase.
+///   La física de los ataques vive en RioTutteAttacks.
+///   Las animaciones viven en RioTutteAnimatorDriver.
 ///
-/// PHASES:
-///   0 → Walks and simple punch only. No special attacks.
-///   1 → Activates DashGrab (grab). Transitions on enough damage received.
-///   2 → Adds SuperDash. +1 endurance. Can fall after strong knockback.
-///   3 → Final phase (cinematic — see GDD).
+/// FASES:
+///   0 → Solo camina y golpea simple. Sin ataques especiales.
+///   1 → Activa DashGrab (agarre). Transición al recibir suficiente daño.
+///   2 → Añade SuperDash. +1 endurance. Puede caer al suelo tras knockback fuerte.
+///   3 → Fase final (cinemática — ver GDD).
 ///
-/// COLLISIONS:
-///   OnTriggerEnter          — contact with player; starts GrabPlayer if applicable.
-///   OnControllerColliderHit — collision with wall or player during DashGrab.
-///   LateUpdate              — physical penetration resolution player↔RioTutte.
+/// COLISIONES:
+///   OnTriggerEnter          — contacto con el player; inicia GrabPlayer si procede.
+///   OnControllerColliderHit — choque con pared o player durante DashGrab.
+///   LateUpdate              — resolución de penetración física player↔RioTutte.
 /// </summary>
 [RequireComponent(typeof(RioTutteAttacks))]
 [RequireComponent(typeof(RioTutteAnimatorDriver))]
@@ -26,25 +26,25 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
 {
     // ── ATTACK ───────────────────────────────────────────────────
     [Header("Attack: Base Punch")]
-    [Tooltip("Base force of the simple punch (phase 0) and grab hit (×2).")]
+    [Tooltip("Fuerza base del golpe simple (fase 0) y del golpe de agarre (×2).")]
     public float attackKnockbackBase = 5f;
 
     // ── PHASE ────────────────────────────────────────────────────
     [Header("Phase")]
-    [Tooltip("Number of RunningPunches the player must land in phase 1 to advance to phase 2.")]
+    [Tooltip("Número de RunningPunches que el player debe conectar en fase 1 para avanzar a fase 2.")]
     public int runningPunchsToAdvance = 4;
 
     // ── PHASE TRANSITION ─────────────────────────────────────────
     [Header("Phase Transition")]
-    [Tooltip("Seconds RioTutte stays still when entering a new phase (gives weight to the transition).")]
+    [Tooltip("Segundos que RioTutte se queda quieto al entrar en una nueva fase (da peso a la transición).")]
     public float phaseEntrancePause = 1.5f;
 
-    // ── FALL STATE (phase 2) ─────────────────────────────────────
-    [Header("Phase 2: Fall")]
-    [Tooltip("Seconds RioTutte remains grounded.")]
+    // ── FALL STATE (fase 2) ──────────────────────────────────────
+    [Header("Fase 2: Fall")]
+    [Tooltip("Segundos que RioTutte permanece caído en el suelo.")]
     public float groundedTimer;
 
-    [Tooltip("True = fall forward. False = fall backward.")]
+    [Tooltip("True = caída frontal. False = caída trasera.")]
     public bool fallDirection;
 
     // ── IPhaseChangeHandler ──────────────────────────────────────
@@ -55,7 +55,6 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
     private Animator        _anim;
     private Vector3         _lastMoveDirection;
     private int             _runningPunchHits;
-    private bool            _punchRunImpactPending;
 
     float MinSeparation => _player != null
         ? _cc.radius + _player.cc.radius + _cc.skinWidth + _player.cc.skinWidth
@@ -76,12 +75,12 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
     //  UPDATE
     // ────────────────────────────────────────────────────────────
 
-    // When true, RioTutte orients each frame towards the player by Z axis (free mode / phase 2+).
+    // Cuando true, RioTutte se orienta cada frame hacia el player por eje Z (modo libre / fase 2+).
     public bool facePlayerByZ;
 
     protected override void Update()
     {
-        // Sync IsAttacking with the attacks component before base.Update() reads it
+        // Sincroniza IsAttacking con el componente de ataques antes de que base.Update() lo lea
         IsAttacking = _attacks.IsAttacking;
 
         base.Update();
@@ -93,7 +92,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
 
     void LateUpdate()
     {
-        // Physical penetration resolution player↔RioTutte
+        // Resolución de penetración física player↔RioTutte
         if (_player == null) return;
 
         Vector3 delta = transform.position - _player.transform.position;
@@ -109,23 +108,22 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
 
         if (_attacks.IsUsingDashGrab)
         {
-            // During DashGrab do not resolve penetration: we need the overlap
-            // so OnTriggerEnter / OnControllerColliderHit can detect contact and call GrabPlayer().
+            // Durante DashGrab no resolver penetración: necesitamos el solapamiento
+            // para que OnTriggerEnter / OnControllerColliderHit detecten el contacto y ejecuten GrabPlayer().
             return;
         }
 
-        if (_punchRunImpactPending)
+        if (_player.currentState == State.PunchRunning)
         {
-            // Fully yield only on the exact frame of the PunchRunning impact
-            _punchRunImpactPending = false;
+            // PunchRun del player gana: RioTutte cede completamente
             _cc.enabled = false;
             transform.position += pushDir * penetration;
             _cc.enabled = true;
         }
         else if (playerEnd > 0)
         {
-            // Player stronger (adrenaline): yield proportional to endurance
-            // +1 → 33% RioTutte yields  |  +3 → 100% RioTutte yields
+            // Player más fuerte (adrenaline): cesión proporcional al endurance
+            // +1 → 33% RioTutte cede  |  +3 → 100% RioTutte cede
             float yieldRatio = Mathf.Clamp01(playerEnd / 3f);
 
             _cc.enabled = false;
@@ -138,7 +136,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         }
         else
         {
-            // endurance <= 0: RioTutte acts as a wall; player bounces
+            // endurance <= 0: RioTutte actúa como pared; el player rebota
             _player.cc.enabled = false;
             _player.transform.position -= pushDir * penetration;
             _player.cc.enabled = true;
@@ -146,7 +144,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
     }
 
     // ────────────────────────────────────────────────────────────
-    //  EnemyBase: ABSTRACT IMPLEMENTATIONS
+    //  EnemyBase: IMPLEMENTACIONES ABSTRACTAS
     // ────────────────────────────────────────────────────────────
 
     protected override void FollowPlayerLogic()
@@ -186,9 +184,9 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
                 _attacks.StartDashGrab();
                 break;
 
-            default: // phase 2+
+            default: // fase 2+
                 float dist     = Vector3.Distance(transform.position, _player.transform.position);
-                // Far → DashGrab (closes distance). Close → 50/50 between DashGrab and SuperDash.
+                // Lejos → DashGrab (cierra distancia). Cerca → 50/50 entre DashGrab y SuperDash.
                 bool  useSuperDash = dist <= 5f && Random.value > 0.5f;
                 if (useSuperDash)
                     _attacks.StartSuperDash(_lastMoveDirection);
@@ -202,11 +200,11 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
     {
         if (dmg <= 0) return;
 
-        // Do not interrupt the fall animation with Hit
+        // No interrumpir la animación de caída con Hit
         if (groundedTimer <= 0f)
             _anim.SetTrigger("Hit");
 
-        // If knockback is received during DashGrab, cancel it
+        // Si recibe knockback durante DashGrab, lo cancela
         if (_attacks.IsUsingDashGrab)
             _attacks.CancelAttack();
 
@@ -216,8 +214,8 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
                 if (_player.currentState == State.PunchRunning)
                 {
                     _runningPunchHits++;
-                    Debug.Log($"[RioTutte] RunningPunch connected: {_runningPunchHits}/{runningPunchsToAdvance}");
-                    if (groundedTimer <= 0f) // only start the fall if not already falling
+                    Debug.Log($"[RioTutte] RunningPunch conectado: {_runningPunchHits}/{runningPunchsToAdvance}");
+                    if (groundedTimer <= 0f) // solo inicia la caída si no está ya cayendo
                     {
                         fallDirection = false;
                         groundedTimer = 3f;
@@ -228,7 +226,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
                 break;
 
             case 2:
-                // Very strong knockbacks can knock RioTutte down in phase 2
+                // Knockbacks muy fuertes pueden tumbar a RioTutte en fase 2
                 if (dmg >= 30) TriggerFall();
                 break;
         }
@@ -250,25 +248,18 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         IsMoving = true;
     }
 
-    public override void ReceiveKnockback(Vector3 direction, float force)
-    {
-        base.ReceiveKnockback(direction, force);
-        if (_player != null && _player.currentState == State.PunchRunning)
-            _punchRunImpactPending = true;
-    }
-
     public override void Die()
     {
-        Debug.Log("[RioTutte] Defeated.");
+        Debug.Log("[RioTutte] Derrotado.");
         activeAI = false;
         _body.Cancel();
         _attacks.CancelAttack();
-        // TODO: defeat animation + notify TutorialRingManager
+        // TODO: animación de derrota + notificar TutorialRingManager
     }
 
     /// <summary>
-    /// Resets internal phase counters without changing CurrentPhase.
-    /// Called by TutorialRingManager on each retry.
+    /// Resetea contadores internos de fase sin cambiar CurrentPhase.
+    /// Llamado por TutorialRingManager en cada retry.
     /// </summary>
     public void ResetPhaseCounters()
     {
@@ -282,7 +273,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
     public void AdvancePhase()
     {
         CurrentPhase++;
-        Debug.Log($"[RioTutte] Phase → {CurrentPhase}");
+        Debug.Log($"[RioTutte] Fase → {CurrentPhase}");
 
         switch (CurrentPhase)
         {
@@ -296,11 +287,11 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
                 _body.mass    = mass + endurance * 0.4f;
                 facePlayerByZ = true;
                 groundedTimer = phaseEntrancePause;
-                // TODO: phase 1→2 transition cinematic (TutorialRingManager)
+                // TODO: cinemática de transición fase 1→2 (TutorialRingManager)
                 break;
 
             case 3:
-                // TODO: final phase cinematic
+                // TODO: cinemática fase final
                 break;
         }
 
@@ -332,7 +323,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         float dz = _player.transform.position.z - transform.position.z;
         if (Mathf.Abs(dz) < 0.1f) return;
 
-        // Same convention as player: Z > 0 → right → scaleX negative
+        // Misma convención que el player: Z > 0 → derecha → scaleX negativo
         float desired = dz > 0f ? -1f : 1f;
         float current = Mathf.Sign(transform.localScale.x);
         if (!Mathf.Approximately(current, desired))
@@ -362,7 +353,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
             return;
         }
 
-        // TODO: activate contact damage when phase 2 is implemented
+        // TODO: activar daño de contacto cuando se implemente fase 2
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)

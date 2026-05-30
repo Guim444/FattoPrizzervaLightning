@@ -2,10 +2,10 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// Single responsibility: manage the player's combat state.
-/// Implements IDamageable. Handles HP, death, and the normal punch cooldown.
-/// Damage parameters for each hit live here because they are combat data,
-/// even though their application occurs within the corresponding states.
+/// Responsabilidad única: gestionar el estado de combate del jugador.
+/// Implementa IDamageable. Maneja HP, muerte y el cooldown de puñetazos normales.
+/// Los parámetros de daño de cada golpe viven aquí porque son datos de combate,
+/// aunque su aplicación ocurre dentro de los estados correspondientes.
 /// </summary>
 public class PlayerCombat : MonoBehaviour, IDamageable
 {
@@ -19,7 +19,7 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     // HP
     // ==================================================
     [Header("HP")]
-    [Tooltip("Player's maximum HP. Also the starting HP after each retry.")]
+    [Tooltip("Vida máxima del jugador. También es la vida de inicio tras cada retry.")]
     public int maxHP = 10;
 
    // ==================================================
@@ -51,7 +51,7 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     // EVENTS
     // ==================================================
     [Header("Events")]
-    [Tooltip("Fired when HP reaches 0. Connect to TutorialRingManager.ShowRetry() in the Inspector.")]
+    [Tooltip("Se dispara cuando HP llega a 0. Conectar a TutorialRingManager.ShowRetry() en el Inspector.")]
     public UnityEvent onDied;
 
     // ==================================================
@@ -68,7 +68,7 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     // INITIALIZATION
     // ==================================================
 
-    /// <summary>Initializes the reference to the orchestrator and sets the initial HP.</summary>
+    /// <summary>Inicializa la referencia al orquestador y establece la HP inicial.</summary>
     public void Initialize(PlayerController player)
     {
         _player = player;
@@ -80,12 +80,12 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     // ==================================================
 
     /// <summary>
-    /// Receives damage. Dies if HP reaches 0.
+    /// Recibe daño. Muere si HP llega a 0.
     /// </summary>
     public void TakeDamage(int dmg)
     {
         HP = Mathf.Max(0, HP - dmg);
-        Debug.Log($"Player received {dmg} damage. HP: {HP}");
+        Debug.Log($"Player recibió {dmg} daño. HP: {HP}");
 
         if (HP <= 0)
         {
@@ -93,13 +93,13 @@ public class PlayerCombat : MonoBehaviour, IDamageable
             return;
         }
 
-        // Activate Hit state
+        // Activa Hit state
         _player.currentState = State.Knockedback;
         StateMachine.SetState(State.Knockedback);
     }
 
     /// <summary>
-    /// Executes the player death sequence.
+    /// Ejecuta la secuencia de muerte del jugador.
     /// </summary>
     public void Die()
     {
@@ -110,8 +110,8 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     }
 
     /// <summary>
-    /// Decrements the normal punch cooldown timer.
-    /// Must be called every Update().
+    /// Decrementa el timer de cooldown del puñetazo normal.
+    /// Debe llamarse cada Update().
     /// </summary>
     public void UpdatePunchCooldown()
     {

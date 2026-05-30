@@ -6,12 +6,12 @@ public class TutorialRingManager : MonoBehaviour
     // ==================================================
     // RING BOUNDS
     // ==================================================
-    [Header("Ring Bounds — X (solid walls)")]
+    [Header("Ring Bounds — X (paredes sólidas)")]
     public Transform leftBound;
 
     public Transform rightBound;
 
-    [Header("Ring Bounds — Z (victory zone)")]
+    [Header("Ring Bounds — Z (zona de victoria)")]
     public Transform frontBound;
 
     public Transform backBound;
@@ -34,10 +34,10 @@ public class TutorialRingManager : MonoBehaviour
     // CONFIGURATION
     // ==================================================
     [Header("Configuration")]
-    [Tooltip("Player's starting endurance when the ring starts / resets.")]
+    [Tooltip("Endurance inicial del player al empezar / al reiniciar el ring.")]
     public int playerStartEndurance = 0;
 
-    [Tooltip("Endurance the player drops to when the enemy reaches 3/4 of the ring.")]
+    [Tooltip("Endurance al que baja el player cuando el enemigo alcanza 3/4 del ring.")]
     public int playerPenaltyEndurance = -1;
 
     // ==================================================
@@ -52,10 +52,10 @@ public class TutorialRingManager : MonoBehaviour
     // RETRY CANVAS
     // ==================================================
     [Header("Retry")]
-    [Tooltip("Canvas shown when the player loses (HP 0 or exits the ring).")]
+    [Tooltip("Canvas que aparece cuando el jugador pierde (HP 0 o sale del ring).")]
     [SerializeField] private GameObject retryCanvas;
 
-    [Tooltip("Reference to TutorialManager to reset Endurance milestones on each retry.")]
+    [Tooltip("Referencia al TutorialManager para resetear los milestones de Endurance en cada retry.")]
     [SerializeField] private TutorialManager tutorialManager;
 
     // ==================================================
@@ -163,7 +163,7 @@ public class TutorialRingManager : MonoBehaviour
             if (pz < RingMinZ || pz > RingMaxZ)
             {
                 _resultTriggered = true;
-                Debug.Log("[TutorialRing] Player left the ring → DEFEAT.");
+                Debug.Log("[TutorialRing] Player salió del ring → DERROTA.");
                 onPlayerOut.Invoke();
                 return;
             }
@@ -175,7 +175,7 @@ public class TutorialRingManager : MonoBehaviour
             if (ez < RingMinZ || ez > RingMaxZ)
             {
                 _resultTriggered = true;
-                Debug.Log("[TutorialRing] Enemy left the ring → VICTORY.");
+                Debug.Log("[TutorialRing] Enemigo salió del ring → VICTORIA.");
                 onEnemyOut.Invoke();
             }
         }
@@ -225,7 +225,7 @@ public class TutorialRingManager : MonoBehaviour
 
         tutorialManager?.ResetMilestones();
 
-        Debug.Log("[TutorialRing] Retry — RioTutte phase preserved.");
+        Debug.Log("[TutorialRing] Retry — fase de RioTutte conservada.");
     }
 
     public void ResetRing()
@@ -235,7 +235,7 @@ public class TutorialRingManager : MonoBehaviour
         _resultTriggered = false;
         if (player != null)
             player.combat.endurance = playerStartEndurance;
-        Debug.Log("[TutorialRing] Ring reset.");
+        Debug.Log("[TutorialRing] Ring reiniciado.");
     }
 
     public void RestartPositions()

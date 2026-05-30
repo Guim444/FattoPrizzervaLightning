@@ -8,19 +8,15 @@ public class PlayerAnimations : MonoBehaviour
 
     public bool pauseAnimatorControl = false;
 
-    [Header("Character Controller: Idle Front")]
-    [SerializeField] private float idleFrontCenterX = 0f;
-    [SerializeField] private float defaultCenterX = -1f;
-
     // ── BLEND TREE THRESHOLDS ────────────────────────────────────
-    [Header("Blend Tree: Speed Thresholds")]
+    [Header("Blend Tree: Umbrales de velocidad")]
     public float walkThreshold   = 4.4f;
     public float runThreshold    = 9f;
     public float runMidThreshold = 11f;
     public float runMaxThreshold = 13.5f;
 
-    // ── ACCELERATION PER SEGMENT (units/second with Time.deltaTime) ──
-    [Header("Blend Tree: Acceleration per segment (u/s)")]
+    // ── ACELERACIÓN POR TRAMO (unidades/segundo con Time.deltaTime) ──
+    [Header("Blend Tree: Aceleración por tramo (u/s)")]
     public float accelToWalk     = 8f;
     public float accelWalkToRun  = 3.5f;
     public float accelRunToMid   = 4.5f;
@@ -28,7 +24,6 @@ public class PlayerAnimations : MonoBehaviour
 
     public float BlendSpeed => _blendSpeed;
     private float _blendSpeed;
-    private CharacterController _characterController;
 
     void Awake()
     {
@@ -36,8 +31,6 @@ public class PlayerAnimations : MonoBehaviour
             instance = this;
         else
             Destroy(gameObject);
-
-        _characterController = GetComponent<CharacterController>();
     }
 
     void LateUpdate()
@@ -56,55 +49,8 @@ public class PlayerAnimations : MonoBehaviour
         animator.SetBool("isGliding",     player.currentState == State.Gliding);
         animator.SetBool("isKnockedback", player.knockbackHandler.ShowKnockbackAnim);
         animator.SetBool("isDead",        player.combat.HP <= 0);
-        bool isIdleFront = player.currentState == State.Idle
-                        && Mathf.Abs(player.movement.LastFacingDirection.x) > 0.1f;
-
-        animator.SetBool("IdleFront", isIdleFront);
-        UpdateCharacterControllerCenter(IsAnimatorInIdleFront());
-        EnforceSpriteFlip();
-    }
-
-    bool IsAnimatorInIdleFront()
-    {
-        const int baseLayer = 0;
-
-        if (animator.GetCurrentAnimatorStateInfo(baseLayer).IsName("Idle_Front"))
-            return true;
-
-        return animator.IsInTransition(baseLayer)
-            && animator.GetNextAnimatorStateInfo(baseLayer).IsName("Idle_Front");
-    }
-
-    void UpdateCharacterControllerCenter(bool isIdleFront)
-    {
-        if (_characterController == null) return;
-
-        float targetX;
-        if (isIdleFront)
-            targetX = idleFrontCenterX;
-        else
-        {
-            bool isMoving = player.currentState == State.Moving
-                         || player.currentState == State.Running
-                         || player.currentState == State.PunchRunning;
-            targetX = isMoving ? idleFrontCenterX : defaultCenterX;
-        }
-
-        if (Mathf.Approximately(_characterController.center.x, targetX)) return;
-
-        Vector3 center = _characterController.center;
-        center.x = targetX;
-        _characterController.center = center;
-    }
-
-    void EnforceSpriteFlip()
-    {
-        var state = player.currentState;
-
-        if (state == State.Moving || state == State.Running || state == State.Idle)
-            player.movement.EnforceInvertedSpriteFlip();
-        else if (state == State.PunchRunning)
-            player.movement.RefreshSpriteFlip();
+        animator.SetBool("IdleFront",     player.currentState == State.Idle
+                                       && Mathf.Abs(player.movement.LastDirection.x) > 0.1f);
     }
 
     void UpdateBlendSpeed()
@@ -115,22 +61,22 @@ public class PlayerAnimations : MonoBehaviour
 
         if (!isWalking && !isRunning)
         {
-            _blendSpeed = 0f; // immediate stop
+            _blendSpeed = 0f; // frenado inmediato
             return;
         }
 
-        // No run key: smoothly accelerate to walkThreshold
+        // Sin tecla de correr: acelera suavemente hasta walkThreshold
         if (isWalking)
         {
             _blendSpeed = Mathf.MoveTowards(_blendSpeed, walkThreshold, accelToWalk * Time.deltaTime);
             return;
         }
 
-        // Run key held: immediate jump to walk if coming from stopped
+        // Tecla de correr: salto inmediato a walk si venía de parado
         if (_blendSpeed < walkThreshold)
             _blendSpeed = walkThreshold;
 
-        // Progressive acceleration per segment
+        // Aceleración progresiva por tramo
         float accel = _blendSpeed < runThreshold    ? accelWalkToRun
                     : _blendSpeed < runMidThreshold  ? accelRunToMid
                     :                                  accelMidToMax;

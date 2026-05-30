@@ -8,8 +8,8 @@ public class KnockedbackState : IStateActions
 
     public void Enter()
     {
-        // Blocks controls. Physics and duration are managed by
-        // PlayerKnockbackHandler — it calls SetState(Idle) when it stops.
+        // Bloquea controles. La física y la duración las gestiona
+        // PlayerKnockbackHandler — él llama SetState(Idle) cuando para.
         player.canMove   = false;
         player.canAttack = false;
     }
@@ -18,7 +18,7 @@ public class KnockedbackState : IStateActions
 
     public void Exit()
     {
-        // Restores controls regardless of how the state was exited.
+        // Restaura controles sin importar cómo se salió del estado.
         player.canMove   = true;
         player.canAttack = true;
     }

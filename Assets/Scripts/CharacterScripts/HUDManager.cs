@@ -1,4 +1,3 @@
-using Cinemachine;
 using UnityEngine;
 
 public class HUDManager : MonoBehaviour
@@ -12,7 +11,7 @@ public class HUDManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private GameObject selectionPanel;
 
-    [Header("References")]
+    [Header("Referencias")]
     [SerializeField] private GameObject OutsideChurch;
 
     [SerializeField] private Transform playerTransform;
@@ -26,21 +25,17 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private GameObject playerTransformFront;
     [SerializeField] private Animator playerAnimator;
 
-    [Header("Configuration — Player")]
+    [Header("Configuración — Jugador")]
     [SerializeField] private float startPositionX = 0f;
 
-// Will be removed
-    private float startPositionY = 2.25f;
-    private float combatStartPositionX = 0f;
-    private float combatStartPositionY = 2.25f;
-    private float combatStartPositionZ = -2f;
+    [SerializeField] private float startPositionY = 2.25f;
+    [SerializeField] private float combatStartPositionX = 0f;
+    [SerializeField] private float combatStartPositionY = 2.25f;
+    [SerializeField] private float combatStartPositionZ = -2f;
 
-    [Header("Configuration — Camera")]
-    [SerializeField] private float freeMoveStartCameraY = 1.5f;
-
+    [Header("Configuración — Cámara")]
+    [SerializeField] private Vector3 combatCameraPosition = new Vector3(-11f, 3.35f, 0f);
     [SerializeField] private CinemachineZoomController cinemachineZoomController;
-    [SerializeField] private CinemachineBrain cinemachineBrain;
-    [SerializeField] private CameraMovement cameraMovement;
 
 
     private void Awake()
@@ -49,24 +44,10 @@ public class HUDManager : MonoBehaviour
         Time.timeScale = 0f;
     }
 
-    private void ActivateCinemachine()
-    {
-        cameraMovement.enabled = false;
-        if (cinemachineBrain != null) cinemachineBrain.enabled = true;
-        cinemachineZoomController?.gameObject.SetActive(true);
-    }
-
-    private void ActivateCameraMovement()
-    {
-        cinemachineZoomController?.gameObject.SetActive(false);
-        if (cinemachineBrain != null) cinemachineBrain.enabled = false;
-        cameraMovement.enabled = true;
-    }
-
     public void OnClickCombatPosition()
     {
         Time.timeScale = 1f;
-        ActivateCinemachine();
+        cinemachineZoomController?.gameObject.SetActive(true);
         playerBoundary.enabled = false;
         enemy.SetActive(false);
         playerTransformFront.SetActive(false);
@@ -87,7 +68,7 @@ public class HUDManager : MonoBehaviour
     {
         _canvasUIStats.SetActive(false);
         playableAreaManager.SetActive(false);
-        ActivateCinemachine();
+        cinemachineZoomController?.gameObject.SetActive(false);
         introSequenceManager?.ShowBlackScreen();
         Time.timeScale = 1f;
         playerBoundary.enabled = true;
@@ -102,22 +83,20 @@ public class HUDManager : MonoBehaviour
         introSequenceManager?.StartIntro();
     }
 
-    // Called from TutorialRingManager.onEnemyOut.
-    // Deactivates the ring and switches to free mode keeping RioTutte active (next phase).
+    // Llamar desde TutorialRingManager.onEnemyOut.
+    // Desactiva el ring y pasa a modo libre manteniendo a RioTutte activo (siguiente fase).
     public void OnRingPhaseComplete()
     {
         ringManager.enabled = false;
         playerBoundary.enabled = false;
         var rioTutte = enemyRio.GetComponent<RioTutteEnemy>();
-        rioTutte.AdvancePhase(); // 0 → 1: activates DashGrab
+        rioTutte.AdvancePhase(); // 0 → 1: activa DashGrab
         rioTutte.facePlayerByZ = true;
     }
 
     public void OnClickFreeMove()
     {
         Time.timeScale = 1f;
-        cameraMovement.combatY = freeMoveStartCameraY;
-        ActivateCameraMovement();
         playerTransformFront.SetActive(true);
         ringManager.enabled = false;
         playerBoundary.enabled = false;
@@ -132,12 +111,12 @@ public class HUDManager : MonoBehaviour
     {
         if (playerTransform == null)
         {
-            Debug.LogError("[HUDManager] playerTransform is not assigned in the Inspector.");
+            Debug.LogError("[HUDManager] playerTransform no está asignado en el Inspector.");
             return;
         }
 
         Debug.Log(
-            $"[HUDManager] MovePlayerToX — before: {playerTransform.position}  →  target X:{x} Y:{combatStartPositionY} Z:{combatStartPositionZ}");
+            $"[HUDManager] MovePlayerToX — antes: {playerTransform.position}  →  destino X:{x} Y:{combatStartPositionY} Z:{combatStartPositionZ}");
 
         CharacterController cc = playerTransform.GetComponent<CharacterController>();
         if (cc != null) cc.enabled = false;
@@ -145,19 +124,19 @@ public class HUDManager : MonoBehaviour
         Physics.SyncTransforms();
         if (cc != null) cc.enabled = true;
 
-        Debug.Log($"[HUDManager] MovePlayerToX — after: {playerTransform.position}");
+        Debug.Log($"[HUDManager] MovePlayerToX — después: {playerTransform.position}");
     }
 
     private void MoveStartPlayerToX(float x)
     {
         if (playerTransform == null)
         {
-            Debug.LogError("[HUDManager] playerTransform is not assigned in the Inspector.");
+            Debug.LogError("[HUDManager] playerTransform no está asignado en el Inspector.");
             return;
         }
 
         Debug.Log(
-            $"[HUDManager] MovePlayerToX — before: {playerTransform.position}  →  target X:{x} Y:{combatStartPositionY} Z:{combatStartPositionZ}");
+            $"[HUDManager] MovePlayerToX — antes: {playerTransform.position}  →  destino X:{x} Y:{combatStartPositionY} Z:{combatStartPositionZ}");
 
         CharacterController cc = playerTransform.GetComponent<CharacterController>();
         if (cc != null) cc.enabled = false;
@@ -165,7 +144,7 @@ public class HUDManager : MonoBehaviour
         Physics.SyncTransforms();
         if (cc != null) cc.enabled = true;
 
-        Debug.Log($"[HUDManager] MovePlayerToX — after: {playerTransform.position}");
+        Debug.Log($"[HUDManager] MovePlayerToX — después: {playerTransform.position}");
     }
 
     private void HidePanel()

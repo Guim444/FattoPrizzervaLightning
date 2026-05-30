@@ -1,12 +1,12 @@
 using UnityEngine;
 
 /// <summary>
-/// Running state with 3 thrust phases.
+/// Running state con 3 fases de thrust.
 ///
-/// No conflict with the new combat system:
-/// its only responsibility is to manage acceleration and expose
-/// combat.damageBoost = currentThrustPhase - 1 so PunchRunningState
-/// and CombatAttackHandler read the correct phase when executing the hit.
+/// No tiene conflicto con el nuevo sistema de combate:
+/// su única responsabilidad es gestionar la aceleración y exponer
+/// combat.damageBoost = currentThrustPhase - 1 para que PunchRunningState
+/// y CombatAttackHandler lean la fase correcta al ejecutar el golpe.
 /// </summary>
 public class RunningState : IStateActions
 {
@@ -34,6 +34,7 @@ public class RunningState : IStateActions
         player.animator.speed = 1;
         actualSpeed           = baseSpeed;
         stamina.SetRunning(staminaCostPerSecond);
+        player.movement.RefreshSpriteFlip();
     }
 
     public void Update()

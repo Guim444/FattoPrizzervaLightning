@@ -31,15 +31,15 @@ MonoBehaviour:
   detailScale: 10
   detailStrength: 0.119
   detailOffset: -0.5
-  density: 0.01
+  density: 1
   shape: 0
   scaleNoiseWithHeight: 0
   border: 0.061
   customHeight: 1
-  height: 163
+  height: 162.08
   verticalOffset: 0
-  distance: 35.4
-  distanceFallOff: 0.488
+  distance: 33.4
+  distanceFallOff: 0.32
   maxDistance: 10000
   maxDistanceFallOff: 0
   terrainFit: 0
@@ -137,7 +137,7 @@ MonoBehaviour:
   shadowCancellation: 0
   shadowMaxDistance: 250
   cookie: 0
-  distantFog: 1
+  distantFog: 0
   distantFogStartDistance: 500
   distantFogDistanceDensity: 0.3
   distantFogMaxHeight: 250

@@ -75,10 +75,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e4c8242b4475d8b4784aff4c4e728ab6, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 833359754762697287}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e4c8242b4475d8b4784aff4c4e728ab6, type: 3}
 --- !u!23 &7008280025200176681 stripped
 MeshRenderer:
@@ -104,7 +101,7 @@ LODGroup:
   m_AnimateCrossFading: 1
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.6
+  - screenRelativeHeight: 0.3
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 7008280025200176681}

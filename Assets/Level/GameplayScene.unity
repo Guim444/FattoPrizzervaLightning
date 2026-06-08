@@ -242,7 +242,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 2004004907}
   m_Lens:
-    FieldOfView: 40
+    FieldOfView: 45
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 20000
@@ -4825,7 +4825,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 20000
-  field of view: 40
+  field of view: 45
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -6380,6 +6380,7 @@ MonoBehaviour:
   ratioQ3: 0.5
   ratioQ4: 0.15
   lockHumanForm: 1
+  introAnimatorController: {fileID: 9100000, guid: 857fd31268726194e9441f46f1a0475e, type: 2}
 --- !u!114 &2021292074
 MonoBehaviour:
   m_ObjectHideFlags: 0

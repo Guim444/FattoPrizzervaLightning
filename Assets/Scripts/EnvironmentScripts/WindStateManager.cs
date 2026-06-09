@@ -1,95 +1,81 @@
-using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// Gestiona la intensidad de la ventisca en 3 niveles: Max, Medium, Min.
-/// Completamente serializable — asigna los Animators y los valores desde el Inspector
-/// cuando los assets estén listos.
+/// Gestiona la ventisca de sprites mediante CrossFade entre 4 clips de Animator,
+/// y controla la emisión de un ParticleSystem por estado.
 ///
-/// El float "WindIntensity" en cada Animator se interpola suavemente entre estados.
+/// Animator setup:
+///   - 4 estados (uno por clip). Entry apunta al estado por defecto (W1_MaxIdle).
+///   - Sin flechas entre estados.
+///   - Asignar el nombre exacto de cada estado en windStates[].stateName.
 /// </summary>
 public class WindStateManager : MonoBehaviour
 {
-    public enum WindIntensity { Max = 0, Medium = 1, Min = 2 }
+    public enum WindPreset { W1_MaxIdle = 0, W2_MaxToMedium = 1, W3_MediumToMin = 2, W4_MinToMedium = 3 }
 
     [System.Serializable]
     public struct WindStateData
     {
+        [Tooltip("Nombre exacto del estado en el Animator Controller.")]
         public string stateName;
         [Range(0f, 1f)]
-        [Tooltip("Valor del parámetro WindIntensity en el Animator (0=calma, 1=máxima ventisca).")]
-        public float intensityValue;
+        [Tooltip("Tiempo normalizado de CrossFade hacia este estado (0 = instantáneo).")]
+        public float crossFadeTime;
+        [Tooltip("Emisión de partículas por segundo para este estado.")]
+        public float emissionRate;
     }
 
-    [Header("Estados de Viento (0=Max, 1=Medium, 2=Min)")]
+    [Header("Estados (0=W1, 1=W2, 2=W3, 3=W4)")]
     [SerializeField] private WindStateData[] windStates = new WindStateData[]
     {
-        new WindStateData { stateName = "Max",    intensityValue = 1.0f },
-        new WindStateData { stateName = "Medium", intensityValue = 0.5f },
-        new WindStateData { stateName = "Min",    intensityValue = 0.1f },
+        new WindStateData { stateName = "W1_MaxIdle",     crossFadeTime = 0f,   emissionRate = 500f  },
+        new WindStateData { stateName = "W2_MaxToMedium", crossFadeTime = 0.1f, emissionRate = 1000f },
+        new WindStateData { stateName = "W3_MediumToMin", crossFadeTime = 0.1f, emissionRate = 2000f },
+        new WindStateData { stateName = "W4_MinToMedium", crossFadeTime = 0.1f, emissionRate = 4000f },
     };
 
     [Header("Animators de ventisca")]
     [SerializeField] private Animator[] windAnimators;
-    [SerializeField] private string intensityParam = "WindIntensity";
 
-    [Header("Transición")]
-    [SerializeField] private float defaultTransitionDuration = 2f;
+    [Header("Particle System")]
+    [SerializeField] private ParticleSystem blizzardParticles;
 
-    private float _currentIntensity = 1f;
     private int _currentStateIndex = -1;
-    private Coroutine _activeTransition;
 
-    /// <summary>Transiciona suavemente a la intensidad de viento dada.</summary>
-    public void TransitionTo(WindIntensity intensity, float duration = -1f)
+    /// <summary>Transiciona al preset dado usando el CrossFade configurado en el Inspector.</summary>
+    public void TransitionTo(WindPreset preset, float crossFadeOverride = -1f)
     {
-        int idx = (int)intensity;
+        int idx = (int)preset;
         if (idx == _currentStateIndex) return;
-
-        if (_activeTransition != null) StopCoroutine(_activeTransition);
         _currentStateIndex = idx;
 
-        float dur = duration < 0f ? defaultTransitionDuration : duration;
-        _activeTransition = StartCoroutine(TransitionCoroutine(windStates[idx].intensityValue, dur));
+        float cft = crossFadeOverride >= 0f ? crossFadeOverride : windStates[idx].crossFadeTime;
+        CrossFadeAll(windStates[idx].stateName, cft);
+        SetEmission(windStates[idx].emissionRate);
     }
 
-    /// <summary>Salta instantáneamente a la intensidad dada sin interpolación.</summary>
-    public void SnapToState(WindIntensity intensity)
+    /// <summary>Salta instantáneamente al preset dado desde el frame 0 del clip.</summary>
+    public void SnapToState(WindPreset preset)
     {
-        if (_activeTransition != null)
-        {
-            StopCoroutine(_activeTransition);
-            _activeTransition = null;
-        }
-        int idx = (int)intensity;
+        int idx = (int)preset;
         _currentStateIndex = idx;
-        SetIntensity(windStates[idx].intensityValue);
+        CrossFadeAll(windStates[idx].stateName, 0f);
+        SetEmission(windStates[idx].emissionRate);
     }
 
-    private IEnumerator TransitionCoroutine(float targetIntensity, float duration)
+    private void CrossFadeAll(string stateName, float transitionTime)
     {
-        float startIntensity = _currentIntensity;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            SetIntensity(Mathf.Lerp(startIntensity, targetIntensity, t));
-            yield return null;
-        }
-
-        SetIntensity(targetIntensity);
-        _activeTransition = null;
-    }
-
-    private void SetIntensity(float intensity)
-    {
-        _currentIntensity = intensity;
         foreach (var anim in windAnimators)
         {
             if (anim != null)
-                anim.SetFloat(intensityParam, intensity);
+                anim.CrossFade(stateName, transitionTime, 0);
         }
+    }
+
+    private void SetEmission(float rate)
+    {
+        if (blizzardParticles == null) return;
+        var emission = blizzardParticles.emission;
+        emission.rateOverTime = rate;
     }
 }

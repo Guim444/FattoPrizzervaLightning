@@ -20,10 +20,10 @@ public class DeenergizedState : IStateActions
     {
         _exitTriggered = false;
 
-        savedEndurance = player.combat.endurance;
-        player.combat.endurance = -2;
+        savedEndurance = player.Combat.endurance;
+        player.Combat.endurance = -2;
 
-        player.movement.RefreshSpriteFlip();
+        player.Movement.RefreshSpriteFlip();
         player.animator.SetBool("isDeenergized", true);
 
         stamina.StopAllRegenDrain();
@@ -33,7 +33,7 @@ public class DeenergizedState : IStateActions
 
     public void Update()
     {
-        var movement = player.movement;
+        var movement = player.Movement;
 
         Vector3 input = movement.GetDirectionalInput();
         Vector3 toMove = movement.ApplyInertia(input, Time.deltaTime, movement.tiredTurnSpeed);
@@ -53,7 +53,7 @@ public class DeenergizedState : IStateActions
 
     public void Exit()
     {
-        player.combat.endurance = savedEndurance;
+        player.Combat.endurance = savedEndurance;
         player.animator.SetBool("isDeenergized", false);
         if (_staminaCoroutine != null)
         {

@@ -10,16 +10,25 @@ public class PlayerStateMachineController : MonoBehaviour
         new System.Collections.Generic.List<float> { 10, 14, 18 };
 
     private PlayerController _player;
+    public PlayerIntentBuffer IntentBuffer { get; private set; }
+
+
+    [field: SerializeField] public StateMachine _stateMachine { get; private set; }
+
+    public State CurrentState => _stateMachine.CurrentKey;
 
     public void Initialize(PlayerController player)
     {
+        _stateMachine = new StateMachine();
+        IntentBuffer = new PlayerIntentBuffer();
+
         _player = player;
         InitializeStateMachine();
     }
 
     private void InitializeStateMachine()
     {
-        StateMachine.Reset();
+        _stateMachine.Reset();
         var sm = _player.staminaManager;
         var cc = _player.cc;
         var p = _player;
@@ -33,7 +42,7 @@ public class PlayerStateMachineController : MonoBehaviour
         {
             player = p,
             controller = cc,
-            baseSpeed = p.movement.runningBaseSpeed,
+            baseSpeed = p.Movement.runningBaseSpeed,
             staminaCostPerSecond = runningStaminaCost[0]
         };
         var tired = new DeenergizedState(sm) { player = p, controller = cc };
@@ -57,24 +66,63 @@ public class PlayerStateMachineController : MonoBehaviour
         var falling = new FallingState();
         var interacting = new InteractingState();
 
-        StateMachine.AddState(State.Idle, idle);
-        StateMachine.AddState(State.Moving, moving);
-        StateMachine.AddState(State.Running, running);
-        StateMachine.AddState(State.Deenergized, tired);
-        StateMachine.AddState(State.Punching, punching);
-        StateMachine.AddState(State.PunchRunning, punchRunning);
-        StateMachine.AddState(State.Knockedback, knockedback);
-        StateMachine.AddState(State.Gliding, gliding);
-        StateMachine.AddState(State.Jumping, jumping);
-        StateMachine.AddState(State.Falling, falling);
-        StateMachine.AddState(State.Interacting, interacting);
+        _stateMachine.AddState(State.Idle, idle);
+        _stateMachine.AddState(State.Moving, moving);
+        _stateMachine.AddState(State.Running, running);
+        _stateMachine.AddState(State.Deenergized, tired);
+        _stateMachine.AddState(State.Punching, punching);
+        _stateMachine.AddState(State.PunchRunning, punchRunning);
+        _stateMachine.AddState(State.Knockedback, knockedback);
+        _stateMachine.AddState(State.Gliding, gliding);
+        _stateMachine.AddState(State.Jumping, jumping);
+        _stateMachine.AddState(State.Falling, falling);
+        _stateMachine.AddState(State.Interacting, interacting);
 
-        StateMachine.SetState(State.Idle);
+        _stateMachine.SetState(State.Idle);
     }
 
     public void HandleStateTransitions()
     {
-        if (_player.combat.normalPunchTimer > 0) return;
+        if (!_player.canMove) return;
+
+        var intents = IntentBuffer;
+
+        if (intents.Has(PlayerStateRequest.Knockback))
+        {
+            _stateMachine.RequestState(State.Knockedback);
+            intents.Clear();
+            return;
+        }
+
+        if (intents.Has(PlayerStateRequest.Interact))
+        {
+            _stateMachine.RequestState(State.Interacting);
+            intents.Clear();
+            return;
+        }
+
+        if (intents.Has(PlayerStateRequest.Attack))
+        {
+            var attackState =
+                _player.isInsideRing ? State.PunchRunning : State.Punching;
+
+            _stateMachine.RequestState(attackState);
+            intents.Clear();
+            return;
+        }
+
+        State newState = PlayerStateHelper.DetermineState(
+            _player,
+            _player.staminaManager,
+            _player.isOnSlope,
+            _stateMachine.CurrentKey
+        );
+
+        _stateMachine.RequestState(newState);
+
+
+
+        /*if (_player.combat.normalPunchTimer > 0) return;
         if (!_player.canMove) return;
 
         State newState = PlayerStateHelper.DetermineState(
@@ -85,13 +133,25 @@ public class PlayerStateMachineController : MonoBehaviour
 
         if (newState == _player.currentState) return;
 
-        _player.currentState = newState;
-        StateMachine.SetState(_player.currentState);
+        //_player.currentState = newState;
+        //_stateMachine.SetState(_player.currentState);
 
         if (_player.currentState != State.Running &&
             _player.currentState != State.PunchRunning)
         {
             _player.combat.damageBoost = 0;
         }
+        */
+    }
+
+    public string GetDebugStateInfo()
+    {
+        var sb = new System.Text.StringBuilder();
+
+        sb.AppendLine($"STATE: {_stateMachine.CurrentKey}");
+
+        sb.AppendLine($"INTENTS: {IntentBuffer.Current}");
+
+        return sb.ToString();
     }
 }

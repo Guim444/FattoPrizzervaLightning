@@ -104,7 +104,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
 
         Vector3 pushDir     = delta.normalized;
         float   penetration = minDist - dist;
-        int     playerEnd   = _player.combat.endurance;
+        int     playerEnd   = _player.Combat.endurance;
 
         if (_attacks.IsUsingDashGrab)
         {
@@ -113,7 +113,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
             return;
         }
 
-        if (_player.currentState == State.PunchRunning)
+        if (_player.StateMachineController.CurrentState == State.PunchRunning)
         {
             // PunchRun del player gana: RioTutte cede completamente
             _cc.enabled = false;
@@ -211,7 +211,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         switch (CurrentPhase)
         {
             case 1:
-                if (_player.currentState == State.PunchRunning)
+                if (_player.StateMachineController.CurrentState == State.PunchRunning)
                 {
                     _runningPunchHits++;
                     Debug.Log($"[RioTutte] RunningPunch conectado: {_runningPunchHits}/{runningPunchsToAdvance}");
@@ -312,7 +312,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         if (toPlayer.magnitude > MinSeparation * 1.5f) return;
 
         Vector3 dir = toPlayer.magnitude > 0.01f ? toPlayer.normalized : transform.forward;
-        _player.knockbackHandler.ReceiveEnemyKnockback(dir, attackKnockbackBase);
+        _player.KnockbackHandler.ReceiveEnemyKnockback(dir, attackKnockbackBase);
         _anim.SetTrigger("Punch");
         ResetAttackCooldown();
     }

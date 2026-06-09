@@ -23,17 +23,17 @@ public class PunchingState : IStateActions
         if (punchExecuted) return;
         punchExecuted = true;
 
-        player.movement.RefreshSpriteFlip();
+        player.Movement.RefreshSpriteFlip();
         player.animator.SetTrigger("isPunching");
 
-        var combat = player.combat;
+        var combat = player.Combat;
         stamina.ModifyStamina(-combat.punchStaminaCostPhase0);
         combat.normalPunchTimer = PunchDuration;
     }
 
     public void Update()
     {
-        var movement = player.movement;
+        var movement = player.Movement;
         movement.RefreshSpriteFlip();
 
         bool isMoving = movement.GetDirectionalInput().magnitude > 0.1f;

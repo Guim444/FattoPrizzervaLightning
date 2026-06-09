@@ -202,13 +202,13 @@ public class RioTutteAttacks : MonoBehaviour, IAttacker
             if (pushDir == Vector3.zero) pushDir = transform.forward;
 
             // Fuerza garantizada superior al endurance del player → siempre vuela
-            _player.knockbackHandler.ReceiveEnemyKnockback(
+            _player.KnockbackHandler.ReceiveEnemyKnockback(
                 pushDir.normalized,
                 _enemy.attackKnockbackBase * 2f
             );
-            _player.combat.TakeDamage(1);
+            _player.Combat.TakeDamage(1);
 
-            if (_player.combat.HP > 0)
+            if (_player.Combat.HP > 0)
                 _player.canMove = true;
         }
 

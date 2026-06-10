@@ -114,11 +114,8 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
             return;
         }
 
-<<<<<<< HEAD
         if (_punchRunImpactPending)
-=======
         if (_player.StateMachineController.CurrentState == State.PunchRunning)
->>>>>>> origin/Albert_Branch
         {
             // Fully yield only on the exact frame of the PunchRunning impact
             _punchRunImpactPending = false;
@@ -257,7 +254,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
     public override void ReceiveKnockback(Vector3 direction, float force)
     {
         base.ReceiveKnockback(direction, force);
-        if (_player != null && _player.currentState == State.PunchRunning)
+        if (_player != null && _player.StateMachineController.CurrentState == State.PunchRunning)
             _punchRunImpactPending = true;
     }
 

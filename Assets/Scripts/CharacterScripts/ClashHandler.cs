@@ -54,15 +54,12 @@ public class ClashHandler : MonoBehaviour
         if (_cooldownTimer > 0f) return;
         if (!player.canMove) return;
 
-<<<<<<< HEAD
         // Pure Running only. In PunchRunning, knockback is handled by ExecuteAttack (animation event)
         // — if both fired, RioTutte would receive double knockback.
-        if (player.currentState != State.Running) return;
-=======
+        if (player.StateMachineController.CurrentState != State.Running) return;
         // Solo Running puro. En PunchRunning el knockback lo gestiona ExecuteAttack (animation event)
         // — si dispararan ambos, RioTutte recibiría doble knockback.
         if (player.StateMachineController.CurrentState != State.Running) return;
->>>>>>> origin/Albert_Branch
 
         var enemy = hit.collider.GetComponent<RioTutteEnemy>();
         if (enemy == null) return;

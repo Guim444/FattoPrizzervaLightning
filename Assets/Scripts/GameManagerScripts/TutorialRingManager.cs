@@ -234,13 +234,10 @@ public class TutorialRingManager : MonoBehaviour
         _enemyThresholdTriggered = false;
         _resultTriggered = false;
         if (player != null)
-<<<<<<< HEAD
-            player.combat.endurance = playerStartEndurance;
+            player.Combat.endurance = playerStartEndurance;
         Debug.Log("[TutorialRing] Ring reset.");
-=======
             player.Combat.endurance = playerStartEndurance;
         Debug.Log("[TutorialRing] Ring reiniciado.");
->>>>>>> origin/Albert_Branch
     }
 
     public void RestartPositions()

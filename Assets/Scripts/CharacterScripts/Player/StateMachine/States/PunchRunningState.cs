@@ -26,10 +26,7 @@ public class PunchRunningState : IStateActions
         if (punchExecuted) return;
         punchExecuted = true;
 
-<<<<<<< HEAD
-=======
         player.Movement.EnforceInvertedSpriteFlip();
->>>>>>> origin/Albert_Branch
         player.animator.SetTrigger("isPunching");
 
         var combat   = player.Combat;

@@ -14,10 +14,7 @@ public class MovingState : IStateActions
     public void Enter()
     {
         stamina.SetWalking();
-<<<<<<< HEAD
-=======
         player.Movement.RefreshSpriteFlip();
->>>>>>> origin/Albert_Branch
     }
 
     public void Update()

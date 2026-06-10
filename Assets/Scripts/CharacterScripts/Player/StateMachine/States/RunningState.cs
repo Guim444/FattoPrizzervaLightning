@@ -34,10 +34,7 @@ public class RunningState : IStateActions
         player.animator.speed = 1;
         actualSpeed           = baseSpeed;
         stamina.SetRunning(staminaCostPerSecond);
-<<<<<<< HEAD
-=======
         player.Movement.RefreshSpriteFlip();
->>>>>>> origin/Albert_Branch
     }
 
     public void Update()

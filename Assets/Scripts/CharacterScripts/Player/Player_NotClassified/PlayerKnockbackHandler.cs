@@ -79,11 +79,8 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
     void Start()
     {
         // Auto-mass from endurance (requires PlayerCombat to already be initialized)
-        if (autoMassFromEndurance && _player.Combat != null)
-            _body.mass = Mathf.Max(0.6f, KnockbackPhysicsBody.MassFromEndurance(_player.Combat.endurance));
-        // Auto-masa desde endurance (necesita que PlayerCombat ya esté inicializado)
-        if (autoMassFromEndurance && _player.Combat != null)
-            _body.mass = Mathf.Max(0.6f, KnockbackPhysicsBody.MassFromEndurance(_player.Combat.endurance));
+        if (autoMassFromEndurance && _player.combat != null)
+            _body.mass = Mathf.Max(0.6f, KnockbackPhysicsBody.MassFromEndurance(_player.combat.endurance));
         else
             _body.mass = manualMass;
     }
@@ -121,19 +118,12 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
     private void ApplyKnockback(Vector3 direction, float force)
     {
         // Recalculate mass in case endurance changed at runtime
-        if (autoMassFromEndurance && _player.Combat != null)
-            _body.mass = Mathf.Max(0.6f, KnockbackPhysicsBody.MassFromEndurance(_player.Combat.endurance));
-        // Recalcula masa por si el endurance cambió en runtime
-        if (autoMassFromEndurance && _player.Combat != null)
-            _body.mass = Mathf.Max(0.6f, KnockbackPhysicsBody.MassFromEndurance(_player.Combat.endurance));
+        if (autoMassFromEndurance && _player.combat != null)
+            _body.mass = Mathf.Max(0.6f, KnockbackPhysicsBody.MassFromEndurance(_player.combat.endurance));
 
         _body.Receive(direction, force);
-
-        //_player.currentState = State.Knockedback;
-        //StateMachine.SetState(State.Knockedback);
-
-        _player.StateMachineController.IntentBuffer.Add(PlayerStateRequest.Knockback);
-
+        _player.currentState = State.Knockedback;
+        StateMachine.SetState(State.Knockedback);
     }
 
     // --------------------------------------------------------
@@ -153,11 +143,8 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
             _cc.Move(delta);
 
         // Block normal movement during knockback
-        _player.Movement.LastDirection = Vector3.zero;
-        _player.Movement.CurrentSpeed  = Vector3.zero;
-        // Bloquea el movimiento normal durante knockback
-        _player.Movement.LastDirection = Vector3.zero;
-        _player.Movement.CurrentSpeed  = Vector3.zero;
+        _player.movement.LastDirection = Vector3.zero;
+        _player.movement.CurrentSpeed  = Vector3.zero;
 
         // Update debug
         _isKnockedBack   = _body.IsActive;
@@ -167,10 +154,8 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
         if (!_body.IsActive)
         {
             ShowKnockbackAnim = false;
-
-            //_player.currentState = State.Idle;
-            //StateMachine.SetState(State.Idle);
-            _player.StateMachineController.IntentBuffer.Add(PlayerStateRequest.Idle);
+            _player.currentState = State.Idle;
+            StateMachine.SetState(State.Idle);
         }
     }
 

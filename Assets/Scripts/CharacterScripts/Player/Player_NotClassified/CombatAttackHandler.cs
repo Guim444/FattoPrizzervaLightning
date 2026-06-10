@@ -70,7 +70,7 @@ public class CombatAttackHandler : MonoBehaviour
         if (!_player.canAttack) return;
         _player.canAttack = false;
 
-        AttackType attackType = KnockbackResolver.StateToAttackType(_player.StateMachineController.CurrentState);
+        AttackType attackType = KnockbackResolver.StateToAttackType(_player.currentState);
         Vector3 direction = GetAttackDirection();
 
         // Sphere projected forward: origin is offset half the radius
@@ -101,7 +101,7 @@ public class CombatAttackHandler : MonoBehaviour
         // Enemy endurance no longer exists — only the player's matters
         KnockbackResult result = KnockbackResolver.Resolve(
             attackType,
-            _player.Combat.endurance,
+            _player.combat.endurance,
             resolverConfig
         );
 
@@ -112,11 +112,11 @@ public class CombatAttackHandler : MonoBehaviour
             kb.ReceiveKnockback(direction, result.ForceOnTarget);
 
         if (result.ForceOnSelf > 0.01f)
-            _player.KnockbackHandler.ReceiveKnockback(-direction, result.ForceOnSelf);
-        _player.Movement.LastDirection = Vector3.zero;
-        _player.Movement.CurrentSpeed = Vector3.zero;
+            _player.knockbackHandler.ReceiveKnockback(-direction, result.ForceOnSelf);
+        _player.movement.LastDirection = Vector3.zero;
+        _player.movement.CurrentSpeed = Vector3.zero;
 
-        Debug.Log($"[Attack] {attackType} | playerEnd:{_player.Combat.endurance} " +
+        Debug.Log($"[Attack] {attackType} | playerEnd:{_player.combat.endurance} " +
                   $"forceEnemy:{result.ForceOnTarget:F1} forceSelf:{result.ForceOnSelf:F1}");
     }
 
@@ -145,10 +145,10 @@ public class CombatAttackHandler : MonoBehaviour
 
     private Vector3 GetAttackDirection()
     {
-        Vector3 last = _player.Movement.LastDirection;
+        Vector3 last = _player.movement.LastDirection;
         if (last.magnitude > 0.1f) return last.normalized;
 
-        return _player.Movement.LastFacingDirection;
+        return _player.movement.LastFacingDirection;
     }
 
     private float CalculateDamage(AttackType type, bool isCenterHit)

@@ -47,20 +47,17 @@ public class PlayerAnimations : MonoBehaviour
 
         UpdateBlendSpeed();
 
-        var state = player.StateMachineController.CurrentState;
-
         animator.SetFloat("Speed",        _blendSpeed);
-        animator.SetBool("isMoving",      state == State.Moving
-                                       || state == State.Running
-                                       || state == State.Deenergized);
-        animator.SetBool("isRunning",     state == State.Running
-                                       || state == State.PunchRunning);
-        animator.SetBool("isGliding",     state == State.Gliding);
-        animator.SetBool("isKnockedback", player.KnockbackHandler.ShowKnockbackAnim);
-        animator.SetBool("isDead",        player.Combat.HP <= 0);
-
-        bool isIdleFront = state == State.Idle
-                        && Mathf.Abs(player.Movement.LastFacingDirection.x) > 0.1f;
+        animator.SetBool("isMoving",      player.currentState == State.Moving
+                                       || player.currentState == State.Running
+                                       || player.currentState == State.Deenergized);
+        animator.SetBool("isRunning",     player.currentState == State.Running
+                                       || player.currentState == State.PunchRunning);
+        animator.SetBool("isGliding",     player.currentState == State.Gliding);
+        animator.SetBool("isKnockedback", player.knockbackHandler.ShowKnockbackAnim);
+        animator.SetBool("isDead",        player.combat.HP <= 0);
+        bool isIdleFront = player.currentState == State.Idle
+                        && Mathf.Abs(player.movement.LastFacingDirection.x) > 0.1f;
 
         animator.SetBool("IdleFront", isIdleFront);
         UpdateCharacterControllerCenter(IsAnimatorInIdleFront());
@@ -87,10 +84,9 @@ public class PlayerAnimations : MonoBehaviour
             targetX = idleFrontCenterX;
         else
         {
-            var state = player.StateMachineController.CurrentState;
-            bool isMoving = state == State.Moving
-                         || state == State.Running
-                         || state == State.PunchRunning;
+            bool isMoving = player.currentState == State.Moving
+                         || player.currentState == State.Running
+                         || player.currentState == State.PunchRunning;
             targetX = isMoving ? idleFrontCenterX : defaultCenterX;
         }
 
@@ -103,19 +99,19 @@ public class PlayerAnimations : MonoBehaviour
 
     void EnforceSpriteFlip()
     {
-        var state = player.StateMachineController.CurrentState;
+        var state = player.currentState;
 
         if (state == State.Moving || state == State.Running || state == State.Idle)
-            player.Movement.EnforceInvertedSpriteFlip();
+            player.movement.EnforceInvertedSpriteFlip();
         else if (state == State.PunchRunning)
-            player.Movement.RefreshSpriteFlip();
+            player.movement.RefreshSpriteFlip();
     }
 
     void UpdateBlendSpeed()
     {
-        bool isWalking = player.StateMachineController.CurrentState == State.Moving;
-        bool isRunning = player.StateMachineController.CurrentState == State.Running
-                      || player.StateMachineController.CurrentState == State.PunchRunning;
+        bool isWalking = player.currentState == State.Moving;
+        bool isRunning = player.currentState == State.Running
+                      || player.currentState == State.PunchRunning;
 
         if (!isWalking && !isRunning)
         {

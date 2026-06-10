@@ -14,12 +14,11 @@ public class MovingState : IStateActions
     public void Enter()
     {
         stamina.SetWalking();
-        player.Movement.RefreshSpriteFlip();
     }
 
     public void Update()
     {
-        var movement = player.Movement;
+        var movement = player.movement;
 
         Vector3 input  = movement.GetDirectionalInput();
         Vector3 toMove = movement.ApplyInertia(input, Time.deltaTime, movement.walkingTurnSpeed);

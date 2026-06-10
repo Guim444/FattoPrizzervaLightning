@@ -113,7 +113,7 @@ public class TutorialManager : MonoBehaviour
         if (milestone.delaySeconds > 0f)
             yield return new WaitForSeconds(milestone.delaySeconds);
 
-        player.Combat.endurance = milestone.newEndurance;
+        player.combat.endurance = milestone.newEndurance;
         milestone.onTriggered?.Invoke();
 
         Debug.Log($"[TutorialManager] '{milestone.label}' → Player Endurance = {milestone.newEndurance}");

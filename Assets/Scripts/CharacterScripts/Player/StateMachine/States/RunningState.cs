@@ -34,13 +34,12 @@ public class RunningState : IStateActions
         player.animator.speed = 1;
         actualSpeed           = baseSpeed;
         stamina.SetRunning(staminaCostPerSecond);
-        player.Movement.RefreshSpriteFlip();
     }
 
     public void Update()
     {
-        var   movement = player.Movement;
-        var   combat   = player.Combat;
+        var   movement = player.movement;
+        var   combat   = player.combat;
         float dt       = Time.deltaTime;
 
         Vector3 input = movement.GetDirectionalInput();
@@ -92,7 +91,7 @@ public class RunningState : IStateActions
 
     void HandleSpeed()
     {
-        var stateMachine = player.StateMachineController;
+        var stateMachine = player.stateMachineController;
 
         if (actualSpeed < topSpeed[_currentThrustPhase - 1])
         {

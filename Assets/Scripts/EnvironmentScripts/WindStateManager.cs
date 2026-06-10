@@ -2,12 +2,17 @@ using UnityEngine;
 
 /// <summary>
 /// Gestiona la ventisca de sprites mediante CrossFade entre 4 clips de Animator,
-/// y controla la emisión de un ParticleSystem por estado.
+/// controla la emisión de un ParticleSystem por estado,
+/// y activa la animación Alembic slow/fast de los árboles.
 ///
 /// Animator setup:
 ///   - 4 estados (uno por clip). Entry apunta al estado por defecto (W1_MaxIdle).
 ///   - Sin flechas entre estados.
 ///   - Asignar el nombre exacto de cada estado en windStates[].stateName.
+///
+/// Mapeo wind → árboles:
+///   W1_MaxIdle / W2_MaxToMedium → fast
+///   W3_MediumToMin / W4_MinToMedium → slow
 /// </summary>
 public class WindStateManager : MonoBehaviour
 {
@@ -37,6 +42,9 @@ public class WindStateManager : MonoBehaviour
     [Header("Animators de ventisca")]
     [SerializeField] private Animator[] windAnimators;
 
+    [Header("Árboles Alembic")]
+    [SerializeField] private AlembicTreeWindController[] treeControllers;
+
     [Header("Particle System")]
     [SerializeField] private ParticleSystem blizzardParticles;
 
@@ -52,6 +60,7 @@ public class WindStateManager : MonoBehaviour
         float cft = crossFadeOverride >= 0f ? crossFadeOverride : windStates[idx].crossFadeTime;
         CrossFadeAll(windStates[idx].stateName, cft);
         SetEmission(windStates[idx].emissionRate);
+        SetTreeWindSpeed(preset);
     }
 
     /// <summary>Salta instantáneamente al preset dado desde el frame 0 del clip.</summary>
@@ -61,6 +70,7 @@ public class WindStateManager : MonoBehaviour
         _currentStateIndex = idx;
         CrossFadeAll(windStates[idx].stateName, 0f);
         SetEmission(windStates[idx].emissionRate);
+        SetTreeWindSpeed(preset);
     }
 
     private void CrossFadeAll(string stateName, float transitionTime)
@@ -77,5 +87,14 @@ public class WindStateManager : MonoBehaviour
         if (blizzardParticles == null) return;
         var emission = blizzardParticles.emission;
         emission.rateOverTime = rate;
+    }
+
+    // W1 y W2 = viento fuerte → fast. W3 y W4 = viento suave → slow.
+    private void SetTreeWindSpeed(WindPreset preset)
+    {
+        if (treeControllers == null) return;
+        bool fast = preset == WindPreset.W1_MaxIdle || preset == WindPreset.W2_MaxToMedium;
+        foreach (var tree in treeControllers)
+            if (tree != null) tree.SetFast(fast);
     }
 }

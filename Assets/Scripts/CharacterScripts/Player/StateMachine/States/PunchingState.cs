@@ -9,7 +9,7 @@ public class PunchingState : IStateActions
     public SphereCollider punchCollider;
 
     // Duración total del estado (hardcodeada, no .length — ver convenciones)
-    private const float PunchDuration = 1.0f;
+    private const float PunchDuration = 0.8333333f;
 
     private bool punchExecuted = false;
 

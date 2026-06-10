@@ -20,7 +20,7 @@ public class GlidingState : IStateActions
     {
         if (player == null || controller == null) return;
 
-        var movement = player.movement;
+        var movement = player.Movement;
 
         Vector3 input  = movement.GetDirectionalInput();
         Vector3 toMove = movement.ApplyInertia(input, Time.deltaTime, movement.glidingTurnSpeed);

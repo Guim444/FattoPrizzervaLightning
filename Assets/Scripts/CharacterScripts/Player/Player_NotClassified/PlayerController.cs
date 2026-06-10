@@ -28,19 +28,19 @@ public class PlayerController : MonoBehaviour
     // ==================================================
     // SPECIALIZED COMPONENTS (auto-resolved in Awake)
     // ==================================================
-    [HideInInspector] public PlayerInputHandler inputHandler;
-    [HideInInspector] public PlayerMovement movement;
-    [HideInInspector] public PlayerCombat combat;
-    [HideInInspector] public PlayerKnockbackHandler knockbackHandler;
-    [HideInInspector] public PlayerInteractor interactor;
-    [HideInInspector] public PlayerDepthScaler depthScaler;
-    [HideInInspector] public PlayerStateMachineController stateMachineController;
-    [HideInInspector] public CombatAttackHandler combatAttackHandler;
+    public PlayerInputHandler InputHandler {  get; private set; }
+    public PlayerMovement Movement {  get; private set; }
+    public PlayerCombat Combat {  get; private set; }
+    public PlayerKnockbackHandler KnockbackHandler {  get; private set; }
+    public PlayerInteractor Interactor {  get; private set; }
+    public PlayerDepthScaler DepthScaler {  get; private set; }
+    public PlayerStateMachineController StateMachineController {  get; private set; }
+    public CombatAttackHandler CombatAttackHandler {  get; private set; }
 
     // ==================================================
     // SHARED STATE (read by multiple components)
     // ==================================================
-    internal State currentState = State.Idle;
+    //internal State currentState = State.Idle;
     public bool canMove = true;
     public bool isGrounded;
     public bool isPunching;
@@ -76,17 +76,18 @@ public class PlayerController : MonoBehaviour
         cc = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         staminaManager = GetComponent<PlayerStaminaManager>();
-        inputHandler = GetComponent<PlayerInputHandler>();
-        movement = GetComponent<PlayerMovement>();
-        combat = GetComponent<PlayerCombat>();
-        knockbackHandler = GetComponent<PlayerKnockbackHandler>();
-        interactor = GetComponent<PlayerInteractor>();
-        depthScaler = GetComponent<PlayerDepthScaler>();
-        stateMachineController = GetComponent<PlayerStateMachineController>();
-        combatAttackHandler = GetComponent<CombatAttackHandler>();
+        
+        InputHandler = GetComponent<PlayerInputHandler>();
+        Movement = GetComponent<PlayerMovement>();
+        Combat = GetComponent<PlayerCombat>();
+        KnockbackHandler = GetComponent<PlayerKnockbackHandler>();
+        Interactor = GetComponent<PlayerInteractor>();
+        DepthScaler = GetComponent<PlayerDepthScaler>();
+        StateMachineController = GetComponent<PlayerStateMachineController>();
+        CombatAttackHandler = GetComponent<CombatAttackHandler>();
 
-        combat.Initialize(this);
-        stateMachineController.Initialize(this);
+        Combat.Initialize(this);
+        StateMachineController.Initialize(this);
     }
 
     // ==================================================
@@ -95,20 +96,20 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        depthScaler.UpdateScaleBasedOnZ();
+        DepthScaler.UpdateScaleBasedOnZ();
         isGrounded = cc.isGrounded;
 
-        if (combat.HP > 0)
+        if (Combat.HP > 0)
         {
-            knockbackHandler.HandleKnockback();
-            combat.UpdatePunchCooldown();
-            stateMachineController.HandleStateTransitions();
-            StateMachine.Update();
-            movement.ApplyGravity();
-            movement.SpeedManagement();
+            KnockbackHandler.HandleKnockback();
+            Combat.UpdatePunchCooldown();
+            StateMachineController.HandleStateTransitions();
+            StateMachineController._stateMachine.Update();
+            Movement.ApplyGravity();
+            Movement.SpeedManagement();
         }
 
-        inputHandler.ConsumeFrameInputs();
+        InputHandler.ConsumeFrameInputs();
     }
 
     // Called by Animation Event at the end of ExitDeenergized

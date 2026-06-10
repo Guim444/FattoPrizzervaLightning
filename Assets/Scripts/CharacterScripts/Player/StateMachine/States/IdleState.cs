@@ -15,12 +15,12 @@ public class IdleState : IStateActions
     {
         stamina.SetIdle();
         player.animator.speed = 1f;
-        player.movement.EnforceInvertedSpriteFlip();
+        player.Movement.EnforceInvertedSpriteFlip();
     }
 
     public void Update()
     {
-        var movement = player.movement;
+        var movement = player.Movement;
 
         movement.EnforceInvertedSpriteFlip();
 
@@ -36,6 +36,6 @@ public class IdleState : IStateActions
 
     public void Exit()
     {
-        player.movement.CurrentSpeed = Vector3.zero;
+        player.Movement.CurrentSpeed = Vector3.zero;
     }
 }

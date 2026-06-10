@@ -24,8 +24,8 @@ public static class PlayerStateHelper
         // if (isOnSlope && currentState == State.Gliding)
         //     return State.Gliding;
 
-        var input = player.inputHandler;
-        var movement = player.movement;
+        var input = player.InputHandler;
+        var movement = player.Movement;
 
         bool hasMovementInput = movement.GetDirectionalInput().magnitude > 0.1f;
 

@@ -48,6 +48,7 @@ public class PlayerAnimations : MonoBehaviour
         UpdateBlendSpeed();
 
         animator.SetFloat("Speed",        _blendSpeed);
+<<<<<<< HEAD
         animator.SetBool("isMoving",      player.currentState == State.Moving
                                        || player.currentState == State.Running
                                        || player.currentState == State.Deenergized);
@@ -105,13 +106,25 @@ public class PlayerAnimations : MonoBehaviour
             player.movement.EnforceInvertedSpriteFlip();
         else if (state == State.PunchRunning)
             player.movement.RefreshSpriteFlip();
+=======
+        animator.SetBool("isMoving",      player.StateMachineController.CurrentState == State.Moving
+                                       || player.StateMachineController.CurrentState == State.Running
+                                       || player.StateMachineController.CurrentState == State.Deenergized);
+        animator.SetBool("isRunning",     player.StateMachineController.CurrentState == State.Running
+                                       || player.StateMachineController.CurrentState == State.PunchRunning);
+        animator.SetBool("isGliding",     player.StateMachineController.CurrentState == State.Gliding);
+        animator.SetBool("isKnockedback", player.KnockbackHandler.ShowKnockbackAnim);
+        animator.SetBool("isDead",        player.Combat.HP <= 0);
+        animator.SetBool("IdleFront",     player.StateMachineController.CurrentState == State.Idle
+                                       && Mathf.Abs(player.Movement.LastDirection.x) > 0.1f);
+>>>>>>> origin/Albert_Branch
     }
 
     void UpdateBlendSpeed()
     {
-        bool isWalking = player.currentState == State.Moving;
-        bool isRunning = player.currentState == State.Running
-                      || player.currentState == State.PunchRunning;
+        bool isWalking = player.StateMachineController.CurrentState == State.Moving;
+        bool isRunning = player.StateMachineController.CurrentState == State.Running
+                      || player.StateMachineController.CurrentState == State.PunchRunning;
 
         if (!isWalking && !isRunning)
         {

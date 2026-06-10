@@ -213,7 +213,7 @@ Transform:
   m_GameObject: {fileID: 16785035}
   serializedVersion: 2
   m_LocalRotation: {x: 0.03812094, y: 0.69994575, z: -0.038784105, w: 0.71212256}
-  m_LocalPosition: {x: -114.97458, y: -29.148483, z: -0.6091392}
+  m_LocalPosition: {x: -106.04042, y: -30.124535, z: -0.45412523}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -455,7 +455,7 @@ MonoBehaviour:
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
   m_ScreenY: 0.5
-  m_CameraDistance: 12.98866
+  m_CameraDistance: 4
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
   m_DeadZoneDepth: 0
@@ -503,7 +503,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &128214775
 Transform:
   m_ObjectHideFlags: 0
@@ -1859,6 +1859,10 @@ PrefabInstance:
       propertyPath: speedDisplay
       value: 
       objectReference: {fileID: 874552210}
+    - target: {fileID: 5181433476781225031, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: groundMask.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 7686821030642128762, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
       propertyPath: m_Height
       value: 2
@@ -4738,7 +4742,7 @@ Transform:
   m_GameObject: {fileID: 1613816017}
   serializedVersion: 2
   m_LocalRotation: {x: 0.03812094, y: 0.69994575, z: -0.038784105, w: 0.71212256}
-  m_LocalPosition: {x: -114.97458, y: -29.148483, z: -0.6091392}
+  m_LocalPosition: {x: -106.04042, y: -30.124535, z: -0.45412523}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

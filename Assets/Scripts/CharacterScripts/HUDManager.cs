@@ -65,6 +65,7 @@ public class HUDManager : MonoBehaviour
 
     public void OnClickCombatPosition()
     {
+        introSequenceManager?.RestoreOriginalAnimator();
         Time.timeScale = 1f;
         ActivateCinemachine();
         playerBoundary.enabled = false;
@@ -115,6 +116,7 @@ public class HUDManager : MonoBehaviour
 
     public void OnClickFreeMove()
     {
+        introSequenceManager?.RestoreOriginalAnimator();
         Time.timeScale = 1f;
         cameraMovement.combatY = freeMoveStartCameraY;
         ActivateCameraMovement();

@@ -242,7 +242,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 2004004907}
   m_Lens:
-    FieldOfView: 40
+    FieldOfView: 45
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 20000
@@ -1769,7 +1769,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1713666893}
   - {fileID: 761690055}
   m_Father: {fileID: 1302313189}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1874,6 +1873,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8518268266261273643, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
       propertyPath: m_FlipX
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8518268266261273643, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: m_FlipY
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8518268266261273643, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
@@ -3790,6 +3793,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1713666893}
   - {fileID: 416904152}
   - {fileID: 704993144}
   m_Father: {fileID: 266818183}
@@ -4825,7 +4829,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 20000
-  field of view: 40
+  field of view: 45
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -5208,7 +5212,7 @@ RectTransform:
   m_Children:
   - {fileID: 1164893685}
   - {fileID: 1836358523}
-  m_Father: {fileID: 416904152}
+  m_Father: {fileID: 1302313189}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -5235,7 +5239,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2021292069}
         m_TargetAssemblyTypeName: TutorialRingManager, Assembly-CSharp
-        m_MethodName: ResetRing
+        m_MethodName: Retry
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5705,15 +5709,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5382597689745741449, guid: 164cd64085e843f4d93a0a2a64687ef7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.724
+      value: -5.301
       objectReference: {fileID: 0}
     - target: {fileID: 5382597689745741449, guid: 164cd64085e843f4d93a0a2a64687ef7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.182
+      value: 1.01
       objectReference: {fileID: 0}
     - target: {fileID: 5382597689745741449, guid: 164cd64085e843f4d93a0a2a64687ef7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.335
+      value: 3.943
       objectReference: {fileID: 0}
     - target: {fileID: 5382597689745741449, guid: 164cd64085e843f4d93a0a2a64687ef7, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6288,9 +6292,9 @@ MonoBehaviour:
   onEnemyOut:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1713666892}
         m_TargetAssemblyTypeName: HUDManager, Assembly-CSharp
-        m_MethodName: OnRingPhaseComplete
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6380,6 +6384,7 @@ MonoBehaviour:
   ratioQ3: 0.5
   ratioQ4: 0.15
   lockHumanForm: 1
+  introAnimatorController: {fileID: 9100000, guid: 857fd31268726194e9441f46f1a0475e, type: 2}
 --- !u!114 &2021292074
 MonoBehaviour:
   m_ObjectHideFlags: 0

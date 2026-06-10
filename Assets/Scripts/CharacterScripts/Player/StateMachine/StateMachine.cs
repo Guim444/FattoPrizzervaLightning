@@ -1,30 +1,63 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class StateMachine
+public class StateMachine
 {
-    private static Dictionary<State, IStateActions> _states = new Dictionary<State, IStateActions>();
-    private static IStateActions _currentState;
-    public static void Reset()
+    private readonly Dictionary<State, IStateActions> _states = new();
+    public IStateActions CurrentState { get; private set; }
+    public State CurrentKey { get; private set; }
+
+
+    public void Reset()
     {
         _states.Clear();
-        _currentState = null;
+        CurrentState = null;
     }
-    public static void AddState(State key, IStateActions state)
+    public void AddState(State key, IStateActions state)
     {
         _states[key] = state;
     }
 
-    public static void SetState(State newState)
+    public void RequestState(State newState)
     {
-        if (_currentState == _states[newState]) return;
-        _currentState?.Exit();
-        _currentState = _states[newState];
-        _currentState.Enter();
+        if (!CanTransition(newState))
+            return;
+
+        SetState(newState);
     }
 
-    public static void Update()
+    public void SetState(State newState)
     {
-        _currentState?.Update();
+        if (!_states.ContainsKey(newState))
+        {
+            Debug.LogWarning($"State {newState} not registered");
+            return;
+        }
+
+        if (CurrentState == _states[newState]) 
+            return;
+
+        CurrentState?.Exit();
+       
+        CurrentState = _states[newState];
+        CurrentKey = newState;
+
+        CurrentState.Enter();
+    }
+
+    public void Update()
+    {
+        CurrentState?.Update();
+    }
+
+    public bool CanTransition(State newState)
+    {
+        if (!_states.ContainsKey(newState))
+            return false;
+
+        if (CurrentState == _states[newState])
+            return false;
+
+        return true;
     }
 }

@@ -43,6 +43,10 @@ public class IntroSequenceManager : MonoBehaviour
     [Header("Blink — Form Lock")]
     [SerializeField] private bool lockHumanForm = false;
 
+    [Header("Animator — Intro Controller")]
+    [SerializeField] private RuntimeAnimatorController introAnimatorController;
+
+    private RuntimeAnimatorController _originalAnimatorController;
     private Material _originalMaterial;
     private Material _spriteFadeMat;
     private Coroutine _blinkCoroutine;
@@ -125,8 +129,12 @@ public class IntroSequenceManager : MonoBehaviour
             playerSpriteRenderer.color = new Color(1f, 1f, 1f, 0f);
         if (playerSpriteRenderer != null) playerSpriteRenderer.enabled = true;
 
-        // Enable human animation during auto-walk. Animator drives the sprite frame;
-        // SpriteRenderer.color.a is independent so the fade still works correctly.
+        if (playerAnimator != null && introAnimatorController != null)
+        {
+            _originalAnimatorController = playerAnimator.runtimeAnimatorController;
+            playerAnimator.runtimeAnimatorController = introAnimatorController;
+        }
+
         if (playerAnimator != null)
         {
             playerAnimator.enabled = true;
@@ -229,6 +237,12 @@ public class IntroSequenceManager : MonoBehaviour
         return ratioQ4;
     }
 
+    public void RestoreOriginalAnimator()
+    {
+        if (playerAnimator != null && _originalAnimatorController != null)
+            playerAnimator.runtimeAnimatorController = _originalAnimatorController;
+    }
+
     public void OnPlayerEnterChurch(Transform churchPosition)
     {
         StartCoroutine(EnterChurchSequence(churchPosition));
@@ -241,6 +255,8 @@ public class IntroSequenceManager : MonoBehaviour
             StopCoroutine(_blinkCoroutine);
             _blinkCoroutine = null;
         }
+
+        RestoreOriginalAnimator();
 
         if (playerAnimator != null) playerAnimator.enabled = true;
         SetSoulForm();

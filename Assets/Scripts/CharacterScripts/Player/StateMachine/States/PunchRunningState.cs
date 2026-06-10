@@ -26,10 +26,11 @@ public class PunchRunningState : IStateActions
         if (punchExecuted) return;
         punchExecuted = true;
 
+        player.Movement.EnforceInvertedSpriteFlip();
         player.animator.SetTrigger("isPunching");
 
-        var combat   = player.combat;
-        var movement = player.movement;
+        var combat   = player.Combat;
+        var movement = player.Movement;
 
         savedEndurance = combat.endurance;
         actualSpeed    = movement.punchRunningBaseSpeed;
@@ -53,9 +54,9 @@ public class PunchRunningState : IStateActions
 
     public void Update()
     {
-        var movement = player.movement;
+        var movement = player.Movement;
 
-        if (!player.inputHandler.IsRunInputHeld)
+        if (!player.InputHandler.IsRunInputHeld)
         {
             if (controller.enabled)
                 controller.Move(Vector3.zero);
@@ -82,9 +83,9 @@ public class PunchRunningState : IStateActions
 
     public void Exit()
     {
-        player.combat.endurance   = savedEndurance; // Restaura el endurance temporal
+        player.Combat.endurance   = savedEndurance; // Restaura el endurance temporal
         player.canAttack          = true;
-        player.combat.damageBoost = 0;
+        player.Combat.damageBoost = 0;
         punchExecuted             = false;
     }
 }

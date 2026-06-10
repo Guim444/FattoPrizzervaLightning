@@ -147,7 +147,7 @@ public class TutorialRingManager : MonoBehaviour
         if (normalized >= 0.75f)
         {
             _enemyThresholdTriggered = true;
-            player.combat.endurance = playerPenaltyEndurance;
+            player.Combat.endurance = playerPenaltyEndurance;
         }
     }
 
@@ -210,8 +210,8 @@ public class TutorialRingManager : MonoBehaviour
 
         if (player != null)
         {
-            player.combat.HP       = player.combat.maxHP;
-            player.combat.endurance = playerStartEndurance;
+            player.Combat.HP       = player.Combat.maxHP;
+            player.Combat.endurance = playerStartEndurance;
             player.canMove         = true;
             player.animator.SetBool("isDead", false);
         }
@@ -234,8 +234,10 @@ public class TutorialRingManager : MonoBehaviour
         _enemyThresholdTriggered = false;
         _resultTriggered = false;
         if (player != null)
-            player.combat.endurance = playerStartEndurance;
+            player.Combat.endurance = playerStartEndurance;
         Debug.Log("[TutorialRing] Ring reset.");
+            player.Combat.endurance = playerStartEndurance;
+        Debug.Log("[TutorialRing] Ring reiniciado.");
     }
 
     public void RestartPositions()

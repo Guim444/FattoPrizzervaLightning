@@ -24,7 +24,7 @@ public class AnimatorSyncController : MonoBehaviour
     {
         if (_player.canAttack)
         {
-            _player.combatAttackHandler.ExecuteAttack();
+            _player.CombatAttackHandler.ExecuteAttack();
             _player.animator.ResetTrigger("isPunching");
         }
     }

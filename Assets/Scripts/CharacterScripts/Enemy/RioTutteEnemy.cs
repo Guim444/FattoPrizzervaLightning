@@ -105,7 +105,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
 
         Vector3 pushDir     = delta.normalized;
         float   penetration = minDist - dist;
-        int     playerEnd   = _player.combat.endurance;
+        int     playerEnd   = _player.Combat.endurance;
 
         if (_attacks.IsUsingDashGrab)
         {
@@ -115,6 +115,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         }
 
         if (_punchRunImpactPending)
+        if (_player.StateMachineController.CurrentState == State.PunchRunning)
         {
             // Fully yield only on the exact frame of the PunchRunning impact
             _punchRunImpactPending = false;
@@ -213,7 +214,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         switch (CurrentPhase)
         {
             case 1:
-                if (_player.currentState == State.PunchRunning)
+                if (_player.StateMachineController.CurrentState == State.PunchRunning)
                 {
                     _runningPunchHits++;
                     Debug.Log($"[RioTutte] RunningPunch connected: {_runningPunchHits}/{runningPunchsToAdvance}");
@@ -253,7 +254,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
     public override void ReceiveKnockback(Vector3 direction, float force)
     {
         base.ReceiveKnockback(direction, force);
-        if (_player != null && _player.currentState == State.PunchRunning)
+        if (_player != null && _player.StateMachineController.CurrentState == State.PunchRunning)
             _punchRunImpactPending = true;
     }
 
@@ -321,7 +322,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
         if (toPlayer.magnitude > MinSeparation * 1.5f) return;
 
         Vector3 dir = toPlayer.magnitude > 0.01f ? toPlayer.normalized : transform.forward;
-        _player.knockbackHandler.ReceiveEnemyKnockback(dir, attackKnockbackBase);
+        _player.KnockbackHandler.ReceiveEnemyKnockback(dir, attackKnockbackBase);
         _anim.SetTrigger("Punch");
         ResetAttackCooldown();
     }

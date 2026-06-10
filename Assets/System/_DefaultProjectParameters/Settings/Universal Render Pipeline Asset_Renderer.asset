@@ -26,6 +26,48 @@ MonoBehaviour:
     BlurQuality: 0
     Falloff: 100
     SampleCount: -1
+--- !u!114 &-4700624686069765276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
+  m_Name: ManuOutline
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    passTag: ManuOutline
+    Event: 300
+    filterSettings:
+      RenderQueueType: 0
+      LayerMask:
+        serializedVersion: 2
+        m_Bits: 2048
+      PassNames: []
+    overrideMaterial: {fileID: 2100000, guid: d2b67e3053f4fdf498c703512c640779, type: 2}
+    overrideMaterialPassIndex: 0
+    overrideShader: {fileID: 0}
+    overrideShaderPassIndex: 0
+    overrideMode: 1
+    overrideDepthState: 0
+    depthCompareFunction: 0
+    enableWrite: 0
+    stencilSettings:
+      overrideStencilState: 0
+      stencilReference: 0
+      stencilCompareFunction: 8
+      passOperation: 0
+      failOperation: 0
+      zFailOperation: 0
+    cameraSettings:
+      overrideCamera: 0
+      restoreCamera: 1
+      offset: {x: 0.11, y: 0, z: 0.64, w: 0}
+      cameraFieldOfView: 60
 --- !u!114 &-3409835923088045136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49,6 +91,26 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   ignoreReflectionProbes: 1
+--- !u!114 &-1921750276035968850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
+  m_Name: FullScreenPassRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  injectionPoint: 600
+  fetchColorBuffer: 1
+  requirements: 0
+  passMaterial: {fileID: 2100000, guid: d2b67e3053f4fdf498c703512c640779, type: 2}
+  passIndex: 0
+  bindDepthStencilAttachment: 1
+  m_Version: 1
 --- !u!114 &-1115646273603524127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,7 +159,9 @@ MonoBehaviour:
   - {fileID: 5993250553209430498}
   - {fileID: 9019489105833884506}
   - {fileID: 8884217464984721623}
-  m_RendererFeatureMap: 4cdbace031c18c8d908feb7af477c316b08bf8454bd4add034f4c05098e44813e221f6e19f4d2c535afbbbf08da92b7dd758bcbbb6144b7b
+  - {fileID: -4700624686069765276}
+  - {fileID: -1921750276035968850}
+  m_RendererFeatureMap: 4cdbace031c18c8d908feb7af477c316b08bf8454bd4add034f4c05098e44813e221f6e19f4d2c535afbbbf08da92b7dd758bcbbb6144b7b642b61c4c006c4beae00de494e9254e5
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -212,7 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
   m_Name: RenderObjects
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     passTag: RenderObjects
     Event: 300

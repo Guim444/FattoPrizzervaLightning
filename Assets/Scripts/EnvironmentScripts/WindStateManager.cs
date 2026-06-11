@@ -5,7 +5,7 @@ using UnityEngine;
 /// controla la emisión de un ParticleSystem por estado,
 /// y activa la animación Alembic slow/fast de los árboles.
 ///
-/// Animator setup:
+/// Animator setup (ventisca):
 ///   - 4 estados (uno por clip). Entry apunta al estado por defecto (W1_MaxIdle).
 ///   - Sin flechas entre estados.
 ///   - Asignar el nombre exacto de cada estado en windStates[].stateName.
@@ -13,6 +13,8 @@ using UnityEngine;
 /// Mapeo wind → árboles:
 ///   W1_MaxIdle / W2_MaxToMedium → fast
 ///   W3_MediumToMin / W4_MinToMedium → slow
+///
+/// Teclas de prueba: 1 y 4 → fast, 2 y 3 → slow
 /// </summary>
 public class WindStateManager : MonoBehaviour
 {
@@ -50,6 +52,18 @@ public class WindStateManager : MonoBehaviour
 
     private int _currentStateIndex = -1;
 
+    // ── Teclas de prueba — árboles ───────────────────────────────────────────
+    // 1 y 4 → fast,  2 y 3 → slow
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha4))
+            SetTreeWindSpeed(true);
+        else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3))
+            SetTreeWindSpeed(false);
+    }
+
+    // ── API pública — viento ─────────────────────────────────────────────────
+
     /// <summary>Transiciona al preset dado usando el CrossFade configurado en el Inspector.</summary>
     public void TransitionTo(WindPreset preset, float crossFadeOverride = -1f)
     {
@@ -73,6 +87,8 @@ public class WindStateManager : MonoBehaviour
         SetTreeWindSpeed(preset);
     }
 
+    // ── Privado ──────────────────────────────────────────────────────────────
+
     private void CrossFadeAll(string stateName, float transitionTime)
     {
         foreach (var anim in windAnimators)
@@ -92,8 +108,13 @@ public class WindStateManager : MonoBehaviour
     // W1 y W2 = viento fuerte → fast. W3 y W4 = viento suave → slow.
     private void SetTreeWindSpeed(WindPreset preset)
     {
-        if (treeControllers == null) return;
         bool fast = preset == WindPreset.W1_MaxIdle || preset == WindPreset.W2_MaxToMedium;
+        SetTreeWindSpeed(fast);
+    }
+
+    private void SetTreeWindSpeed(bool fast)
+    {
+        if (treeControllers == null) return;
         foreach (var tree in treeControllers)
             if (tree != null) tree.SetFast(fast);
     }

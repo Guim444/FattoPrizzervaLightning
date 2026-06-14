@@ -64,6 +64,7 @@ public class IntroSequenceManager : MonoBehaviour
             _originalClearFlags = mainCamera.clearFlags;
 
         _spriteFadeMat = new Material(Shader.Find("Sprites/Default"));
+
     }
 
     public void ShowBlackScreen()
@@ -123,8 +124,8 @@ public class IntroSequenceManager : MonoBehaviour
     {
         if (playerSpriteRenderer != null) playerSpriteRenderer.enabled = false;
         playerTransform.gameObject.SetActive(true);
-        if (playerSpriteRenderer != null && _spriteFadeMat != null)
-            playerSpriteRenderer.sharedMaterial = _spriteFadeMat;
+        //if (playerSpriteRenderer != null && _spriteFadeMat != null)
+        //    playerSpriteRenderer.sharedMaterial = _spriteFadeMat;
         if (playerSpriteRenderer != null)
             playerSpriteRenderer.color = new Color(1f, 1f, 1f, 0f);
         if (playerSpriteRenderer != null) playerSpriteRenderer.enabled = true;

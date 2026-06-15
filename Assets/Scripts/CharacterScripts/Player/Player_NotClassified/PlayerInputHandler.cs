@@ -90,6 +90,11 @@ public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
     void OnDisable()
     {
         _playerActions.Disable();
+        _moveInput = Vector2.zero;
+        IsRunInputHeld = false;
+        IsPunchInputHeld = false;
+        IsPunchInputPressed = false;
+        IsActionInputPressed = false;
     }
 
     void OnDestroy()

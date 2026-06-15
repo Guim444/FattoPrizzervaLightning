@@ -11,6 +11,7 @@ public class IntroSequenceManager : MonoBehaviour
     [SerializeField] private CharacterController playerCC;
     [SerializeField] private PlayerBoundaryClamp boundaryClamp;
     [SerializeField] private PlayerInputHandler playerInputHandler;
+    [SerializeField] private PlayerController playerController;
     [SerializeField] private HUDManager hudManager;
     [SerializeField] private SpriteRenderer playerSpriteRenderer;
 
@@ -26,6 +27,8 @@ public class IntroSequenceManager : MonoBehaviour
     [Header("Phase 2 — Fade + auto movement")]
     [SerializeField] private float fadeInDuration = 4f;
     [SerializeField] private float fadeExponent   = 2f;
+    [Tooltip("Mueve al jugador automáticamente en X mientras se revela durante el fade.")]
+    [SerializeField] private bool autoWalkEnabled = true;
     [SerializeField] private float autoWalkSpeed  = 3f;
     [SerializeField] private float introPlayerZ   = 0f;
 
@@ -52,10 +55,15 @@ public class IntroSequenceManager : MonoBehaviour
     private Coroutine _blinkCoroutine;
     private CameraClearFlags _originalClearFlags;
 
+    public float IntroPlayerZ => introPlayerZ;
+
     private void Awake()
     {
         if (playerSpriteRenderer == null && playerTransform != null)
             playerSpriteRenderer = playerTransform.GetComponentInChildren<SpriteRenderer>();
+
+        if (playerController == null && playerTransform != null)
+            playerController = playerTransform.GetComponent<PlayerController>();
 
         if (playerSpriteRenderer != null)
             _originalMaterial = playerSpriteRenderer.sharedMaterial;
@@ -69,6 +77,12 @@ public class IntroSequenceManager : MonoBehaviour
 
     public void ShowBlackScreen()
     {
+        if (playerController != null)
+        {
+            playerController.ResetToIdle();
+            playerController.enabled = false;
+        }
+
         if (mainCamera != null)
         {
             mainCamera.clearFlags      = CameraClearFlags.SolidColor;
@@ -94,7 +108,10 @@ public class IntroSequenceManager : MonoBehaviour
         yield return StartCoroutine(HoldBlack());
         yield return StartCoroutine(FadeFromBlack());
 
+        KeepPlayerAtIntroDepth();
+        if (playerCC != null) playerCC.enabled = true;
         if (playerInputHandler != null) playerInputHandler.enabled = true;
+        if (playerController != null) playerController.enabled = true;
 
         _blinkCoroutine = StartCoroutine(BlinkCoroutine());
     }
@@ -112,12 +129,9 @@ public class IntroSequenceManager : MonoBehaviour
     private void ActivatePlayerInvisible()
     {
         if (playerTransform == null) return;
-        playerCC.enabled = false;
-        Vector3 pos = playerTransform.position;
-        pos.z = introPlayerZ;
-        playerTransform.position = pos;
+        if (playerCC != null) playerCC.enabled = false;
+        KeepPlayerAtIntroDepth();
         Physics.SyncTransforms();
-        playerCC.enabled = true;
     }
 
     private IEnumerator FadeFromBlack()
@@ -159,7 +173,17 @@ public class IntroSequenceManager : MonoBehaviour
             }
 
             SetPlayerAlpha(reveal);
-            playerCC.Move(Vector3.right * autoWalkSpeed * Time.deltaTime);
+            if (autoWalkEnabled)
+            {
+                Vector3 pos = playerTransform.position;
+                pos.x += autoWalkSpeed * Time.unscaledDeltaTime;
+                pos.z = introPlayerZ;
+                playerTransform.position = pos;
+            }
+            else
+            {
+                KeepPlayerAtIntroDepth();
+            }
 
             yield return null;
         }
@@ -172,6 +196,15 @@ public class IntroSequenceManager : MonoBehaviour
             mainCamera.backgroundColor = fadeEndBgColor;
             mainCamera.clearFlags      = _originalClearFlags;
         }
+    }
+
+    private void KeepPlayerAtIntroDepth()
+    {
+        if (playerTransform == null) return;
+
+        Vector3 pos = playerTransform.position;
+        pos.z = introPlayerZ;
+        playerTransform.position = pos;
     }
 
     private void SetPlayerAlpha(float alpha)

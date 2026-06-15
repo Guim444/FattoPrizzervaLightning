@@ -180,7 +180,7 @@ Transform:
   m_GameObject: {fileID: 16785035}
   serializedVersion: 2
   m_LocalRotation: {x: 0.03812094, y: 0.69994575, z: -0.038784105, w: 0.71212256}
-  m_LocalPosition: {x: -106.04041, y: -30.124535, z: -0.06898239}
+  m_LocalPosition: {x: -114.57227, y: -29.192434, z: -0.21701606}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3346,7 +3346,7 @@ Transform:
   m_GameObject: {fileID: 1613816017}
   serializedVersion: 2
   m_LocalRotation: {x: 0.03812094, y: 0.69994575, z: -0.038784105, w: 0.71212256}
-  m_LocalPosition: {x: -106.04041, y: -30.124535, z: -0.06898239}
+  m_LocalPosition: {x: -114.57227, y: -29.192434, z: -0.21701606}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4657,6 +4657,7 @@ MonoBehaviour:
   playerCC: {fileID: 448675061}
   boundaryClamp: {fileID: 2004004936}
   playerInputHandler: {fileID: 2004004961}
+  playerController: {fileID: 0}
   hudManager: {fileID: 2021292074}
   playerSpriteRenderer: {fileID: 2004004950}
   introVirtualCamera: {fileID: 16785037}
@@ -4666,6 +4667,7 @@ MonoBehaviour:
   holdBlackDuration: 10
   fadeInDuration: 10
   fadeExponent: 5
+  autoWalkEnabled: 1
   autoWalkSpeed: 3
   introPlayerZ: 0
   blinkStartX: -100

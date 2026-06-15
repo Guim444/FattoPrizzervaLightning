@@ -15,7 +15,11 @@ public class ChurchDoorTrigger : MonoBehaviour
         triggered = true;
         if (playerCamera != null)
             playerCamera.fieldOfView = 60;
-        
-        hudManager.OnEnterCombatFromTrigger();
+
+        int activatedManagers = WindStateManager.ActivateAllVideoPlayersRoots();
+        if (activatedManagers == 0)
+            Debug.LogWarning("[ChurchDoorTrigger] No se encontró ningún WindStateManager para activar la ventisca.", this);
+
+        hudManager?.OnEnterCombatFromTrigger();
     }
 }

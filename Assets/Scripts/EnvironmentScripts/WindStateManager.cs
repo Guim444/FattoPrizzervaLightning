@@ -8,7 +8,7 @@ using UnityEngine.Video;
 ///
 /// Idea clave:
 /// - Cada clip tiene su propio VideoPlayer.
-/// - Todos los clips se asignan y se preparan una sola vez en Awake.
+/// - Los clips se asignan al crear el root, en Awake o al entrar en la iglesia.
 /// - Después, los players quedan corriendo.
 /// - Al cambiar de estado NO se cambia clip, NO se llama Prepare, NO se llama Stop.
 /// - Tampoco se hace seek/time=0/frame=0 en runtime.
@@ -79,11 +79,14 @@ public class WindStateManager : MonoBehaviour
     [SerializeField] private ParticleSystem blizzardParticles;
 
     [Header("Preload / Playback")]
-    [Tooltip("Crea un VideoPlayer por clip en Awake y los deja preparados/corriendo.")]
+    [Tooltip("Crea el root y sus VideoPlayers en Awake. Si se desactiva, se crean al entrar en la iglesia.")]
     [SerializeField] private bool preloadPlayersOnAwake = true;
 
     [Tooltip("Nombre del contenedor runtime donde se crean los VideoPlayers.")]
     [SerializeField] private string videoPlayersRootName = "Runtime_VideoPlayers";
+
+    [Tooltip("Si está desactivado, los vídeos permanecen inactivos hasta entrar en la iglesia.")]
+    [SerializeField] private bool videoPlayersRootStartsActive = false;
 
     // ── Estado interno ────────────────────────────────────────────────────────
 
@@ -100,6 +103,7 @@ public class WindStateManager : MonoBehaviour
     private int   _activeTransitionIndex = -1;
     private int   _pendingIdleAfterTransitionIndex = -1;
     private float _transitionEndsAtUnscaled = -1f;
+    private float _activeTransitionOpacity = 0f;
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
 
@@ -136,6 +140,10 @@ public class WindStateManager : MonoBehaviour
     {
         RefreshVideoCamera();
         UpdateTransitionTimer();
+
+        // Mantiene el alpha correcto aunque algún prepareCompleted tardío,
+        // recarga de escena o llamada repetida apague el player activo.
+        MaintainActiveVideoAlpha();
     }
 
     // ── API pública ────────────────────────────────────────────────────────────
@@ -153,6 +161,7 @@ public class WindStateManager : MonoBehaviour
         _activeTransitionIndex = -1;
         _pendingIdleAfterTransitionIndex = -1;
         _transitionEndsAtUnscaled = -1f;
+        _activeTransitionOpacity = 0f;
 
         SetEmission(windStates[idx].emissionRate);
         SetTreeWindSpeed(preset);
@@ -170,7 +179,12 @@ public class WindStateManager : MonoBehaviour
         if (!IsValidStateIndex(idx)) return;
 
         if (idx == _currentStateIndex && _activeTransitionIndex < 0)
+        {
+            // Si el manager externo llama TransitionTo(W1) en vez de SnapToState(W1),
+            // no salimos sin hacer nada: re-aplicamos el idle visible.
+            ShowIdle(idx);
             return;
+        }
 
         _currentStateIndex = idx;
 
@@ -200,13 +214,55 @@ public class WindStateManager : MonoBehaviour
         // No hacemos seek/restart aquí. time=0/frame=0 también puede congelar el decoder.
         // El player ya está corriendo en loop desde Awake; solo cambiamos alpha.
         // Aseguramos que esté corriendo sin preparar ni reasignar clip.
-        if (!transition.isPlaying)
+        if (IsVideoPlayersRootActive && !transition.isPlaying)
             transition.Play();
 
         float opacity = _crossFadeOverride >= 0f ? _crossFadeOverride : data.transitionOpacity;
-        transition.targetCameraAlpha = opacity;
+        _activeTransitionOpacity = opacity;
+        transition.targetCameraAlpha = IsVideoPlayersRootActive ? opacity : 0f;
 
         _transitionEndsAtUnscaled = Time.unscaledTime + GetClipDurationSafe(transition);
+    }
+
+    public static int ActivateAllVideoPlayersRoots()
+    {
+        WindStateManager[] managers = Object.FindObjectsByType<WindStateManager>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None);
+
+        foreach (WindStateManager manager in managers)
+            manager.ActivateVideoPlayersRoot();
+
+        return managers.Length;
+    }
+
+    public void ActivateVideoPlayersRoot()
+    {
+        if (_playersRoot == null)
+            BuildAndPrepareFixedPlayers();
+
+        if (_playersRoot == null)
+        {
+            Debug.LogWarning($"[{nameof(WindStateManager)}] No existe el root de VideoPlayers.", this);
+            return;
+        }
+
+        _playersRoot.gameObject.SetActive(true);
+        RefreshVideoCamera();
+
+        foreach (VideoPlayer player in _allPlayers)
+        {
+            if (player == null) continue;
+
+            AssignCameraToPlayer(player);
+
+            if (player.isPrepared)
+                player.Play();
+            else
+                player.Prepare();
+        }
+
+        ApplyCurrentVideoAlphas();
     }
 
     // ── Preload de VideoPlayers fijos ─────────────────────────────────────────
@@ -226,6 +282,7 @@ public class WindStateManager : MonoBehaviour
         _allPlayers.Clear();
 
         _playersRoot = GetOrCreatePlayersRoot();
+        _playersRoot.gameObject.SetActive(videoPlayersRootStartsActive);
 
         for (int i = 0; i < windStates.Length; i++)
         {
@@ -270,8 +327,8 @@ public class WindStateManager : MonoBehaviour
 
         AssignCameraToPlayer(vp);
 
-        // Único Prepare permitido: al inicio.
-        vp.Prepare();
+        if (IsVideoPlayersRootActive)
+            vp.Prepare();
 
         _allPlayers.Add(vp);
         return vp;
@@ -303,6 +360,9 @@ public class WindStateManager : MonoBehaviour
     {
         source.prepareCompleted -= OnFixedPlayerPrepared;
 
+        if (!IsVideoPlayersRootActive)
+            return;
+
         // Todos quedan corriendo siempre. El visible se decide solo por alpha.
         if (!source.isPlaying)
             source.Play();
@@ -329,15 +389,16 @@ public class WindStateManager : MonoBehaviour
             return;
         }
 
-        if (!idle.isPlaying)
+        if (IsVideoPlayersRootActive && !idle.isPlaying)
             idle.Play();
 
-        idle.targetCameraAlpha = windStates[stateIdx].idleOpacity;
+        idle.targetCameraAlpha = IsVideoPlayersRootActive ? windStates[stateIdx].idleOpacity : 0f;
 
         _activeIdleIndex = stateIdx;
         _activeTransitionIndex = -1;
         _pendingIdleAfterTransitionIndex = -1;
         _transitionEndsAtUnscaled = -1f;
+        _activeTransitionOpacity = 0f;
     }
 
     private void HideAllVideos()
@@ -359,7 +420,10 @@ public class WindStateManager : MonoBehaviour
             VideoPlayer transition = GetTransitionPlayer(_activeTransitionIndex);
             if (transition != null)
             {
-                float opacity = windStates[_activeTransitionIndex].transitionOpacity;
+                float opacity = _activeTransitionOpacity > 0f
+                    ? _activeTransitionOpacity
+                    : windStates[_activeTransitionIndex].transitionOpacity;
+
                 transition.targetCameraAlpha = opacity;
             }
 
@@ -371,6 +435,47 @@ public class WindStateManager : MonoBehaviour
             VideoPlayer idle = GetIdlePlayer(_activeIdleIndex);
             if (idle != null)
                 idle.targetCameraAlpha = windStates[_activeIdleIndex].idleOpacity;
+        }
+    }
+
+    private void MaintainActiveVideoAlpha()
+    {
+        if (!IsVideoPlayersRootActive)
+            return;
+
+        if (_activeTransitionIndex >= 0)
+        {
+            VideoPlayer activeTransition = GetTransitionPlayer(_activeTransitionIndex);
+
+            for (int i = 0; i < _allPlayers.Count; i++)
+            {
+                VideoPlayer player = _allPlayers[i];
+                if (player == null) continue;
+
+                player.targetCameraAlpha = player == activeTransition ? _activeTransitionOpacity : 0f;
+
+                if (player == activeTransition && !player.isPlaying)
+                    player.Play();
+            }
+
+            return;
+        }
+
+        if (_activeIdleIndex >= 0)
+        {
+            VideoPlayer activeIdle = GetIdlePlayer(_activeIdleIndex);
+            float idleOpacity = IsValidStateIndex(_activeIdleIndex) ? windStates[_activeIdleIndex].idleOpacity : 0f;
+
+            for (int i = 0; i < _allPlayers.Count; i++)
+            {
+                VideoPlayer player = _allPlayers[i];
+                if (player == null) continue;
+
+                player.targetCameraAlpha = player == activeIdle ? idleOpacity : 0f;
+
+                if (player == activeIdle && !player.isPlaying)
+                    player.Play();
+            }
         }
     }
 
@@ -394,6 +499,7 @@ public class WindStateManager : MonoBehaviour
         _activeTransitionIndex = -1;
         _pendingIdleAfterTransitionIndex = -1;
         _transitionEndsAtUnscaled = -1f;
+        _activeTransitionOpacity = 0f;
 
         ShowIdle(idleIdx);
     }
@@ -425,6 +531,9 @@ public class WindStateManager : MonoBehaviour
 
         return _transitionPlayers[stateIdx];
     }
+
+    private bool IsVideoPlayersRootActive =>
+        _playersRoot != null && _playersRoot.gameObject.activeInHierarchy;
 
     // ── Callbacks de VideoPlayer ───────────────────────────────────────────────
 
@@ -637,4 +746,3 @@ public class WindStateManager : MonoBehaviour
         return new string(chars);
     }
 }
-

@@ -111,6 +111,16 @@ public class PlayerController : MonoBehaviour
         inputHandler.ConsumeFrameInputs();
     }
 
+    public void ResetToIdle()
+    {
+        movement.ResetMotion();
+        knockbackHandler.CancelKnockback();
+        combat.normalPunchTimer = 0f;
+        combat.damageBoost = 0;
+        currentState = State.Idle;
+        StateMachine.SetState(State.Idle);
+    }
+
     // Called by Animation Event at the end of ExitDeenergized
     public void OnDeenergizedExitDone()
     {

@@ -123,6 +123,13 @@ public class PlayerMovement : MonoBehaviour
         UpdateSpriteFlip(LastFacingDirection.z);
     }
 
+    public void ResetMotion()
+    {
+        CurrentSpeed = Vector3.zero;
+        LastDirection = Vector3.zero;
+        _verticalVelocity = -2f;
+    }
+
     // For sprites with naturally inverted orientation (idle, static punch, etc.)
     public void EnforceInvertedSpriteFlip()
     {

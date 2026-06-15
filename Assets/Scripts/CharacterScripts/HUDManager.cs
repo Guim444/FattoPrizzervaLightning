@@ -91,7 +91,7 @@ public class HUDManager : MonoBehaviour
         ActivateCinemachine();
         introSequenceManager?.ShowBlackScreen();
         Time.timeScale = 1f;
-        playerBoundary.enabled = true;
+        playerBoundary.enabled = false;
         OutsideChurch.SetActive(false);
         enemy.SetActive(false);
         enemyRio.SetActive(false);
@@ -101,6 +101,7 @@ public class HUDManager : MonoBehaviour
         playerAnimator?.SetBool("IdleFront", true);
         HidePanel();
         introSequenceManager?.StartIntro();
+        playerBoundary.enabled = true;
     }
 
     // Called from TutorialRingManager.onEnemyOut.
@@ -158,16 +159,18 @@ public class HUDManager : MonoBehaviour
             return;
         }
 
+        float startZ = introSequenceManager != null ? introSequenceManager.IntroPlayerZ : 0f;
+
         Debug.Log(
-            $"[HUDManager] MovePlayerToX — before: {playerTransform.position}  →  target X:{x} Y:{combatStartPositionY} Z:{combatStartPositionZ}");
+            $"[HUDManager] MoveStartPlayerToX — before: {playerTransform.position}  →  target X:{x} Y:{startPositionY} Z:{startZ}");
 
         CharacterController cc = playerTransform.GetComponent<CharacterController>();
         if (cc != null) cc.enabled = false;
-        playerTransform.position = new Vector3(x, startPositionY, combatStartPositionZ);
+        playerTransform.position = new Vector3(x, startPositionY, startZ);
         Physics.SyncTransforms();
         if (cc != null) cc.enabled = true;
 
-        Debug.Log($"[HUDManager] MovePlayerToX — after: {playerTransform.position}");
+        Debug.Log($"[HUDManager] MoveStartPlayerToX — after: {playerTransform.position}");
     }
 
     private void HidePanel()

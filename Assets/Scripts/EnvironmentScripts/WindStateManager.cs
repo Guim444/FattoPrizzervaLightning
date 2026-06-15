@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -13,8 +14,6 @@ using UnityEngine;
 /// Mapeo wind → árboles:
 ///   W1_MaxIdle / W2_MaxToMedium → fast
 ///   W3_MediumToMin / W4_MinToMedium → slow
-///
-/// Teclas de prueba: 1 y 4 → fast, 2 y 3 → slow
 /// </summary>
 public class WindStateManager : MonoBehaviour
 {
@@ -35,10 +34,10 @@ public class WindStateManager : MonoBehaviour
     [Header("Estados (0=W1, 1=W2, 2=W3, 3=W4)")]
     [SerializeField] private WindStateData[] windStates = new WindStateData[]
     {
-        new WindStateData { stateName = "W1_MaxIdle",     crossFadeTime = 0f,   emissionRate = 500f  },
-        new WindStateData { stateName = "W2_MaxToMedium", crossFadeTime = 0.1f, emissionRate = 1000f },
-        new WindStateData { stateName = "W3_MediumToMin", crossFadeTime = 0.1f, emissionRate = 2000f },
-        new WindStateData { stateName = "W4_MinToMedium", crossFadeTime = 0.1f, emissionRate = 4000f },
+        new WindStateData { stateName = "Blizzard_Fast",           crossFadeTime = 0f,   emissionRate = 4000f },
+        new WindStateData { stateName = "Blizzard_Fast_to_Medium", crossFadeTime = 0.1f, emissionRate = 2000f },
+        new WindStateData { stateName = "Blizzard_Slow",           crossFadeTime = 0.1f, emissionRate = 500f  },
+        new WindStateData { stateName = "Blizzard_Medium",         crossFadeTime = 0.1f, emissionRate = 1000f },
     };
 
     [Header("Animators de ventisca")]
@@ -52,14 +51,9 @@ public class WindStateManager : MonoBehaviour
 
     private int _currentStateIndex = -1;
 
-    // ── Teclas de prueba — árboles ───────────────────────────────────────────
-    // 1 y 4 → fast,  2 y 3 → slow
-    private void Update()
+    private void Awake()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha4))
-            SetTreeWindSpeed(true);
-        else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3))
-            SetTreeWindSpeed(false);
+        ResolveMissingReferences();
     }
 
     // ── API pública — viento ─────────────────────────────────────────────────
@@ -89,8 +83,99 @@ public class WindStateManager : MonoBehaviour
 
     // ── Privado ──────────────────────────────────────────────────────────────
 
+    private void ResolveMissingReferences()
+    {
+        bool repaired = false;
+
+        if (HasMissingReferences(windAnimators))
+        {
+            var matches = new List<Animator>();
+            foreach (var animator in Object.FindObjectsByType<Animator>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (HasAllWindStates(animator))
+                    matches.Add(animator);
+            }
+
+            windAnimators = matches.ToArray();
+            repaired |= windAnimators.Length > 0;
+        }
+
+        if (HasMissingReferences(treeControllers))
+        {
+            var matches = new List<AlembicTreeWindController>();
+            foreach (var tree in Object.FindObjectsByType<AlembicTreeWindController>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (tree != null && tree.HasAvailablePlayers)
+                    matches.Add(tree);
+            }
+
+            treeControllers = matches.ToArray();
+            repaired |= treeControllers.Length > 0;
+        }
+
+        if (blizzardParticles == null)
+        {
+            var matches = new List<ParticleSystem>();
+            foreach (var particles in Object.FindObjectsByType<ParticleSystem>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (particles.name == "SnowStorm")
+                    matches.Add(particles);
+            }
+
+            if (matches.Count == 1)
+            {
+                blizzardParticles = matches[0];
+                repaired = true;
+            }
+            else if (matches.Count > 1)
+            {
+                Debug.LogWarning($"[{nameof(WindStateManager)}] Hay varios ParticleSystem llamados SnowStorm. Asigna blizzardParticles manualmente.", this);
+            }
+        }
+
+        if (repaired)
+            Debug.LogWarning($"[{nameof(WindStateManager)}] Se repararon referencias perdidas durante esta ejecución. Revisa el Inspector para corregirlas de forma permanente.", this);
+    }
+
+    private bool HasAllWindStates(Animator animator)
+    {
+        if (animator == null || animator.runtimeAnimatorController == null)
+            return false;
+
+        foreach (var windState in windStates)
+        {
+            if (!AnimatorContainsState(animator, windState.stateName))
+                return false;
+        }
+
+        return true;
+    }
+
+    private static bool AnimatorContainsState(Animator animator, string stateName)
+    {
+        int shortHash = Animator.StringToHash(stateName);
+        int fullPathHash = Animator.StringToHash($"Base Layer.{stateName}");
+        return animator.HasState(0, shortHash) || animator.HasState(0, fullPathHash);
+    }
+
+    private static bool HasMissingReferences<T>(T[] references) where T : Object
+    {
+        if (references == null || references.Length == 0)
+            return true;
+
+        foreach (var reference in references)
+        {
+            if (reference == null)
+                return true;
+        }
+
+        return false;
+    }
+
     private void CrossFadeAll(string stateName, float transitionTime)
     {
+        if (windAnimators == null) return;
+
         foreach (var anim in windAnimators)
         {
             if (anim != null)

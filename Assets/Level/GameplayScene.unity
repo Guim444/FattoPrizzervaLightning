@@ -180,7 +180,7 @@ Transform:
   m_GameObject: {fileID: 16785035}
   serializedVersion: 2
   m_LocalRotation: {x: 0.03812094, y: 0.69994575, z: -0.038784105, w: 0.71212256}
-  m_LocalPosition: {x: -114.57227, y: -29.192434, z: -0.21701606}
+  m_LocalPosition: {x: -106.04041, y: -30.124535, z: -0.06898239}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1437,6 +1437,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 301409532}
     m_Modifications:
+    - target: {fileID: 1009434755670034052, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1375970196312274560, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
       propertyPath: m_Name
       value: CHR_Player
@@ -3346,7 +3350,7 @@ Transform:
   m_GameObject: {fileID: 1613816017}
   serializedVersion: 2
   m_LocalRotation: {x: 0.03812094, y: 0.69994575, z: -0.038784105, w: 0.71212256}
-  m_LocalPosition: {x: -114.57227, y: -29.192434, z: -0.21701606}
+  m_LocalPosition: {x: -106.04041, y: -30.124535, z: -0.06898239}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

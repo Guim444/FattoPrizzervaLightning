@@ -114,6 +114,7 @@ public class LightingStateManager : MonoBehaviour
 
         CancelBlueTransition();
         StopActiveTransition();
+        ApplyBakeForState(LightingState.Blue);
 
         _blueTransitionCoroutine = StartCoroutine(BlueTransitionCoroutine());
     }
@@ -140,6 +141,7 @@ public class LightingStateManager : MonoBehaviour
         StopActiveTransition();
 
         _currentStateIndex = idx;
+        ApplyBakeForState(state);
         SwitchSky(idx);
 
         float dur = duration < 0f ? transitionDuration : duration;
@@ -162,6 +164,7 @@ public class LightingStateManager : MonoBehaviour
         CancelBlueTransition();
         StopActiveTransition();
 
+        ApplyBakeForState(state);
         SwitchSky(idx);
         DeactivatePreviousActivations();
         ActivateStateObjects(states[idx]);
@@ -190,14 +193,6 @@ public class LightingStateManager : MonoBehaviour
     {
         bool isBlue = stateIndex == (int)LightingState.Blue;
 
-        if (lightmapStateManager != null)
-        {
-            if (isBlue)
-                lightmapStateManager.ApplyBlue();
-            else
-                lightmapStateManager.ApplyWarm();
-        }
-
         if (redLightsObject  != null) redLightsObject.SetActive(!isBlue);
         if (blueLightsObject != null) blueLightsObject.SetActive(isBlue);
         if (redSource        != null) redSource.SetActive(!isBlue);
@@ -210,6 +205,26 @@ public class LightingStateManager : MonoBehaviour
         var current = states[stateIndex];
         if (skyAnimator != null && !string.IsNullOrEmpty(current.skyAnimatorTrigger))
             skyAnimator.SetTrigger(current.skyAnimatorTrigger);
+    }
+
+    private void ApplyBakeForState(LightingState state)
+    {
+        if (lightmapStateManager == null)
+            return;
+
+        switch (state)
+        {
+            case LightingState.Tapat:
+                lightmapStateManager.ApplyWarm1();
+                break;
+            case LightingState.Radiografia:
+            case LightingState.Lluna:
+                lightmapStateManager.ApplyWarm2();
+                break;
+            case LightingState.Blue:
+                lightmapStateManager.ApplyBlue();
+                break;
+        }
     }
 
     [ContextMenu("Apply State")]

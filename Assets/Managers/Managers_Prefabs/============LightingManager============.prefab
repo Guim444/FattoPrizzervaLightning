@@ -282,15 +282,31 @@ MonoBehaviour:
   - stateName: Blizzard_Fast
     crossFadeTime: 0
     emissionRate: 4000
+    playVideo: 1
+    videoStartTime: 2
+    videoEndTime: 3
+    videoOpacity: 0.28
   - stateName: Blizzard_Fast_to_Medium
     crossFadeTime: 0.1
     emissionRate: 2000
+    playVideo: 1
+    videoStartTime: 1
+    videoEndTime: 2
+    videoOpacity: 0.2
   - stateName: Blizzard_Slow
     crossFadeTime: 0.1
     emissionRate: 500
+    playVideo: 1
+    videoStartTime: 1
+    videoEndTime: 2
+    videoOpacity: 0.08
   - stateName: Blizzard_Medium
     crossFadeTime: 0.1
     emissionRate: 1000
+    playVideo: 1
+    videoStartTime: 2
+    videoEndTime: 3
+    videoOpacity: 0.16
   windAnimators:
   - {fileID: 0}
   treeControllers:
@@ -393,6 +409,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   blizzardParticles: {fileID: 0}
+  blizzardVideoClip: {fileID: 32900000, guid: a60fd6f076ed8644e84a910246c5eed2, type: 3}
+  blizzardVideoPlayer: {fileID: 0}
+  blizzardVideoCamera: {fileID: 0}
 --- !u!114 &8216613400829712707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -456,7 +475,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98b45629f7d4c64b1d430a7ccbdc301, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  warm:
+  warm1:
     colors:
     - {fileID: 2800000, guid: 9b2e6acee3495524f9f7b61acc0a8830, type: 3}
     - {fileID: 2800000, guid: ae5f81f447dd38b47857412f937ca063, type: 3}
@@ -475,6 +494,11 @@ MonoBehaviour:
     - {fileID: 2800000, guid: de93c3837d30acd4c9fb0c8b7a4b5cb6, type: 3}
     - {fileID: 2800000, guid: 14484d1738895684d8ad2ae0be730176, type: 3}
     - {fileID: 2800000, guid: c2835992040b37b4cb5caecf4cd8b0cc, type: 3}
+    shadowMasks: []
+  warm2:
+    colors: []
+    directions: []
+    shadowMasks: []
   blue:
     colors:
     - {fileID: 2800000, guid: e2dd212737f3d4741aaba2b2809bcc2f, type: 3}
@@ -494,4 +518,5 @@ MonoBehaviour:
     - {fileID: 2800000, guid: 49a86089cca96ff4fbebac0fcf3df4dc, type: 3}
     - {fileID: 2800000, guid: 57bb0223da1a34b408efc6d28a53c2c8, type: 3}
     - {fileID: 2800000, guid: 41778711e3271fe4fbf162723885323c, type: 3}
+    shadowMasks: []
   applyWarmOnAwake: 1

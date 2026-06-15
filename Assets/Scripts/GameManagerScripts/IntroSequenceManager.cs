@@ -263,7 +263,7 @@ public class IntroSequenceManager : MonoBehaviour
         SetSoulForm();
 
         playerInputHandler.enabled = false;
-        boundaryClamp.enabled = false;
+        boundaryClamp.enabled = true;
         yield return StartCoroutine(MovePlayerToPosition(target.position, 2f));
 
         playerAnimator.SetBool("IdleFront", false);

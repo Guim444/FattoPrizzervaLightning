@@ -179,6 +179,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Particles_Blizzard
       objectReference: {fileID: 0}
+    - target: {fileID: 6753687207782584452, guid: 6210b488cb776ce4f847b0138f610fe5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10344,6 +10348,43 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cc4f827b4403b1644bdad3e0bdf6b523, type: 3}
+--- !u!84 &620191128
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 6
+  m_Width: 256
+  m_Height: 256
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 0
+  m_ColorFormat: 8
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_UseDynamicScaleExplicit: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 0
+    m_WrapV: 0
+    m_WrapW: 0
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!4 &634201588 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3455504139340129118, guid: 7d0cfe08cee955f4f9241c818483e576, type: 3}
@@ -11932,6 +11973,43 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!84 &821897474
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 6
+  m_Width: 256
+  m_Height: 256
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 0
+  m_ColorFormat: 8
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_UseDynamicScaleExplicit: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 0
+    m_WrapV: 0
+    m_WrapW: 0
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1001 &843406649
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17800,43 +17878,6 @@ Material:
     - _WindDirection: {r: 0.03012356, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!84 &945788155
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 256
-  m_Height: 256
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 0
-  m_ColorFormat: 8
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 0
-    m_WrapV: 0
-    m_WrapW: 0
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1001 &968012937
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23629,6 +23670,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1541221690}
   - {fileID: 1626407313}
   - {fileID: 2019513220}
   - {fileID: 1507914322}
@@ -23886,43 +23928,6 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 6988635055884618310, guid: 164cd64085e843f4d93a0a2a64687ef7, type: 3}
   m_PrefabInstance: {fileID: 1441418140}
   m_PrefabAsset: {fileID: 0}
---- !u!84 &1443858897
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 256
-  m_Height: 256
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 0
-  m_ColorFormat: 8
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 0
-    m_WrapV: 0
-    m_WrapW: 0
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!95 &1454752030 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 6988635055884618310, guid: 164cd64085e843f4d93a0a2a64687ef7, type: 3}
@@ -25288,6 +25293,72 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e72efac6fea67024c975d20f0611cbd2, type: 3}
+--- !u!1 &1541221689
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1541221690}
+  - component: {fileID: 1541221691}
+  m_Layer: 0
+  m_Name: Blizzard
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1541221690
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541221689}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1432079889}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!328 &1541221691
+VideoPlayer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541221689}
+  m_Enabled: 1
+  m_VideoClip: {fileID: 32900000, guid: e50672ac1f82d8e4dbcdc945aa7aeedb, type: 3}
+  m_TargetCameraAlpha: 0
+  m_TargetCamera3DLayout: 0
+  m_TargetCamera: {fileID: 0}
+  m_TargetTexture: {fileID: 0}
+  m_TimeReference: 0
+  m_TargetMaterialRenderer: {fileID: 0}
+  m_TargetMaterialProperty: <noninit>
+  m_RenderMode: 1
+  m_AspectRatio: 4
+  m_DataSource: 0
+  m_TimeUpdateMode: 2
+  m_PlaybackSpeed: 1
+  m_AudioOutputMode: 2
+  m_TargetAudioSources: []
+  m_DirectAudioVolumes: []
+  m_Url: 
+  m_EnabledAudioTracks: 
+  m_DirectAudioMutes: 
+  m_ControlledAudioTrackCount: 0
+  m_PlayOnAwake: 0
+  m_SkipOnDrop: 1
+  m_Looping: 0
+  m_WaitForFirstFrame: 1
+  m_FrameReadyEventEnabled: 0
+  m_VideoShaders: []
 --- !u!1001 &1542462403
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25759,7 +25830,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
-        m_Texture: {fileID: 945788155}
+        m_Texture: {fileID: 620191128}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -25782,7 +25853,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DetailColor: {r: 0.5231373, g: 0.5231373, b: 0.5231373, a: 0}
     - _DetailData: {r: 0.5, g: 4, b: -0.5, a: 0}
-    - _DetailWindDirection: {r: 0.51204056, g: 0, b: 0, a: 0}
+    - _DetailWindDirection: {r: 0.08146862, g: 0, b: 0, a: 0}
     - _DistanceData: {r: 0, g: 4.12, b: 0.000004, a: 0.0040856707}
     - _FogOfWarCenter: {r: 0, g: 0, b: 0, a: 1}
     - _FogOfWarCenterAdjusted: {r: 0, g: 0, b: 0, a: 1}
@@ -25795,7 +25866,7 @@ Material:
     - _ShadowData: {r: 0.4, g: 0, b: 250, a: 0}
     - _SpecularColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
     - _SunDir: {r: 0.88837695, g: 0.45570028, b: -0.055891793, a: 0}
-    - _WindDirection: {r: 0.51204056, g: 0, b: 0, a: 0}
+    - _WindDirection: {r: 0.08146862, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!1001 &1578299037
@@ -26829,7 +26900,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
-        m_Texture: {fileID: 1443858897}
+        m_Texture: {fileID: 821897474}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -26852,7 +26923,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DetailColor: {r: 0.5231373, g: 0.5231373, b: 0.5231373, a: 0}
     - _DetailData: {r: 0.5, g: 4, b: -0.5, a: 0}
-    - _DetailWindDirection: {r: 0.51204056, g: 0, b: 0, a: 0}
+    - _DetailWindDirection: {r: 0.08146862, g: 0, b: 0, a: 0}
     - _DistanceData: {r: 0, g: 5.8, b: 0.000004, a: 0.0060955924}
     - _FogOfWarCenter: {r: 0, g: 0, b: 0, a: 1}
     - _FogOfWarCenterAdjusted: {r: 0, g: 0, b: 0, a: 1}
@@ -26865,7 +26936,7 @@ Material:
     - _ShadowData: {r: 0.4, g: 0, b: 250, a: 0}
     - _SpecularColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
     - _SunDir: {r: 0.88837695, g: 0.45570028, b: -0.055891793, a: 0}
-    - _WindDirection: {r: 0.51204056, g: 0, b: 0, a: 0}
+    - _WindDirection: {r: 0.08146862, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!84 &1714280917
@@ -39843,6 +39914,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
+      propertyPath: transitionPlayer
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
       propertyPath: blizzardParticles
       value: 
       objectReference: {fileID: 2137974667}
@@ -39857,6 +39932,14 @@ PrefabInstance:
     - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
       propertyPath: blizzardVideoPlayer
       value: 
+      objectReference: {fileID: 1541221691}
+    - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
+      propertyPath: rewindTransitionOnEnter
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
+      propertyPath: windAnimators.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
       propertyPath: 'windAnimators.Array.data[0]'
@@ -40254,6 +40337,30 @@ PrefabInstance:
       propertyPath: 'treeControllers.Array.data[97]'
       value: 
       objectReference: {fileID: 2200418625512421176}
+    - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
+      propertyPath: windStates.Array.data[0].idleOpacity
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
+      propertyPath: windStates.Array.data[0].idleLoopClip
+      value: 
+      objectReference: {fileID: 32900000, guid: e50672ac1f82d8e4dbcdc945aa7aeedb, type: 3}
+    - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
+      propertyPath: windStates.Array.data[1].idleLoopClip
+      value: 
+      objectReference: {fileID: 32900000, guid: a60fd6f076ed8644e84a910246c5eed2, type: 3}
+    - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
+      propertyPath: windStates.Array.data[0].transitionClip
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
+      propertyPath: windStates.Array.data[1].transitionClip
+      value: 
+      objectReference: {fileID: 32900000, guid: e50672ac1f82d8e4dbcdc945aa7aeedb, type: 3}
+    - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
+      propertyPath: windStates.Array.data[0].transitionOpacity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8183958482278946327, guid: 2d9375674999f234493c06101bc5c824, type: 3}
       propertyPath: m_Name
       value: ============LightingManager============

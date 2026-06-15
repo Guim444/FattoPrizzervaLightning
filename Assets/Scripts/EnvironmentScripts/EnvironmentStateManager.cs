@@ -3,7 +3,12 @@ using UnityEngine;
 /// <summary>
 /// Coordina las animaciones ambientales al pulsar teclas 1-4.
 /// LightingStateManager gestiona su propio input para cielo y luces.
-/// Este script escucha las mismas teclas para ventisca, árboles y plantas.
+/// Este script escucha las mismas teclas para vídeos de ventisca, árboles y plantas.
+///
+/// Tecla 1 → Idle fast en loop (snap inmediato)
+/// Tecla 2 → Transición → Idle loop  (ventisca alta a media)
+/// Tecla 3 → Transición → Idle loop  (ventisca media a mínima)
+/// Tecla 4 → Transición → Idle loop  (ventisca mínima a media)
 /// </summary>
 public class EnvironmentStateManager : MonoBehaviour
 {
@@ -56,22 +61,25 @@ public class EnvironmentStateManager : MonoBehaviour
 
         switch (key)
         {
-            // Tecla 1: ventisca máxima, snap inmediato (estado de inicio / reset)
+            // Tecla 1: idle fast en loop, snap inmediato (estado de inicio / reset)
             case 1:
                 windManager.SnapToState(WindStateManager.WindPreset.W1_MaxIdle);
                 plantManager?.PlayWindy();
                 break;
-            // Tecla 2: transición de máxima a media, luego idle media
+
+            // Tecla 2: transición de máxima a media, luego idle media en loop
             case 2:
                 windManager.TransitionTo(WindStateManager.WindPreset.W2_MaxToMedium);
                 plantManager?.PlayWindyExit();
                 break;
-            // Tecla 3: transición de media a mínima, luego idle mínima
+
+            // Tecla 3: transición de media a mínima, luego idle mínima en loop
             case 3:
                 windManager.TransitionTo(WindStateManager.WindPreset.W3_MediumToMin);
                 plantManager?.PlayIdleSmooth();
                 break;
-            // Tecla 4: transición de mínima a media (cielo azul), luego idle media
+
+            // Tecla 4: transición de mínima a media (cielo azul), luego idle media en loop
             case 4:
                 windManager.TransitionTo(WindStateManager.WindPreset.W4_MinToMedium);
                 plantManager?.PlayWindy();

@@ -1754,6 +1754,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2004004907}
     m_Modifications:
+    - target: {fileID: 487044489386557270, guid: 2bc5a0bd4e5559548a88a0d8af61cf23, type: 3}
+      propertyPath: m_Intensity
+      value: 11.91
+      objectReference: {fileID: 0}
     - target: {fileID: 3829286876900468289, guid: 2bc5a0bd4e5559548a88a0d8af61cf23, type: 3}
       propertyPath: m_Name
       value: CHR_Player_Light_Surround
@@ -2224,7 +2228,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2236582697073084627, guid: 83a4e49580b25a0418b629a0c79075df, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.28
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2236582697073084627, guid: 83a4e49580b25a0418b629a0c79075df, type: 3}
       propertyPath: m_LocalPosition.z

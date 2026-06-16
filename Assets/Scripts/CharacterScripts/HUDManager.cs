@@ -65,6 +65,7 @@ public class HUDManager : MonoBehaviour
 
     public void OnClickCombatPosition()
     {
+        ActivateGameplayBlizzard();
         introSequenceManager?.RestoreOriginalAnimator();
         Time.timeScale = 1f;
         ActivateCinemachine();
@@ -117,6 +118,7 @@ public class HUDManager : MonoBehaviour
 
     public void OnClickFreeMove()
     {
+        ActivateGameplayBlizzard();
         introSequenceManager?.RestoreOriginalAnimator();
         Time.timeScale = 1f;
         cameraMovement.combatY = freeMoveStartCameraY;
@@ -129,6 +131,13 @@ public class HUDManager : MonoBehaviour
         enemyRio.SetActive(false);
         MovePlayerToX(combatStartPositionX);
         HidePanel();
+    }
+
+    private void ActivateGameplayBlizzard()
+    {
+        int activatedManagers = WindStateManager.ActivateAllVideoPlayersRoots();
+        if (activatedManagers == 0)
+            Debug.LogWarning("[HUDManager] No se encontró ningún WindStateManager para activar la ventisca.", this);
     }
 
     private void MovePlayerToX(float x)

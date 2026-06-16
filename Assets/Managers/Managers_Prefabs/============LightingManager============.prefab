@@ -62,8 +62,8 @@ MonoBehaviour:
       startIntensity: 2
       targetIntensity: 2
     - light: {fileID: 0}
-      startIntensity: 0.01
-      targetIntensity: 0.01
+      startIntensity: 0.005
+      targetIntensity: 0.005
     - light: {fileID: 0}
       startIntensity: 2
       targetIntensity: 2
@@ -89,11 +89,11 @@ MonoBehaviour:
       startIntensity: 20
       targetIntensity: 20
     - light: {fileID: 0}
-      startIntensity: 10.28
-      targetIntensity: 10.28
+      startIntensity: 4
+      targetIntensity: 4
     - light: {fileID: 0}
-      startIntensity: 20
-      targetIntensity: 20
+      startIntensity: 7
+      targetIntensity: 7
   - stateName: Radiografia
     skyAnimatorTrigger: Radiog
     entries:
@@ -281,18 +281,18 @@ MonoBehaviour:
   windStates:
   - stateName: Blizzard_Fast
     crossFadeTime: 0
-    emissionRate: 4000
+    emissionRate: 5500
     playVideo: 1
     videoStartTime: 2
     videoEndTime: 3
-    videoOpacity: 0.28
+    videoOpacity: 0.36
   - stateName: Blizzard_Fast_to_Medium
     crossFadeTime: 0.1
-    emissionRate: 2000
+    emissionRate: 2600
     playVideo: 1
     videoStartTime: 1
     videoEndTime: 2
-    videoOpacity: 0.2
+    videoOpacity: 0.22
   - stateName: Blizzard_Slow
     crossFadeTime: 0.1
     emissionRate: 500
@@ -302,11 +302,11 @@ MonoBehaviour:
     videoOpacity: 0.08
   - stateName: Blizzard_Medium
     crossFadeTime: 0.1
-    emissionRate: 1000
+    emissionRate: 1400
     playVideo: 1
     videoStartTime: 2
     videoEndTime: 3
-    videoOpacity: 0.16
+    videoOpacity: 0.18
   windAnimators:
   - {fileID: 0}
   treeControllers:

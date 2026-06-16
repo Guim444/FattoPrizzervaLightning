@@ -57,6 +57,15 @@ public class IntroSequenceManager : MonoBehaviour
 
     public float IntroPlayerZ => introPlayerZ;
 
+
+    private bool isWalking;
+    private bool played;
+
+    private float _timer;
+    private float _currentCooldown;
+
+    
+
     private void Awake()
     {
         if (playerSpriteRenderer == null && playerTransform != null)
@@ -73,6 +82,20 @@ public class IntroSequenceManager : MonoBehaviour
 
         _spriteFadeMat = new Material(Shader.Find("Sprites/Default"));
 
+    }
+
+    private void Update()
+    {
+        if (isWalking && !played)
+        {
+            _timer += Time.deltaTime;
+
+            if (_timer >= 5f)
+            {
+                playerAnimator.SetTrigger("TransformToGhost");
+                played = true;
+            }
+        }
     }
 
     public void ShowBlackScreen()
@@ -196,6 +219,8 @@ public class IntroSequenceManager : MonoBehaviour
             mainCamera.backgroundColor = fadeEndBgColor;
             mainCamera.clearFlags      = _originalClearFlags;
         }
+        played = false;
+        isWalking = true;
     }
 
     private void KeepPlayerAtIntroDepth()

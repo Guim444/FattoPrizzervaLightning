@@ -30,9 +30,9 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private float startPositionX = 0f;
 
 // Will be removed
-    private float startPositionY = 2.25f;
+    private float startPositionY = 1.8f;
     private float combatStartPositionX = 0f;
-    private float combatStartPositionY = 2.25f;
+    private float combatStartPositionY = 1f;
     private float combatStartPositionZ = -2f;
 
     [Header("Configuration — Camera")]

@@ -281,28 +281,24 @@ MonoBehaviour:
   windStates:
   - stateName: Blizzard_Fast
     crossFadeTime: 0
-    emissionRate: 5500
     playVideo: 1
     videoStartTime: 2
     videoEndTime: 3
     videoOpacity: 0.36
   - stateName: Blizzard_Fast_to_Medium
     crossFadeTime: 0.1
-    emissionRate: 2600
     playVideo: 1
     videoStartTime: 1
     videoEndTime: 2
     videoOpacity: 0.22
   - stateName: Blizzard_Slow
     crossFadeTime: 0.1
-    emissionRate: 500
     playVideo: 1
     videoStartTime: 1
     videoEndTime: 2
     videoOpacity: 0.08
   - stateName: Blizzard_Medium
     crossFadeTime: 0.1
-    emissionRate: 1400
     playVideo: 1
     videoStartTime: 2
     videoEndTime: 3
@@ -408,7 +404,16 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  blizzardParticles: {fileID: 0}
+  preloadPlayersOnAwake: 1
+  videoPlayersRootName: Runtime_VideoPlayers
+  videoPlayersRootStartsActive: 0
+  prewarmPlayersWhileHidden: 1
+  renderTextureWidth: 0
+  renderTextureHeight: 0
+  quadCameraDistance: 3
+  quadCameraLocalOffset: {x: 0, y: 0, z: 0}
+  quadViewportOverscan: 1.12
+  blizzardRenderingLayerMask: 4294967295
   blizzardVideoClip: {fileID: 32900000, guid: a60fd6f076ed8644e84a910246c5eed2, type: 3}
   blizzardVideoPlayer: {fileID: 0}
   blizzardVideoCamera: {fileID: 0}

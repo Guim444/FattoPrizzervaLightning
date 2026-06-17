@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
 using UnityEngine.Video;
 
 /// <summary>
@@ -12,7 +13,7 @@ using UnityEngine.Video;
 /// - Después, los players quedan corriendo.
 /// - Al cambiar de estado NO se cambia clip, NO se llama Prepare, NO se llama Stop.
 /// - Tampoco se hace seek/time=0/frame=0 en runtime.
-/// - Solo se cambia targetCameraAlpha para decidir qué vídeo se ve.
+/// - Solo se cambia el alpha del material del quad para decidir qué vídeo se ve.
 ///
 /// Estructura por tecla:
 ///   Tecla 1 → IdleLoop_Fast              (snap inmediato, sin transición)
@@ -41,9 +42,6 @@ public class WindStateManager : MonoBehaviour
         [Tooltip("Clip idle que se reproduce en loop tras la transición (o directamente en W1).")]
         public VideoClip idleLoopClip;
 
-        [Tooltip("Emisión de partículas por segundo para este estado.")]
-        public float emissionRate;
-
         [Range(0f, 1f)]
         [Tooltip("Opacidad del vídeo sobre la cámara durante la transición.")]
         public float transitionOpacity;
@@ -52,11 +50,6 @@ public class WindStateManager : MonoBehaviour
         [Tooltip("Opacidad del vídeo sobre la cámara durante el idle loop.")]
         public float idleOpacity;
 
-        [HideInInspector] public string stateName;
-        [HideInInspector] public float crossFadeTime;
-        [HideInInspector] public bool playVideo;
-        [HideInInspector] public float videoStartTime;
-        [HideInInspector] public float videoEndTime;
         [HideInInspector] public float videoOpacity;
     }
 
@@ -66,13 +59,13 @@ public class WindStateManager : MonoBehaviour
     [SerializeField] private WindStateData[] windStates = new WindStateData[]
     {
         // W1: solo idle fast, sin transición
-        new WindStateData { emissionRate = 5500f, transitionOpacity = 0f,   idleOpacity = 0.36f },
+        new WindStateData { transitionOpacity = 0f,   idleOpacity = 0.36f },
         // W2
-        new WindStateData { emissionRate = 2600f, transitionOpacity = 0.24f, idleOpacity = 0.22f },
+        new WindStateData { transitionOpacity = 0.24f, idleOpacity = 0.22f },
         // W3
-        new WindStateData { emissionRate = 500f,  transitionOpacity = 0.12f, idleOpacity = 0.08f },
+        new WindStateData { transitionOpacity = 0.12f, idleOpacity = 0.08f },
         // W4
-        new WindStateData { emissionRate = 1400f, transitionOpacity = 0.18f, idleOpacity = 0.16f },
+        new WindStateData { transitionOpacity = 0.18f, idleOpacity = 0.16f },
     };
 
     [Header("Cámara")]
@@ -81,9 +74,6 @@ public class WindStateManager : MonoBehaviour
 
     [Header("Árboles Alembic")]
     [SerializeField] private AlembicTreeWindController[] treeControllers;
-
-    [Header("Particle System")]
-    [SerializeField] private ParticleSystem blizzardParticles;
 
     [Header("Preload / Playback")]
     [Tooltip("Crea el root y sus VideoPlayers en Awake. Si se desactiva, se crean al entrar en la iglesia.")]
@@ -97,6 +87,18 @@ public class WindStateManager : MonoBehaviour
 
     [Tooltip("Mantiene los VideoPlayers activos con alpha 0 para evitar tirones al mostrarlos.")]
     [SerializeField] private bool prewarmPlayersWhileHidden = true;
+
+    [Header("Video Surface")]
+    [Tooltip("0 usa la resolucion del clip. Usar un valor fijo solo si todos los videos comparten formato.")]
+    [SerializeField, Min(0)] private int renderTextureWidth = 0;
+    [Tooltip("0 usa la resolucion del clip. Usar un valor fijo solo si todos los videos comparten formato.")]
+    [SerializeField, Min(0)] private int renderTextureHeight = 0;
+    [SerializeField, Min(0.01f)] private float quadCameraDistance = 3f;
+    [Tooltip("Offset local del quad respecto a la camara. X desplaza horizontal, Y vertical, Z acerca/aleja junto con la distancia.")]
+    [SerializeField] private Vector3 quadCameraLocalOffset = Vector3.zero;
+    [SerializeField, Min(1f)] private float quadViewportOverscan = 1.12f;
+    [Tooltip("Rendering Layer Mask del quad de ventisca. Todos=4294967295, Default=1, Light Layer 1=2, Light Layer 2=4.")]
+    [SerializeField] private uint blizzardRenderingLayerMask = uint.MaxValue;
 
     [Header("Compatibilidad")]
     [SerializeField, HideInInspector] private VideoClip blizzardVideoClip;
@@ -112,6 +114,7 @@ public class WindStateManager : MonoBehaviour
     private VideoPlayer[] _idlePlayers;
     private VideoPlayer[] _transitionPlayers;
     private readonly List<VideoPlayer> _allPlayers = new List<VideoPlayer>();
+    private readonly Dictionary<VideoPlayer, VideoSurface> _videoSurfaces = new Dictionary<VideoPlayer, VideoSurface>();
 
     private int   _activeIdleIndex       = -1;
     private int   _activeTransitionIndex = -1;
@@ -119,6 +122,16 @@ public class WindStateManager : MonoBehaviour
     private float _transitionEndsAtUnscaled = -1f;
     private float _activeTransitionOpacity = 0f;
     private bool  _videoPlayersVisible;
+
+    private sealed class VideoSurface
+    {
+        public GameObject quad;
+        public MeshRenderer renderer;
+        public Mesh mesh;
+        public Material material;
+        public RenderTexture texture;
+        public readonly Vector3[] vertices = new Vector3[4];
+    }
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
 
@@ -161,6 +174,21 @@ public class WindStateManager : MonoBehaviour
         MaintainActiveVideoAlpha();
     }
 
+    private void LateUpdate()
+    {
+        UpdateVideoSurfaces();
+    }
+
+    private void OnEnable()
+    {
+        Camera.onPreCull += HandleCameraPreCull;
+    }
+
+    private void OnDisable()
+    {
+        Camera.onPreCull -= HandleCameraPreCull;
+    }
+
     // ── API pública ────────────────────────────────────────────────────────────
 
     /// <summary>
@@ -178,7 +206,6 @@ public class WindStateManager : MonoBehaviour
         _transitionEndsAtUnscaled = -1f;
         _activeTransitionOpacity = 0f;
 
-        SetEmission(windStates[idx].emissionRate);
         SetTreeWindSpeed(preset);
 
         ShowIdle(idx);
@@ -203,7 +230,6 @@ public class WindStateManager : MonoBehaviour
 
         _currentStateIndex = idx;
 
-        SetEmission(windStates[idx].emissionRate);
         SetTreeWindSpeed(preset);
 
         WindStateData data = windStates[idx];
@@ -234,7 +260,7 @@ public class WindStateManager : MonoBehaviour
 
         float opacity = _crossFadeOverride >= 0f ? _crossFadeOverride : GetTransitionOpacity(idx);
         _activeTransitionOpacity = opacity;
-        transition.targetCameraAlpha = ShouldShowVideos ? opacity : 0f;
+        SetVideoOpacity(transition, ShouldShowVideos ? opacity : 0f);
 
         _transitionEndsAtUnscaled = Time.unscaledTime + GetClipDurationSafe(transition);
     }
@@ -339,7 +365,8 @@ public class WindStateManager : MonoBehaviour
 
         vp.clip = clip;
         vp.isLooping = loop;
-        vp.targetCameraAlpha = 0f;
+        CreateVideoSurface(vp, playerName, clip);
+        SetVideoOpacity(vp, 0f);
 
         vp.prepareCompleted += OnFixedPlayerPrepared;
         vp.errorReceived += OnVideoError;
@@ -366,6 +393,8 @@ public class WindStateManager : MonoBehaviour
 
     private void ClearRuntimePlayers()
     {
+        ReleaseVideoSurfaces();
+
         Transform root = transform.Find(videoPlayersRootName);
         if (root == null) return;
 
@@ -387,7 +416,7 @@ public class WindStateManager : MonoBehaviour
             source.Play();
 
         // IMPORTANTE:
-        // No poner source.targetCameraAlpha = 0 aquí.
+        // No poner el alpha del material a 0 aquí.
         // Si Start() o un manager ya mostró el idle inicial antes de que termine Prepare(),
         // este callback llegaría después y apagaría el vídeo activo.
         ApplyCurrentVideoAlphas();
@@ -411,7 +440,7 @@ public class WindStateManager : MonoBehaviour
         if (CanRunVideoPlayers && !idle.isPlaying)
             idle.Play();
 
-        idle.targetCameraAlpha = ShouldShowVideos ? GetIdleOpacity(stateIdx) : 0f;
+        SetVideoOpacity(idle, ShouldShowVideos ? GetIdleOpacity(stateIdx) : 0f);
 
         _activeIdleIndex = stateIdx;
         _activeTransitionIndex = -1;
@@ -426,7 +455,7 @@ public class WindStateManager : MonoBehaviour
         {
             VideoPlayer player = _allPlayers[i];
             if (player != null)
-                player.targetCameraAlpha = 0f;
+                SetVideoOpacity(player, 0f);
         }
     }
 
@@ -446,7 +475,7 @@ public class WindStateManager : MonoBehaviour
                     ? _activeTransitionOpacity
                     : GetTransitionOpacity(_activeTransitionIndex);
 
-                transition.targetCameraAlpha = opacity;
+                SetVideoOpacity(transition, opacity);
             }
 
             return;
@@ -456,7 +485,7 @@ public class WindStateManager : MonoBehaviour
         {
             VideoPlayer idle = GetIdlePlayer(_activeIdleIndex);
             if (idle != null)
-                idle.targetCameraAlpha = GetIdleOpacity(_activeIdleIndex);
+                SetVideoOpacity(idle, GetIdleOpacity(_activeIdleIndex));
         }
     }
 
@@ -476,7 +505,7 @@ public class WindStateManager : MonoBehaviour
                 VideoPlayer player = _allPlayers[i];
                 if (player == null) continue;
 
-                player.targetCameraAlpha = ShouldShowVideos && player == activeTransition ? _activeTransitionOpacity : 0f;
+                SetVideoOpacity(player, ShouldShowVideos && player == activeTransition ? _activeTransitionOpacity : 0f);
 
                 if (player == activeTransition && !player.isPlaying)
                     player.Play();
@@ -495,7 +524,7 @@ public class WindStateManager : MonoBehaviour
                 VideoPlayer player = _allPlayers[i];
                 if (player == null) continue;
 
-                player.targetCameraAlpha = ShouldShowVideos && player == activeIdle ? idleOpacity : 0f;
+                SetVideoOpacity(player, ShouldShowVideos && player == activeIdle ? idleOpacity : 0f);
 
                 if (player == activeIdle && !player.isPlaying)
                     player.Play();
@@ -547,7 +576,7 @@ public class WindStateManager : MonoBehaviour
         {
             VideoPlayer transition = GetTransitionPlayer(_activeTransitionIndex);
             if (transition != null)
-                transition.targetCameraAlpha = 0f;
+                SetVideoOpacity(transition, 0f);
         }
 
         _activeTransitionIndex = -1;
@@ -652,7 +681,7 @@ public class WindStateManager : MonoBehaviour
         player.skipOnDrop        = true;
         player.audioOutputMode   = VideoAudioOutputMode.None;
         player.timeUpdateMode    = VideoTimeUpdateMode.UnscaledGameTime;
-        player.renderMode        = VideoRenderMode.CameraNearPlane;
+        player.renderMode        = VideoRenderMode.RenderTexture;
         player.aspectRatio       = VideoAspectRatio.FitOutside;
         player.playbackSpeed     = 1f;
 
@@ -746,14 +775,237 @@ public class WindStateManager : MonoBehaviour
         AssignCameraToAllPlayers();
     }
 
-    // ── Partículas & Árboles ──────────────────────────────────────────────────
+    // ── Superficie de vídeo ───────────────────────────────────────────────────
 
-    private void SetEmission(float rate)
+    private void CreateVideoSurface(VideoPlayer player, string playerName, VideoClip clip)
     {
-        if (blizzardParticles == null) return;
-        var emission = blizzardParticles.emission;
-        emission.rateOverTime = rate;
+        if (player == null) return;
+
+        int width = renderTextureWidth > 0 ? renderTextureWidth : GetClipWidthSafe(clip);
+        int height = renderTextureHeight > 0 ? renderTextureHeight : GetClipHeightSafe(clip);
+
+        RenderTexture texture = new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32)
+        {
+            name = $"{playerName}_RT",
+            useMipMap = false,
+            autoGenerateMips = false
+        };
+        texture.Create();
+
+        player.renderMode = VideoRenderMode.RenderTexture;
+        player.targetTexture = texture;
+
+        GameObject quad = new GameObject($"{playerName}_Quad");
+        quad.name = $"{playerName}_Quad";
+        quad.transform.SetParent(player.transform, false);
+
+        MeshFilter meshFilter = quad.AddComponent<MeshFilter>();
+        MeshRenderer renderer = quad.AddComponent<MeshRenderer>();
+        Mesh mesh = CreateVideoSurfaceMesh(playerName);
+        meshFilter.sharedMesh = mesh;
+
+        renderer.shadowCastingMode = ShadowCastingMode.Off;
+        renderer.receiveShadows = false;
+        renderer.lightProbeUsage = LightProbeUsage.Off;
+        renderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
+        renderer.renderingLayerMask = blizzardRenderingLayerMask;
+
+        Shader surfaceShader = ResolveVideoSurfaceShader();
+        if (surfaceShader == null)
+        {
+            Debug.LogWarning($"[{nameof(WindStateManager)}] No se encontro un shader compatible para mostrar la ventisca en un quad.", this);
+            return;
+        }
+
+        Material material = new Material(surfaceShader)
+        {
+            name = $"{playerName}_Material",
+            renderQueue = (int)RenderQueue.Transparent + 10
+        };
+
+        ConfigureVideoSurfaceMaterial(material, texture);
+        renderer.sharedMaterial = material;
+
+        _videoSurfaces[player] = new VideoSurface
+        {
+            quad = quad,
+            renderer = renderer,
+            mesh = mesh,
+            material = material,
+            texture = texture
+        };
     }
+
+    private Mesh CreateVideoSurfaceMesh(string playerName)
+    {
+        Mesh mesh = new Mesh
+        {
+            name = $"{playerName}_Mesh"
+        };
+
+        mesh.vertices = new[]
+        {
+            Vector3.zero,
+            Vector3.up,
+            Vector3.one,
+            Vector3.right
+        };
+        mesh.uv = new[]
+        {
+            new Vector2(0f, 0f),
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(1f, 0f)
+        };
+        mesh.triangles = new[] { 0, 1, 2, 0, 2, 3 };
+        mesh.RecalculateBounds();
+        return mesh;
+    }
+
+    private Shader ResolveVideoSurfaceShader()
+    {
+        Shader shader = Shader.Find("Universal Render Pipeline/Unlit");
+        if (shader != null) return shader;
+
+        shader = Shader.Find("Unlit/Transparent");
+        if (shader != null) return shader;
+
+        return Shader.Find("Sprites/Default");
+    }
+
+    private void ConfigureVideoSurfaceMaterial(Material material, Texture texture)
+    {
+        if (material == null) return;
+
+        SetMaterialTexture(material, "_BaseMap", texture);
+        SetMaterialTexture(material, "_MainTex", texture);
+
+        if (material.HasProperty("_Surface")) material.SetFloat("_Surface", 1f);
+        if (material.HasProperty("_Blend")) material.SetFloat("_Blend", 0f);
+        if (material.HasProperty("_ZWrite")) material.SetFloat("_ZWrite", 0f);
+        if (material.HasProperty("_SrcBlend")) material.SetFloat("_SrcBlend", (float)BlendMode.SrcAlpha);
+        if (material.HasProperty("_DstBlend")) material.SetFloat("_DstBlend", (float)BlendMode.OneMinusSrcAlpha);
+        if (material.HasProperty("_Cull")) material.SetFloat("_Cull", (float)CullMode.Off);
+        if (material.HasProperty("_ZTest")) material.SetFloat("_ZTest", (float)CompareFunction.Always);
+
+        material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+        material.DisableKeyword("_ALPHATEST_ON");
+        SetSurfaceMaterialAlpha(material, 0f);
+    }
+
+    private void SetVideoOpacity(VideoPlayer player, float opacity)
+    {
+        if (player == null) return;
+
+        float alpha = Mathf.Clamp01(opacity);
+        player.targetCameraAlpha = 0f;
+
+        if (!_videoSurfaces.TryGetValue(player, out VideoSurface surface) || surface == null)
+            return;
+
+        if (surface.renderer != null)
+        {
+            surface.renderer.enabled = alpha > 0.001f;
+            surface.renderer.renderingLayerMask = blizzardRenderingLayerMask;
+        }
+
+        SetSurfaceMaterialAlpha(surface.material, alpha);
+    }
+
+    private void SetSurfaceMaterialAlpha(Material material, float alpha)
+    {
+        if (material == null) return;
+
+        Color color = Color.white;
+        if (material.HasProperty("_BaseColor"))
+            color = material.GetColor("_BaseColor");
+        else if (material.HasProperty("_Color"))
+            color = material.GetColor("_Color");
+
+        color.a = Mathf.Clamp01(alpha);
+
+        if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", color);
+        if (material.HasProperty("_Color")) material.SetColor("_Color", color);
+    }
+
+    private void SetMaterialTexture(Material material, string propertyName, Texture texture)
+    {
+        if (material == null || texture == null || !material.HasProperty(propertyName)) return;
+        material.SetTexture(propertyName, texture);
+    }
+
+    private void UpdateVideoSurfaces()
+    {
+        if (blizzardVideoCamera == null) return;
+
+        foreach (VideoSurface surface in _videoSurfaces.Values)
+            PositionVideoSurface(surface);
+    }
+
+    private void HandleCameraPreCull(Camera cam)
+    {
+        if (cam == null || cam != blizzardVideoCamera) return;
+        UpdateVideoSurfaces();
+    }
+
+    private void PositionVideoSurface(VideoSurface surface)
+    {
+        if (surface == null || surface.quad == null || surface.mesh == null || blizzardVideoCamera == null) return;
+
+        Transform cameraTransform = blizzardVideoCamera.transform;
+        Transform quadTransform = surface.quad.transform;
+        float distance = Mathf.Max(0.01f, quadCameraDistance);
+        float overscan = Mathf.Max(1f, quadViewportOverscan);
+        float margin = (overscan - 1f) * 0.5f;
+
+        quadTransform.position = cameraTransform.position;
+        quadTransform.rotation = cameraTransform.rotation;
+        quadTransform.localScale = Vector3.one;
+
+        surface.vertices[0] = GetViewportCornerLocal(quadTransform, -margin, -margin, distance) + quadCameraLocalOffset;
+        surface.vertices[1] = GetViewportCornerLocal(quadTransform, -margin, 1f + margin, distance) + quadCameraLocalOffset;
+        surface.vertices[2] = GetViewportCornerLocal(quadTransform, 1f + margin, 1f + margin, distance) + quadCameraLocalOffset;
+        surface.vertices[3] = GetViewportCornerLocal(quadTransform, 1f + margin, -margin, distance) + quadCameraLocalOffset;
+
+        surface.mesh.vertices = surface.vertices;
+        surface.mesh.RecalculateBounds();
+    }
+
+    private Vector3 GetViewportCornerLocal(Transform surfaceTransform, float viewportX, float viewportY, float distance)
+    {
+        Vector3 worldPosition = blizzardVideoCamera.ViewportToWorldPoint(new Vector3(viewportX, viewportY, distance));
+        return surfaceTransform.InverseTransformPoint(worldPosition);
+    }
+
+    private void ReleaseVideoSurfaces()
+    {
+        foreach (VideoSurface surface in _videoSurfaces.Values)
+        {
+            if (surface == null) continue;
+
+            if (surface.texture != null)
+            {
+                surface.texture.Release();
+                Destroy(surface.texture);
+            }
+
+            if (surface.material != null)
+                Destroy(surface.material);
+
+            if (surface.mesh != null)
+                Destroy(surface.mesh);
+        }
+
+        _videoSurfaces.Clear();
+    }
+
+    private int GetClipWidthSafe(VideoClip clip)
+        => clip != null && clip.width > 0 ? (int)clip.width : 1920;
+
+    private int GetClipHeightSafe(VideoClip clip)
+        => clip != null && clip.height > 0 ? (int)clip.height : 1080;
+
+    // ── Árboles ───────────────────────────────────────────────────────────────
 
     private void SetTreeWindSpeed(WindPreset preset)
     {
@@ -778,23 +1030,6 @@ public class WindStateManager : MonoBehaviour
 
             treeControllers = matches.ToArray();
             repaired |= treeControllers.Length > 0;
-        }
-
-        if (blizzardParticles == null)
-        {
-            var matches = new List<ParticleSystem>();
-            foreach (var ps in Object.FindObjectsByType<ParticleSystem>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-                if (ps.name == "SnowStorm") matches.Add(ps);
-
-            if (matches.Count == 1)
-            {
-                blizzardParticles = matches[0];
-                repaired = true;
-            }
-            else if (matches.Count > 1)
-            {
-                Debug.LogWarning($"[{nameof(WindStateManager)}] Hay varios ParticleSystem llamados SnowStorm. Asigna blizzardParticles manualmente.", this);
-            }
         }
 
         if (repaired)

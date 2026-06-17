@@ -74,6 +74,7 @@ public class IntroSequenceManager : MonoBehaviour
     private Vector3 _originalIntroTrackedObjectOffset;
     private CameraClearFlags _originalClearFlags;
     private float _activePlayerFadeAlpha = -1f;
+    private bool _playerFadeMaterialRestored;
     private bool _isIntroBlizzardCameraAnchored;
     private bool _hasOriginalIntroTrackedObjectOffset;
     private readonly List<ParticleSystem> _introBlizzardParticles = new List<ParticleSystem>();
@@ -294,6 +295,7 @@ public class IntroSequenceManager : MonoBehaviour
         playerTransform.gameObject.SetActive(true);
         ApplyIntroCameraFraming();
         ApplyPlayerFadeMaterial();
+        _playerFadeMaterialRestored = false;
         SetPlayerFadeAlpha(0f);
         RestorePlayerRenderersEnabled();
 
@@ -326,7 +328,15 @@ public class IntroSequenceManager : MonoBehaviour
                 introVirtualCamera.m_Lens.FieldOfView = Mathf.Lerp(introStartFOV, introEndFOV, reveal);
             }
 
-            SetPlayerFadeAlpha(GetIntroPlayerFadeAlpha(elapsed));
+            if (!_playerFadeMaterialRestored)
+            {
+                float playerFadeAlpha = GetIntroPlayerFadeAlpha(elapsed);
+                SetPlayerFadeAlpha(playerFadeAlpha);
+
+                if (playerFadeAlpha >= 0.999f)
+                    CompletePlayerFadeMaterial();
+            }
+
             if (autoWalkEnabled)
             {
                 Vector3 pos = playerTransform.position;
@@ -342,10 +352,7 @@ public class IntroSequenceManager : MonoBehaviour
             yield return null;
         }
 
-        SetPlayerFadeAlpha(1f);
-        _activePlayerFadeAlpha = -1f;
-        RestoreOriginalColors();
-        RestoreOriginalMaterials();
+        CompletePlayerFadeMaterial();
         RestoreIntroCameraFraming();
         if (mainCamera != null)
         {
@@ -363,6 +370,21 @@ public class IntroSequenceManager : MonoBehaviour
 
         float t = Mathf.Clamp01((elapsed - introPlayerFadeDelay) / introPlayerFadeDuration);
         return Mathf.SmoothStep(0f, 1f, t);
+    }
+
+    private void CompletePlayerFadeMaterial()
+    {
+        if (_playerFadeMaterialRestored)
+        {
+            _activePlayerFadeAlpha = -1f;
+            return;
+        }
+
+        SetPlayerFadeAlpha(1f);
+        _activePlayerFadeAlpha = -1f;
+        RestoreOriginalColors();
+        RestoreOriginalMaterials();
+        _playerFadeMaterialRestored = true;
     }
 
     private void KeepPlayerAtIntroDepth()
@@ -435,11 +457,22 @@ public class IntroSequenceManager : MonoBehaviour
         CachePlayerSpriteRenderers();
         if (_playerSpriteRenderers == null) return;
 
-        Color fadeColor = introPlayerFadeTint;
-        fadeColor.a = Mathf.Clamp01(alpha);
+        float clampedAlpha = Mathf.Clamp01(alpha);
+        for (int i = 0; i < _playerSpriteRenderers.Length; i++)
+        {
+            SpriteRenderer renderer = _playerSpriteRenderers[i];
+            if (renderer == null) continue;
 
-        foreach (SpriteRenderer renderer in _playerSpriteRenderers)
-            if (renderer != null) renderer.color = fadeColor;
+            Color baseColor = GetOriginalRendererColor(i);
+            Color fadeColor = new Color(
+                baseColor.r * introPlayerFadeTint.r,
+                baseColor.g * introPlayerFadeTint.g,
+                baseColor.b * introPlayerFadeTint.b,
+                baseColor.a * introPlayerFadeTint.a * clampedAlpha
+            );
+
+            renderer.color = fadeColor;
+        }
     }
 
     private void SetPlayerRenderersEnabled(bool enabled)
@@ -498,14 +531,41 @@ public class IntroSequenceManager : MonoBehaviour
             if (sourceMaterial == null) continue;
 
             if (_playerFadeMaterials[i] == null)
-            {
-                _playerFadeMaterials[i] = new Material(sourceMaterial);
-                _playerFadeMaterials[i].name = sourceMaterial.name + "_IntroFade";
-                ConfigurePlayerFadeMaterial(_playerFadeMaterials[i]);
-            }
+                _playerFadeMaterials[i] = CreatePlayerFadeMaterial(sourceMaterial);
 
             renderer.sharedMaterial = _playerFadeMaterials[i];
         }
+    }
+
+    private Material CreatePlayerFadeMaterial(Material sourceMaterial)
+    {
+        Shader fadeShader = ResolveSpriteFadeShader(sourceMaterial);
+        Material material = fadeShader != null ? new Material(fadeShader) : new Material(sourceMaterial);
+        material.name = sourceMaterial.name + "_IntroFade";
+
+        CopyTextureIfPresent(sourceMaterial, material, "_MainTex");
+        CopyTextureIfPresent(sourceMaterial, material, "_BaseMap");
+        CopyColorIfPresent(sourceMaterial, material, "_Color");
+        CopyColorIfPresent(sourceMaterial, material, "_BaseColor");
+        ConfigurePlayerFadeMaterial(material);
+        return material;
+    }
+
+    private Shader ResolveSpriteFadeShader(Material sourceMaterial)
+    {
+        Shader spriteLitShader = Shader.Find("Universal Render Pipeline/2D/Sprite-Lit-Default");
+        if (spriteLitShader != null)
+            return spriteLitShader;
+
+        Shader spriteDefaultShader = Shader.Find("Sprites/Default");
+        if (spriteDefaultShader != null)
+            return spriteDefaultShader;
+
+        if (sourceMaterial != null && sourceMaterial.HasProperty("_MainTex"))
+            return sourceMaterial.shader;
+
+        Debug.LogWarning("[IntroSequenceManager] No se encontro un shader de SpriteRenderer compatible para el fade del player.", this);
+        return null;
     }
 
     private void ConfigurePlayerFadeMaterial(Material material)
@@ -522,6 +582,44 @@ public class IntroSequenceManager : MonoBehaviour
         material.DisableKeyword("_ALPHATEST_ON");
         material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
         material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+    }
+
+    private void CopyTextureIfPresent(Material source, Material target, string propertyName)
+    {
+        if (source == null || target == null) return;
+        if (!source.HasProperty(propertyName) || !target.HasProperty(propertyName)) return;
+
+        target.SetTexture(propertyName, source.GetTexture(propertyName));
+        target.SetTextureScale(propertyName, source.GetTextureScale(propertyName));
+        target.SetTextureOffset(propertyName, source.GetTextureOffset(propertyName));
+    }
+
+    private void CopyColorIfPresent(Material source, Material target, string propertyName)
+    {
+        if (source == null || target == null) return;
+        if (!source.HasProperty(propertyName) || !target.HasProperty(propertyName)) return;
+
+        target.SetColor(propertyName, source.GetColor(propertyName));
+    }
+
+    private Color GetOriginalRendererColor(int index)
+    {
+        if (_originalRendererColors != null &&
+            index >= 0 &&
+            index < _originalRendererColors.Length)
+        {
+            return _originalRendererColors[index];
+        }
+
+        if (_playerSpriteRenderers != null &&
+            index >= 0 &&
+            index < _playerSpriteRenderers.Length &&
+            _playerSpriteRenderers[index] != null)
+        {
+            return _playerSpriteRenderers[index].color;
+        }
+
+        return Color.white;
     }
 
     private void RestoreOriginalMaterials()

@@ -29,7 +29,7 @@ public class PlayerFaceHUD : MonoBehaviour
         if (playerCombat.HP == _lastHP) return; // only update on change
 
         _lastHP = playerCombat.HP;
-        UpdateFace(playerCombat.HP, playerCombat.HP); // current HP = maxHP for now
+        UpdateFace(playerCombat.HP, playerCombat.maxHP);
     }
 
     void UpdateFace(float currentHP, float maxHP)

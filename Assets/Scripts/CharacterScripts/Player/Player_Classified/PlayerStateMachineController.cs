@@ -10,16 +10,23 @@ public class PlayerStateMachineController : MonoBehaviour
         new System.Collections.Generic.List<float> { 10, 14, 18 };
 
     private PlayerController _player;
+    private StateMachine _stateMachine;
+
+    public State CurrentState =>
+        _stateMachine != null && _stateMachine.HasCurrentState
+            ? _stateMachine.CurrentState
+            : State.Idle;
 
     public void Initialize(PlayerController player)
     {
         _player = player;
+        _stateMachine = new StateMachine();
         InitializeStateMachine();
     }
 
     private void InitializeStateMachine()
     {
-        StateMachine.Reset();
+        _stateMachine.Reset();
         var sm = _player.staminaManager;
         var cc = _player.cc;
         var p = _player;
@@ -53,23 +60,23 @@ public class PlayerStateMachineController : MonoBehaviour
 
         var knockedback = new KnockedbackState() { player = p, controller = cc };
         var gliding = new GlidingState(sm) { player = p, controller = cc };
-        var jumping = new JumpingState();
-        var falling = new FallingState();
-        var interacting = new InteractingState();
+        var jumping = new JumpingState() { player = p, controller = cc };
+        var falling = new FallingState() { player = p, controller = cc };
+        var interacting = new InteractingState() { player = p, controller = cc };
 
-        StateMachine.AddState(State.Idle, idle);
-        StateMachine.AddState(State.Moving, moving);
-        StateMachine.AddState(State.Running, running);
-        StateMachine.AddState(State.Deenergized, tired);
-        StateMachine.AddState(State.Punching, punching);
-        StateMachine.AddState(State.PunchRunning, punchRunning);
-        StateMachine.AddState(State.Knockedback, knockedback);
-        StateMachine.AddState(State.Gliding, gliding);
-        StateMachine.AddState(State.Jumping, jumping);
-        StateMachine.AddState(State.Falling, falling);
-        StateMachine.AddState(State.Interacting, interacting);
+        _stateMachine.AddState(State.Idle, idle);
+        _stateMachine.AddState(State.Moving, moving);
+        _stateMachine.AddState(State.Running, running);
+        _stateMachine.AddState(State.Deenergized, tired);
+        _stateMachine.AddState(State.Punching, punching);
+        _stateMachine.AddState(State.PunchRunning, punchRunning);
+        _stateMachine.AddState(State.Knockedback, knockedback);
+        _stateMachine.AddState(State.Gliding, gliding);
+        _stateMachine.AddState(State.Jumping, jumping);
+        _stateMachine.AddState(State.Falling, falling);
+        _stateMachine.AddState(State.Interacting, interacting);
 
-        StateMachine.SetState(State.Idle);
+        TransitionTo(State.Idle);
     }
 
     public void HandleStateTransitions()
@@ -81,17 +88,36 @@ public class PlayerStateMachineController : MonoBehaviour
             _player,
             _player.staminaManager,
             _player.isOnSlope,
-            _player.currentState);
+            CurrentState);
 
-        if (newState == _player.currentState) return;
+        TransitionTo(newState);
+    }
 
-        _player.currentState = newState;
-        StateMachine.SetState(_player.currentState);
+    /// <summary>
+    /// Single entry point for every player state transition.
+    /// </summary>
+    public bool TransitionTo(State newState, bool forceReenter = false)
+    {
+        if (_stateMachine == null)
+        {
+            Debug.LogError("PlayerStateMachineController has not been initialized.", this);
+            return false;
+        }
 
-        if (_player.currentState != State.Running &&
-            _player.currentState != State.PunchRunning)
+        bool changed = _stateMachine.SetState(newState, forceReenter);
+
+        if (changed &&
+            newState != State.Running &&
+            newState != State.PunchRunning)
         {
             _player.combat.damageBoost = 0;
         }
+
+        return changed;
+    }
+
+    public void UpdateCurrentState()
+    {
+        _stateMachine?.Update();
     }
 }

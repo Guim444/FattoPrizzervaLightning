@@ -9,7 +9,9 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerInputHandler))]
 [RequireComponent(typeof(PlayerMovement))]
 [RequireComponent(typeof(PlayerCombat))]
+[RequireComponent(typeof(PlayerStaminaManager))]
 [RequireComponent(typeof(PlayerKnockbackHandler))]
+[RequireComponent(typeof(CombatAttackHandler))]
 [RequireComponent(typeof(PlayerInteractor))]
 [RequireComponent(typeof(PlayerDepthScaler))]
 [RequireComponent(typeof(PlayerStateMachineController))]
@@ -40,7 +42,11 @@ public class PlayerController : MonoBehaviour
     // ==================================================
     // SHARED STATE (read by multiple components)
     // ==================================================
-    internal State currentState = State.Idle;
+    public State currentState =>
+        stateMachineController != null
+            ? stateMachineController.CurrentState
+            : State.Idle;
+
     public bool canMove = true;
     public bool isGrounded;
     public bool isPunching;
@@ -103,7 +109,7 @@ public class PlayerController : MonoBehaviour
             knockbackHandler.HandleKnockback();
             combat.UpdatePunchCooldown();
             stateMachineController.HandleStateTransitions();
-            StateMachine.Update();
+            stateMachineController.UpdateCurrentState();
             movement.ApplyGravity();
             movement.SpeedManagement();
         }
@@ -117,8 +123,9 @@ public class PlayerController : MonoBehaviour
         knockbackHandler.CancelKnockback();
         combat.normalPunchTimer = 0f;
         combat.damageBoost = 0;
-        currentState = State.Idle;
-        StateMachine.SetState(State.Idle);
+        canMove = true;
+        canAttack = true;
+        stateMachineController.TransitionTo(State.Idle, forceReenter: true);
     }
 
     // Called by Animation Event at the end of ExitDeenergized

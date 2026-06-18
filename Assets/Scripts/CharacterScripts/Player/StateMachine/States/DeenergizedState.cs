@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class DeenergizedState : IStateActions
 {
+    // EnterDeenergized lasts 1.0416666 s. The design waits for two cycles
+    // before stamina recovery starts; keep this stable during transitions.
+    private const float StaminaDropDelay = 2.0833332f;
+
     public PlayerController player;
     public CharacterController controller;
     public PlayerStaminaManager stamina;
@@ -27,8 +31,7 @@ public class DeenergizedState : IStateActions
         player.animator.SetBool("isDeenergized", true);
 
         stamina.StopAllRegenDrain();
-        float length = player.animator.GetCurrentAnimatorStateInfo(0).length;
-        player.StartCoroutine(StartStaminaDrop(length));
+        _staminaCoroutine = player.StartCoroutine(StartStaminaDrop());
     }
 
     public void Update()
@@ -62,9 +65,9 @@ public class DeenergizedState : IStateActions
         }
     }
 
-    IEnumerator StartStaminaDrop(float length)
+    IEnumerator StartStaminaDrop()
     {
-        yield return new WaitForSeconds(length * 2f);
+        yield return new WaitForSeconds(StaminaDropDelay);
         stamina.SetTired();
     }
 }

@@ -93,9 +93,7 @@ public class PlayerCombat : MonoBehaviour, IDamageable
             return;
         }
 
-        // Activate Hit state
-        _player.currentState = State.Knockedback;
-        StateMachine.SetState(State.Knockedback);
+        _player.stateMachineController.TransitionTo(State.Knockedback);
     }
 
     /// <summary>

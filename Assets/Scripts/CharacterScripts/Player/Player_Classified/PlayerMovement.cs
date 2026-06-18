@@ -70,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
     private CharacterController _cc;
     private PlayerInputHandler _input;
     private PlayerController _playerController;
+    private PlayerAnimations _animations;
 
     // ==================================================
     // INITIALIZATION
@@ -80,6 +81,7 @@ public class PlayerMovement : MonoBehaviour
         _cc = GetComponent<CharacterController>();
         _input = GetComponent<PlayerInputHandler>();
         _playerController = GetComponent<PlayerController>();
+        _animations = GetComponent<PlayerAnimations>();
         _verticalVelocity = -2f;
     }
 
@@ -173,7 +175,7 @@ public class PlayerMovement : MonoBehaviour
     public void ApplyGravity()
     {
         bool grounded = IsGrounded();
-        GetComponent<PlayerController>().isGrounded = grounded;
+        _playerController.isGrounded = grounded;
 
         if (grounded && _verticalVelocity < 0f)
             _verticalVelocity = -2f;
@@ -208,8 +210,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (speedDisplay == null) return;
 
-        float speed = PlayerAnimations.instance != null
-            ? PlayerAnimations.instance.BlendSpeed
+        float speed = _animations != null
+            ? _animations.BlendSpeed
             : 0f;
 
         speedDisplay.text = speed > 0.15f

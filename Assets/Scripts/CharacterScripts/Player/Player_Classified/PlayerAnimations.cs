@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlayerAnimations : MonoBehaviour
 {
-    public static PlayerAnimations instance;
     public Animator animator;
     public PlayerController player;
 
@@ -32,11 +31,6 @@ public class PlayerAnimations : MonoBehaviour
 
     void Awake()
     {
-        if (instance == null)
-            instance = this;
-        else
-            Destroy(gameObject);
-
         _characterController = GetComponent<CharacterController>();
     }
 

@@ -122,8 +122,7 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
             _body.mass = Mathf.Max(0.6f, KnockbackPhysicsBody.MassFromEndurance(_player.combat.endurance));
 
         _body.Receive(direction, force);
-        _player.currentState = State.Knockedback;
-        StateMachine.SetState(State.Knockedback);
+        _player.stateMachineController.TransitionTo(State.Knockedback);
     }
 
     // --------------------------------------------------------
@@ -154,13 +153,18 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
         if (!_body.IsActive)
         {
             ShowKnockbackAnim = false;
-            _player.currentState = State.Idle;
-            StateMachine.SetState(State.Idle);
+            _player.stateMachineController.TransitionTo(State.Idle);
         }
     }
 
     /// <summary>
     /// Cancels knockback immediately (e.g.: player death).
     /// </summary>
-    public void CancelKnockback() => _body.Cancel();
+    public void CancelKnockback()
+    {
+        _body.Cancel();
+        ShowKnockbackAnim = false;
+        _isKnockedBack = false;
+        _debugVelocity = Vector3.zero;
+    }
 }

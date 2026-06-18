@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 /// Exposes read-only properties for other components to query.
 /// ConsumeFrameInputs() must be called at the end of Update() to reset single-frame inputs.
 /// </summary>
-[RequireComponent(typeof(PlayerInteractor))]
 public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
 {
     // ==================================================
@@ -15,8 +14,6 @@ public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
     private Actions _actions;
     private Actions.PlayerActions _playerActions;
     private InputAction _punchAction;
-    private InputAction _actionAction;
-    private PlayerInteractor _interactor;
 
     // ==================================================
     // RAW INPUT STATE
@@ -35,25 +32,19 @@ public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
     /// <summary>True only on the frame the punch was pressed (consumed at end of Update).</summary>
     public bool IsPunchInputPressed { get; private set; }
 
-    /// <summary>True only on the frame the interaction action was pressed.</summary>
-    public bool IsActionInputPressed { get; private set; }
-
     // ==================================================
     // INITIALIZATION
     // ==================================================
 
     void Awake()
     {
-        _interactor = GetComponent<PlayerInteractor>();
-
         _actions = new Actions();
         _playerActions = _actions.Player;
         _playerActions.AddCallbacks(this);
 
-        // Punch and Action are optional in the Player map.
+        // Punch is optional in the Player map.
         var playerMap = _playerActions.Get();
         _punchAction = playerMap.FindAction("PunchStarted", throwIfNotFound: false);
-        _actionAction = playerMap.FindAction("Run", throwIfNotFound: false);
 
         if (_punchAction != null)
         {
@@ -65,21 +56,6 @@ public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
             Debug.LogWarning(
                 "PlayerInputHandler: action 'PunchStarted' not found in 'Player' map of Actions.inputactions.");
         }
-
-        if (_actionAction != null)
-        {
-            _actionAction.started += OnActionStarted;
-        }
-        else
-        {
-            Debug.LogWarning(
-                "PlayerInputHandler: action 'Run' not found in 'Player' map of Actions.inputactions.");
-        }
-    }
-
-    void Update()
-    {
-
     }
 
     void OnEnable()
@@ -94,7 +70,6 @@ public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
         IsRunInputHeld = false;
         IsPunchInputHeld = false;
         IsPunchInputPressed = false;
-        IsActionInputPressed = false;
     }
 
     void OnDestroy()
@@ -103,11 +78,6 @@ public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
         {
             _punchAction.started -= OnPunchStarted;
             _punchAction.canceled -= OnPunchCanceled;
-        }
-
-        if (_actionAction != null)
-        {
-            _actionAction.started -= OnActionStarted;
         }
 
         _playerActions.RemoveCallbacks(this);
@@ -139,12 +109,6 @@ public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
         IsPunchInputHeld = false;
     }
 
-    private void OnActionStarted(InputAction.CallbackContext _)
-    {
-        IsActionInputPressed = true;
-        _interactor.TryInteract();
-    }
-
     // ==================================================
     // FRAME CLEANUP
     // ==================================================
@@ -155,7 +119,6 @@ public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
     public void ConsumeFrameInputs()
     {
         IsPunchInputPressed = false;
-        IsActionInputPressed = false;
     }
 
     public void ConsumePunchInput()

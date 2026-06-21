@@ -45,6 +45,9 @@ public class LightingStateManager : MonoBehaviour
     [SerializeField] private GameObject redSource;
     [SerializeField] private GameObject blueSource;
 
+    [Header("Baked Lighting")]
+    [SerializeField] private LightmapStateManager lightmapStateManager;
+
     [Header("Lighting States")]
     [SerializeField] private LightingStateData[] states = new LightingStateData[4];
 
@@ -65,21 +68,54 @@ public class LightingStateManager : MonoBehaviour
     private Coroutine _blueTransitionCoroutine;
     private readonly List<GameObject> _activatedByManager = new List<GameObject>();
 
+    private void Awake()
+    {
+        if (lightmapStateManager == null)
+            lightmapStateManager = GetComponent<LightmapStateManager>();
+    }
+
     private void Update()
     {
         if (!enableKeyboardShortcuts) return;
 
-        if      (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1)) TransitionTo(LightingState.Tapat);
-        else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2)) TransitionTo(LightingState.Radiografia);
-        else if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)) TransitionTo(LightingState.Lluna);
-        else if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4)) StartBlueTransition();
+        if      (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1)) ApplyPhase(1);
+        else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2)) ApplyPhase(2);
+        else if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)) ApplyPhase(3);
+        else if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4)) ApplyPhase(4);
+    }
+
+    public void ApplyPhase(int phase)
+    {
+        switch (phase)
+        {
+            case 1:
+                TransitionTo(LightingState.Tapat);
+                break;
+            case 2:
+                TransitionTo(LightingState.Radiografia);
+                break;
+            case 3:
+                TransitionTo(LightingState.Lluna);
+                break;
+            case 4:
+                StartBlueTransition();
+                break;
+            default:
+                Debug.LogWarning($"[{nameof(LightingStateManager)}] La fase {phase} no existe.", this);
+                break;
+        }
     }
 
     /// <summary>Dispara el cielo azul al instante y aplica el snap de luces tras blueLightsDelay segundos.</summary>
     public void StartBlueTransition()
     {
-        if (_blueTransitionCoroutine != null)
-            StopCoroutine(_blueTransitionCoroutine);
+        if (_currentStateIndex == (int)LightingState.Blue && _blueTransitionCoroutine == null)
+            return;
+
+        CancelBlueTransition();
+        StopActiveTransition();
+        ApplyBakeForState(LightingState.Blue);
+
         _blueTransitionCoroutine = StartCoroutine(BlueTransitionCoroutine());
     }
 
@@ -87,21 +123,25 @@ public class LightingStateManager : MonoBehaviour
     {
         TriggerSkyOnly(LightingState.Blue);
         yield return new WaitForSeconds(blueLightsDelay);
-        SnapToState(LightingState.Blue);
+
         _blueTransitionCoroutine = null;
+        SnapToState(LightingState.Blue);
     }
 
     /// <summary>Transitions to the given state, interpolating from startIntensity to targetIntensity. Does nothing if already in that state.</summary>
     public void TransitionTo(LightingState state, float duration = -1f)
     {
         int idx = (int)state;
-        if (idx == _currentStateIndex) return;
         if (idx < 0 || idx >= states.Length) return;
 
-        if (_activeTransition != null)
-            StopCoroutine(_activeTransition);
+        CancelBlueTransition();
+
+        if (idx == _currentStateIndex && _activeTransition == null) return;
+
+        StopActiveTransition();
 
         _currentStateIndex = idx;
+        ApplyBakeForState(state);
         SwitchSky(idx);
 
         float dur = duration < 0f ? transitionDuration : duration;
@@ -121,9 +161,10 @@ public class LightingStateManager : MonoBehaviour
         int idx = (int)state;
         if (idx < 0 || idx >= states.Length) return;
 
-        if (_activeTransition != null)
-            StopCoroutine(_activeTransition);
+        CancelBlueTransition();
+        StopActiveTransition();
 
+        ApplyBakeForState(state);
         SwitchSky(idx);
         DeactivatePreviousActivations();
         ActivateStateObjects(states[idx]);
@@ -151,6 +192,7 @@ public class LightingStateManager : MonoBehaviour
     private void SwitchSky(int stateIndex)
     {
         bool isBlue = stateIndex == (int)LightingState.Blue;
+
         if (redLightsObject  != null) redLightsObject.SetActive(!isBlue);
         if (blueLightsObject != null) blueLightsObject.SetActive(isBlue);
         if (redSource        != null) redSource.SetActive(!isBlue);
@@ -163,6 +205,26 @@ public class LightingStateManager : MonoBehaviour
         var current = states[stateIndex];
         if (skyAnimator != null && !string.IsNullOrEmpty(current.skyAnimatorTrigger))
             skyAnimator.SetTrigger(current.skyAnimatorTrigger);
+    }
+
+    private void ApplyBakeForState(LightingState state)
+    {
+        if (lightmapStateManager == null)
+            return;
+
+        switch (state)
+        {
+            case LightingState.Tapat:
+                lightmapStateManager.ApplyWarm1();
+                break;
+            case LightingState.Radiografia:
+            case LightingState.Lluna:
+                lightmapStateManager.ApplyWarm2();
+                break;
+            case LightingState.Blue:
+                lightmapStateManager.ApplyBlue();
+                break;
+        }
     }
 
     [ContextMenu("Apply State")]
@@ -193,6 +255,14 @@ public class LightingStateManager : MonoBehaviour
     {
         DeactivatePreviousActivations();
         ActivateStateObjects(target);
+        ApplyStartIntensities(target);
+
+        if (duration <= 0f)
+        {
+            ApplyTargetIntensities(target);
+            _activeTransition = null;
+            yield break;
+        }
 
         float elapsed = 0f;
         while (elapsed < duration)
@@ -200,8 +270,9 @@ public class LightingStateManager : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
 
-            foreach (var entry in target.entries)
+            for (int i = 0; i < target.entries.Length; i++)
             {
+                var entry = target.entries[i];
                 if (entry.light != null)
                     entry.light.intensity = Mathf.Lerp(entry.startIntensity, entry.targetIntensity, t);
             }
@@ -209,12 +280,43 @@ public class LightingStateManager : MonoBehaviour
             yield return null;
         }
 
+        ApplyTargetIntensities(target);
+        _activeTransition = null;
+    }
+
+    private static void ApplyStartIntensities(LightingStateData target)
+    {
+        foreach (var entry in target.entries)
+        {
+            if (entry.light != null)
+                entry.light.intensity = entry.startIntensity;
+        }
+    }
+
+    private static void ApplyTargetIntensities(LightingStateData target)
+    {
         foreach (var entry in target.entries)
         {
             if (entry.light != null)
                 entry.light.intensity = entry.targetIntensity;
         }
+    }
 
+    private void StopActiveTransition()
+    {
+        if (_activeTransition == null)
+            return;
+
+        StopCoroutine(_activeTransition);
         _activeTransition = null;
+    }
+
+    private void CancelBlueTransition()
+    {
+        if (_blueTransitionCoroutine == null)
+            return;
+
+        StopCoroutine(_blueTransitionCoroutine);
+        _blueTransitionCoroutine = null;
     }
 }

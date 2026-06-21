@@ -1,0 +1,646 @@
+fileFormatVersion: 2
+guid: 0804a94d769722345a5d7834c34a7aa5
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 3000
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 257c380becedb7041a8e0f6a9c3916f5
+      internalID: -1380910856
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_1
+      rect:
+        serializedVersion: 2
+        x: 1700
+        y: 3000
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2b8faf590c006c44bcd5795db3dc4c6
+      internalID: -1064623876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_2
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 3000
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e3959d7388827d449604758608df45d
+      internalID: 675553265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_3
+      rect:
+        serializedVersion: 2
+        x: 5100
+        y: 3000
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9e4466bde24749419d18b9d7663058b
+      internalID: -1780464767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_4
+      rect:
+        serializedVersion: 2
+        x: 6800
+        y: 3000
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88ec1ae8db95a754eac4fce98f89d25f
+      internalID: -1390405621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_5
+      rect:
+        serializedVersion: 2
+        x: 8500
+        y: 3000
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 126290f4a8171364bb8c669f314c8004
+      internalID: 1824960851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_6
+      rect:
+        serializedVersion: 2
+        x: 10200
+        y: 3000
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1520db492353784588987334a718b62
+      internalID: 1593634863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_7
+      rect:
+        serializedVersion: 2
+        x: 11900
+        y: 3000
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d3f99d8d39161546b7355fe70450b8d
+      internalID: 1418497658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1500
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 603f79c5333fe75449834349129a51e2
+      internalID: -904733112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_9
+      rect:
+        serializedVersion: 2
+        x: 1700
+        y: 1500
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc7dbbb68f22b444a878de5e2c538c58
+      internalID: -1685682812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_10
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 1500
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3892778894bfa194cb88c2c0dbcbebac
+      internalID: 423424671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_11
+      rect:
+        serializedVersion: 2
+        x: 5100
+        y: 1500
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 60fbbeb8cadb6804799369db5af688bc
+      internalID: -1460079060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_12
+      rect:
+        serializedVersion: 2
+        x: 6800
+        y: 1500
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70ad681243fc7d24985f1d642ac198e2
+      internalID: -1566445184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_13
+      rect:
+        serializedVersion: 2
+        x: 8500
+        y: 1500
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb3020594fa205141ae8ad9b34088061
+      internalID: 1449196492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_14
+      rect:
+        serializedVersion: 2
+        x: 10200
+        y: 1500
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 134e011d11ba94d45b5e869cb3e1a038
+      internalID: -487421170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_15
+      rect:
+        serializedVersion: 2
+        x: 11900
+        y: 1500
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2a8ead3f163dd347ba3622f87bf0199
+      internalID: 569595821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0721bb43302aae84d8d550bff1ed9cfb
+      internalID: -1267541683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_17
+      rect:
+        serializedVersion: 2
+        x: 1700
+        y: 0
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8eaa354bff3acde4bb378d5f77ec1833
+      internalID: -1401100729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_18
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 0
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef2f46faa4517e04aaf2b9eb4ed38b20
+      internalID: 857035002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_19
+      rect:
+        serializedVersion: 2
+        x: 5100
+        y: 0
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c616a0abd626be40a60a73397933fd7
+      internalID: 792806131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_20
+      rect:
+        serializedVersion: 2
+        x: 6800
+        y: 0
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 02eb957cc5b1045498115a60773876cd
+      internalID: 25805174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_21
+      rect:
+        serializedVersion: 2
+        x: 8500
+        y: 0
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf8b7d7b36709d5449601bd4fb038690
+      internalID: 1431368807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Animation_General_Photo_SpriteSheet_22
+      rect:
+        serializedVersion: 2
+        x: 10200
+        y: 0
+        width: 1700
+        height: 1500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb6c06bef85995645bd0fc0de1820fec
+      internalID: -521348641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Animation_General_Photo_SpriteSheet_0: -1380910856
+      Animation_General_Photo_SpriteSheet_1: -1064623876
+      Animation_General_Photo_SpriteSheet_10: 423424671
+      Animation_General_Photo_SpriteSheet_11: -1460079060
+      Animation_General_Photo_SpriteSheet_12: -1566445184
+      Animation_General_Photo_SpriteSheet_13: 1449196492
+      Animation_General_Photo_SpriteSheet_14: -487421170
+      Animation_General_Photo_SpriteSheet_15: 569595821
+      Animation_General_Photo_SpriteSheet_16: -1267541683
+      Animation_General_Photo_SpriteSheet_17: -1401100729
+      Animation_General_Photo_SpriteSheet_18: 857035002
+      Animation_General_Photo_SpriteSheet_19: 792806131
+      Animation_General_Photo_SpriteSheet_2: 675553265
+      Animation_General_Photo_SpriteSheet_20: 25805174
+      Animation_General_Photo_SpriteSheet_21: 1431368807
+      Animation_General_Photo_SpriteSheet_22: -521348641
+      Animation_General_Photo_SpriteSheet_3: -1780464767
+      Animation_General_Photo_SpriteSheet_4: -1390405621
+      Animation_General_Photo_SpriteSheet_5: 1824960851
+      Animation_General_Photo_SpriteSheet_6: 1593634863
+      Animation_General_Photo_SpriteSheet_7: 1418497658
+      Animation_General_Photo_SpriteSheet_8: -904733112
+      Animation_General_Photo_SpriteSheet_9: -1685682812
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -30,9 +30,9 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private float startPositionX = 0f;
 
 // Will be removed
-    private float startPositionY = 2.25f;
+    private float startPositionY = 1.8f;
     private float combatStartPositionX = 0f;
-    private float combatStartPositionY = 2.25f;
+    private float combatStartPositionY = 1f;
     private float combatStartPositionZ = -2f;
 
     [Header("Configuration — Camera")]
@@ -65,6 +65,7 @@ public class HUDManager : MonoBehaviour
 
     public void OnClickCombatPosition()
     {
+        ActivateGameplayBlizzard();
         introSequenceManager?.RestoreOriginalAnimator();
         Time.timeScale = 1f;
         ActivateCinemachine();
@@ -91,7 +92,7 @@ public class HUDManager : MonoBehaviour
         ActivateCinemachine();
         introSequenceManager?.ShowBlackScreen();
         Time.timeScale = 1f;
-        playerBoundary.enabled = true;
+        playerBoundary.enabled = false;
         OutsideChurch.SetActive(false);
         enemy.SetActive(false);
         enemyRio.SetActive(false);
@@ -101,6 +102,7 @@ public class HUDManager : MonoBehaviour
         playerAnimator?.SetBool("IdleFront", true);
         HidePanel();
         introSequenceManager?.StartIntro();
+        playerBoundary.enabled = true;
     }
 
     // Called from TutorialRingManager.onEnemyOut.
@@ -116,6 +118,7 @@ public class HUDManager : MonoBehaviour
 
     public void OnClickFreeMove()
     {
+        ActivateGameplayBlizzard();
         introSequenceManager?.RestoreOriginalAnimator();
         Time.timeScale = 1f;
         cameraMovement.combatY = freeMoveStartCameraY;
@@ -128,6 +131,13 @@ public class HUDManager : MonoBehaviour
         enemyRio.SetActive(false);
         MovePlayerToX(combatStartPositionX);
         HidePanel();
+    }
+
+    private void ActivateGameplayBlizzard()
+    {
+        int activatedManagers = WindStateManager.ActivateAllVideoPlayersRoots();
+        if (activatedManagers == 0)
+            Debug.LogWarning("[HUDManager] No se encontró ningún WindStateManager para activar la ventisca.", this);
     }
 
     private void MovePlayerToX(float x)
@@ -158,16 +168,18 @@ public class HUDManager : MonoBehaviour
             return;
         }
 
+        float startZ = introSequenceManager != null ? introSequenceManager.IntroPlayerZ : 0f;
+
         Debug.Log(
-            $"[HUDManager] MovePlayerToX — before: {playerTransform.position}  →  target X:{x} Y:{combatStartPositionY} Z:{combatStartPositionZ}");
+            $"[HUDManager] MoveStartPlayerToX — before: {playerTransform.position}  →  target X:{x} Y:{startPositionY} Z:{startZ}");
 
         CharacterController cc = playerTransform.GetComponent<CharacterController>();
         if (cc != null) cc.enabled = false;
-        playerTransform.position = new Vector3(x, startPositionY, combatStartPositionZ);
+        playerTransform.position = new Vector3(x, startPositionY, startZ);
         Physics.SyncTransforms();
         if (cc != null) cc.enabled = true;
 
-        Debug.Log($"[HUDManager] MovePlayerToX — after: {playerTransform.position}");
+        Debug.Log($"[HUDManager] MoveStartPlayerToX — after: {playerTransform.position}");
     }
 
     private void HidePanel()

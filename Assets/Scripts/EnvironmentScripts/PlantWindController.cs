@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -19,11 +20,6 @@ using UnityEngine;
 ///   PlayWindy()      → fuerza WindyEntry → loop
 ///   PlayWindyExit()  → espera loopDurationBeforeOut segundos → fuerza WindyOut
 ///   PlayIdleSmooth() → fuerza IdleSmooth
-///
-/// Teclas de prueba en Editor:
-///   1 ó 4  →  PlayWindy
-///   2      →  PlayWindyExit
-///   3      →  PlayIdleSmooth
 /// </summary>
 public class PlantWindController : MonoBehaviour
 {
@@ -41,7 +37,7 @@ public class PlantWindController : MonoBehaviour
     [SerializeField] private string windyEntryState = "WindyEntry";
     [SerializeField] private string windyLoopState  = "WindyLoop";
     [SerializeField] private string windyOutState   = "WindyOut";
-    [SerializeField] private string idleSmoothState = "IdleSmooth";
+    [SerializeField] private string idleSmoothState = "IdleSmoth";
 
     [Header("Config")]
     [Range(0f, 1f)]
@@ -52,15 +48,22 @@ public class PlantWindController : MonoBehaviour
 
     private Coroutine _exitCoroutine;
 
-    // ── Teclas de prueba (Editor) ────────────────────────────────────────────
-    private void Update()
+    private void Awake()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha4))
-            PlayWindy();
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-            PlayWindyExit();
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-            PlayIdleSmooth();
+        if (!HasMissingPlantReferences())
+            return;
+
+        var matches = new List<PlantEntry>();
+        foreach (var animator in Object.FindObjectsByType<Animator>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            if (HasAllPlantStates(animator))
+                matches.Add(new PlantEntry { animator = animator });
+        }
+
+        plants = matches.ToArray();
+
+        if (plants.Length > 0)
+            Debug.LogWarning($"[{nameof(PlantWindController)}] Se repararon referencias de plantas durante esta ejecución. Revisa el Inspector para corregirlas de forma permanente.", this);
     }
 
     // ── API pública ──────────────────────────────────────────────────────────
@@ -88,6 +91,37 @@ public class PlantWindController : MonoBehaviour
 
     // ── Privado ──────────────────────────────────────────────────────────────
 
+    private bool HasMissingPlantReferences()
+    {
+        if (plants == null || plants.Length == 0)
+            return true;
+
+        foreach (var plant in plants)
+        {
+            if (plant.animator == null)
+                return true;
+        }
+
+        return false;
+    }
+
+    private bool HasAllPlantStates(Animator animator)
+    {
+        return animator != null
+            && animator.runtimeAnimatorController != null
+            && AnimatorContainsState(animator, windyEntryState)
+            && AnimatorContainsState(animator, windyLoopState)
+            && AnimatorContainsState(animator, windyOutState)
+            && AnimatorContainsState(animator, idleSmoothState);
+    }
+
+    private static bool AnimatorContainsState(Animator animator, string stateName)
+    {
+        int shortHash = Animator.StringToHash(stateName);
+        int fullPathHash = Animator.StringToHash($"Base Layer.{stateName}");
+        return animator.HasState(0, shortHash) || animator.HasState(0, fullPathHash);
+    }
+
     private IEnumerator WindyExitRoutine()
     {
         CrossFadeAll(windyLoopState);
@@ -98,6 +132,8 @@ public class PlantWindController : MonoBehaviour
 
     private void CrossFadeAll(string stateName)
     {
+        if (plants == null) return;
+
         foreach (var p in plants)
         {
             if (p.animator != null)

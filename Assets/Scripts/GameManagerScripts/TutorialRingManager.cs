@@ -212,8 +212,8 @@ public class TutorialRingManager : MonoBehaviour
         {
             player.combat.HP       = player.combat.maxHP;
             player.combat.endurance = playerStartEndurance;
-            player.canMove         = true;
             player.animator.SetBool("isDead", false);
+            player.ResetToIdle();
         }
 
         if (enemy != null)

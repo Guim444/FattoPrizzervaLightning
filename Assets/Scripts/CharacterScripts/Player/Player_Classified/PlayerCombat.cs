@@ -30,6 +30,14 @@ public class PlayerCombat : MonoBehaviour, IDamageable
 
     public int endurance = 0;
 
+    private int? _temporaryEnduranceOverride;
+
+    /// <summary>
+    /// Endurance used by combat and knockback calculations.
+    /// Temporary state effects never overwrite the serialized/base endurance.
+    /// </summary>
+    public int EffectiveEndurance => _temporaryEnduranceOverride ?? endurance;
+
     // ==================================================
     // PUNCH COOLDOWN
     // ==================================================
@@ -101,10 +109,22 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     /// </summary>
     public void Die()
     {
+        _player.combatAttackHandler.CancelPreparedAttack();
+        ClearEnduranceOverride();
         _player.canMove = false;
         _player.animator.speed = 1;
         _player.animator.SetBool("isDead", true);
         onDied.Invoke();
+    }
+
+    public void SetEnduranceOverride(int value)
+    {
+        _temporaryEnduranceOverride = value;
+    }
+
+    public void ClearEnduranceOverride()
+    {
+        _temporaryEnduranceOverride = null;
     }
 
     /// <summary>

@@ -8,8 +8,9 @@ public class PunchingState : IStateActions
     public PlayerStaminaManager stamina;
     public SphereCollider punchCollider;
 
-    // Duración total del estado (hardcodeada, no .length — ver convenciones)
-    private const float PunchDuration = 0.8333333f;
+    // Impact event: 0.8333333 s. The safety window keeps the state active
+    // until Unity has dispatched the Animation Event, including at low frame rates.
+    private const float PunchDuration = 0.95f;
 
     private bool punchExecuted = false;
 
@@ -24,6 +25,7 @@ public class PunchingState : IStateActions
         punchExecuted = true;
 
         player.movement.RefreshSpriteFlip();
+        player.combatAttackHandler.PrepareAttack(AttackType.Punch);
         player.animator.SetTrigger("isPunching");
 
         var combat = player.combat;
@@ -55,6 +57,9 @@ public class PunchingState : IStateActions
 
     public void Exit()
     {
+        if (player.canAttack)
+            player.combatAttackHandler.CancelPreparedAttack();
+
         player.canAttack = true;
         punchExecuted = false;
     }

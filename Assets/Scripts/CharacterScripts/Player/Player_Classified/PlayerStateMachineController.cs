@@ -81,6 +81,8 @@ public class PlayerStateMachineController : MonoBehaviour
 
     public void HandleStateTransitions()
     {
+        // Deenergized owns its recovery and exit sequence.
+        if (CurrentState == State.Deenergized) return;
         if (_player.combat.normalPunchTimer > 0) return;
         if (!_player.canMove) return;
 

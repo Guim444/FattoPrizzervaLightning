@@ -76,7 +76,7 @@ public class ClashHandler : MonoBehaviour
 
         KnockbackResult result = KnockbackResolver.Resolve(
             AttackType.Clash,
-            player.combat.endurance,
+            player.combat.EffectiveEndurance,
             resolverConfig
         );
 

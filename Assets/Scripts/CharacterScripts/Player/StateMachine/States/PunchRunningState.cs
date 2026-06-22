@@ -8,13 +8,12 @@ public class PunchRunningState : IStateActions
     public PlayerStaminaManager stamina;
     public BoxCollider punchCollider;
 
-    // Duración total del estado (hardcodeada, no .length — ver convenciones)
-    private const float PunchRunDuration = 1.2f;
+    // RunningPunch clip: 1.9583333 s. Impact event: 1.625 s.
+    private const float PunchRunDuration = 1.9583333f;
 
     private float staminaCost;
     private float actualSpeed;
     private bool  punchExecuted = false;
-    private int   savedEndurance;
 
     public PunchRunningState(PlayerStaminaManager staminaManager)
     {
@@ -26,29 +25,28 @@ public class PunchRunningState : IStateActions
         if (punchExecuted) return;
         punchExecuted = true;
 
-        player.animator.SetTrigger("isPunching");
-
         var combat   = player.combat;
         var movement = player.movement;
 
-        savedEndurance = combat.endurance;
-        actualSpeed    = movement.punchRunningBaseSpeed;
+        int damageBoost = Mathf.Clamp(combat.damageBoost, 0, 2);
+        actualSpeed = movement.punchRunningBaseSpeed;
 
         // El endurance sube temporalmente según la fase de carrera:
         // más damageBoost → golpe más poderoso (tabla KnockbackResolver)
-        switch (combat.damageBoost)
+        switch (damageBoost)
         {
-            case 0: staminaCost = combat.punchRunningStaminaCostPhase1; combat.endurance += 1; break;
-            case 1: staminaCost = combat.punchRunningStaminaCostPhase2; combat.endurance += 2; break;
-            case 2: staminaCost = combat.punchRunningStaminaCostPhase3; combat.endurance += 3; break;
+            case 0: staminaCost = combat.punchRunningStaminaCostPhase1; break;
+            case 1: staminaCost = combat.punchRunningStaminaCostPhase2; break;
+            default: staminaCost = combat.punchRunningStaminaCostPhase3; break;
         }
 
-        if (player.staminaManager.currentStamina - staminaCost >= 0)
-        {
-            stamina.ModifyStamina(-staminaCost);
-            combat.normalPunchTimer = PunchRunDuration;
-            CalcSpeed(combat.damageBoost, movement.punchRunningBaseSpeed);
-        }
+        combat.SetEnduranceOverride(combat.endurance + damageBoost + 1);
+        stamina.ModifyStamina(-staminaCost);
+        combat.normalPunchTimer = PunchRunDuration;
+        CalcSpeed(damageBoost, movement.punchRunningBaseSpeed);
+
+        player.combatAttackHandler.PrepareAttack(AttackType.PunchRunning);
+        player.animator.SetTrigger("isPunching");
     }
 
     public void Update()
@@ -82,7 +80,10 @@ public class PunchRunningState : IStateActions
 
     public void Exit()
     {
-        player.combat.endurance   = savedEndurance; // Restaura el endurance temporal
+        if (player.canAttack)
+            player.combatAttackHandler.CancelPreparedAttack();
+
+        player.combat.ClearEnduranceOverride();
         player.canAttack          = true;
         player.combat.damageBoost = 0;
         punchExecuted             = false;

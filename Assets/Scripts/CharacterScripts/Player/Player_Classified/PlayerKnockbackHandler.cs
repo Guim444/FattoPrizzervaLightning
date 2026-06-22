@@ -80,7 +80,7 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
     {
         // Auto-mass from endurance (requires PlayerCombat to already be initialized)
         if (autoMassFromEndurance && _player.combat != null)
-            _body.mass = Mathf.Max(0.6f, KnockbackPhysicsBody.MassFromEndurance(_player.combat.endurance));
+            _body.mass = Mathf.Max(0.6f, KnockbackPhysicsBody.MassFromEndurance(_player.combat.EffectiveEndurance));
         else
             _body.mass = manualMass;
     }
@@ -119,7 +119,7 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
     {
         // Recalculate mass in case endurance changed at runtime
         if (autoMassFromEndurance && _player.combat != null)
-            _body.mass = Mathf.Max(0.6f, KnockbackPhysicsBody.MassFromEndurance(_player.combat.endurance));
+            _body.mass = Mathf.Max(0.6f, KnockbackPhysicsBody.MassFromEndurance(_player.combat.EffectiveEndurance));
 
         _body.Receive(direction, force);
         _player.stateMachineController.TransitionTo(State.Knockedback);

@@ -105,7 +105,7 @@ public class RioTutteEnemy : EnemyBase, IPhaseChangeHandler
 
         Vector3 pushDir     = delta.normalized;
         float   penetration = minDist - dist;
-        int     playerEnd   = _player.combat.endurance;
+        int     playerEnd   = _player.combat.EffectiveEndurance;
 
         if (_attacks.IsUsingDashGrab)
         {

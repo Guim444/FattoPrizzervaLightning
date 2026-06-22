@@ -48,6 +48,8 @@ public class CombatAttackHandler : MonoBehaviour
     // --------------------------------------------------------
 
     private PlayerController _player;
+    private AttackType _preparedAttackType;
+    private bool _hasPreparedAttack;
 
     // --------------------------------------------------------
     //  INIT
@@ -60,17 +62,34 @@ public class CombatAttackHandler : MonoBehaviour
     // --------------------------------------------------------
 
     /// <summary>
-    /// Single entry point for any player attack.
-    /// Call from the corresponding StateMachine state
-    /// (PunchingState, PunchRunningState) in its Enter() or on the
-    /// impact frame according to the animation.
+    /// Stores the attack type selected by the state before the animation starts.
+    /// The Animation Event later consumes this exact context.
     /// </summary>
-    public void ExecuteAttack()
+    public void PrepareAttack(AttackType attackType)
     {
+        _preparedAttackType = attackType;
+        _hasPreparedAttack = true;
+    }
+
+    public void CancelPreparedAttack()
+    {
+        _hasPreparedAttack = false;
+    }
+
+    public void ExecutePreparedAttack()
+    {
+        if (!_hasPreparedAttack)
+        {
+            Debug.LogWarning("[Attack] Animation Event received without a prepared attack.", this);
+            return;
+        }
+
+        AttackType attackType = _preparedAttackType;
+        _hasPreparedAttack = false;
+
         if (!_player.canAttack) return;
         _player.canAttack = false;
 
-        AttackType attackType = KnockbackResolver.StateToAttackType(_player.currentState);
         Vector3 direction = GetAttackDirection();
 
         // Sphere projected forward: origin is offset half the radius
@@ -101,7 +120,7 @@ public class CombatAttackHandler : MonoBehaviour
         // Enemy endurance no longer exists — only the player's matters
         KnockbackResult result = KnockbackResolver.Resolve(
             attackType,
-            _player.combat.endurance,
+            _player.combat.EffectiveEndurance,
             resolverConfig
         );
 
@@ -116,7 +135,7 @@ public class CombatAttackHandler : MonoBehaviour
         _player.movement.LastDirection = Vector3.zero;
         _player.movement.CurrentSpeed = Vector3.zero;
 
-        Debug.Log($"[Attack] {attackType} | playerEnd:{_player.combat.endurance} " +
+        Debug.Log($"[Attack] {attackType} | playerEnd:{_player.combat.EffectiveEndurance} " +
                   $"forceEnemy:{result.ForceOnTarget:F1} forceSelf:{result.ForceOnSelf:F1}");
     }
 

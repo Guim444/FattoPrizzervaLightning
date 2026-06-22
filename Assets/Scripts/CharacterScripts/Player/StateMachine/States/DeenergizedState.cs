@@ -1,19 +1,22 @@
-using System.Collections;
 using UnityEngine;
 
 public class DeenergizedState : IStateActions
 {
-    // EnterDeenergized lasts 1.0416666 s. The design waits for two cycles
-    // before stamina recovery starts; keep this stable during transitions.
-    private const float StaminaDropDelay = 2.0833332f;
+    // EnterDeenergized lasts 1.0416666 s. Preserve the current design delay
+    // of two cycles before recovery starts.
+    private const float RecoveryDelay = 2.0833332f;
+
+    // IdleDeenergized -> ExitDeenergized blend (0.25 s) + exit clip (0.9166667 s).
+    private const float ExitDuration = 1.1666667f;
 
     public PlayerController player;
     public CharacterController controller;
     public PlayerStaminaManager stamina;
-    private Coroutine _staminaCoroutine;
 
-    private int savedEndurance;
-    private bool _exitTriggered;
+    private float _recoveryDelayRemaining;
+    private float _exitTimeRemaining;
+    private bool _recoveryStarted;
+    private bool _isExiting;
 
     public DeenergizedState(PlayerStaminaManager staminaManager)
     {
@@ -22,20 +25,25 @@ public class DeenergizedState : IStateActions
 
     public void Enter()
     {
-        _exitTriggered = false;
+        _recoveryDelayRemaining = RecoveryDelay;
+        _exitTimeRemaining = 0f;
+        _recoveryStarted = false;
+        _isExiting = false;
 
-        savedEndurance = player.combat.endurance;
-        player.combat.endurance = -2;
-
+        player.combat.SetEnduranceOverride(-2);
         player.movement.RefreshSpriteFlip();
         player.animator.SetBool("isDeenergized", true);
-
         stamina.StopAllRegenDrain();
-        _staminaCoroutine = player.StartCoroutine(StartStaminaDrop());
     }
 
     public void Update()
     {
+        if (_isExiting)
+        {
+            UpdateExit();
+            return;
+        }
+
         var movement = player.movement;
 
         Vector3 input = movement.GetDirectionalInput();
@@ -44,30 +52,46 @@ public class DeenergizedState : IStateActions
         if (toMove != Vector3.zero && controller.enabled)
             controller.Move(toMove * movement.tiredSpeed * Time.deltaTime);
 
-        // Cuando la stamina se recuperó, dispara la animación de salida y bloquea
-        // la state machine hasta que el Animation Event llame a OnDeenergizedExitDone()
-        if (!_exitTriggered && !stamina.isTired)
+        if (!_recoveryStarted)
         {
-            _exitTriggered = true;
-            player.animator.SetBool("isDeenergized", false);
-            player.canMove = false;
+            _recoveryDelayRemaining -= Time.deltaTime;
+
+            if (_recoveryDelayRemaining <= 0f)
+            {
+                _recoveryStarted = true;
+                stamina.SetTired();
+            }
         }
+
+        if (_recoveryStarted && !stamina.isTired)
+            BeginExit();
     }
 
     public void Exit()
     {
-        player.combat.endurance = savedEndurance;
+        player.combat.ClearEnduranceOverride();
         player.animator.SetBool("isDeenergized", false);
-        if (_staminaCoroutine != null)
-        {
-            player.StopCoroutine(_staminaCoroutine);
-            _staminaCoroutine = null;
-        }
+        _isExiting = false;
     }
 
-    IEnumerator StartStaminaDrop()
+    private void BeginExit()
     {
-        yield return new WaitForSeconds(StaminaDropDelay);
-        stamina.SetTired();
+        _isExiting = true;
+        _exitTimeRemaining = ExitDuration;
+        player.canMove = false;
+        player.movement.LastDirection = Vector3.zero;
+        player.movement.CurrentSpeed = Vector3.zero;
+        player.animator.SetBool("isDeenergized", false);
+    }
+
+    private void UpdateExit()
+    {
+        _exitTimeRemaining -= Time.deltaTime;
+
+        if (_exitTimeRemaining > 0f)
+            return;
+
+        _exitTimeRemaining = float.PositiveInfinity;
+        player.OnDeenergizedExitDone();
     }
 }

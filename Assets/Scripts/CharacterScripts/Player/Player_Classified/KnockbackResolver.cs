@@ -96,12 +96,4 @@ public static class KnockbackResolver
         return new KnockbackResult(forceTarget, forceSelf, animTrigger);
     }
 
-    public static AttackType StateToAttackType(State state)
-    {
-        switch (state)
-        {
-            case State.PunchRunning: return AttackType.PunchRunning;
-            default:                 return AttackType.Punch;
-        }
-    }
 }

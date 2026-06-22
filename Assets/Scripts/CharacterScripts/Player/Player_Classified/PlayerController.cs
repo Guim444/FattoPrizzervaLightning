@@ -121,6 +121,8 @@ public class PlayerController : MonoBehaviour
     {
         movement.ResetMotion();
         knockbackHandler.CancelKnockback();
+        combatAttackHandler.CancelPreparedAttack();
+        combat.ClearEnduranceOverride();
         combat.normalPunchTimer = 0f;
         combat.damageBoost = 0;
         canMove = true;
@@ -128,9 +130,14 @@ public class PlayerController : MonoBehaviour
         stateMachineController.TransitionTo(State.Idle, forceReenter: true);
     }
 
-    // Called by Animation Event at the end of ExitDeenergized
+    // Called by DeenergizedState after its hardcoded exit duration.
+    // It also remains compatible with a future Animation Event.
     public void OnDeenergizedExitDone()
     {
+        if (currentState != State.Deenergized)
+            return;
+
         canMove = true;
+        stateMachineController.TransitionTo(State.Idle);
     }
 }

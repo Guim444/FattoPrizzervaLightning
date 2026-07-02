@@ -2491,7 +2491,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1302313189
 Transform:
   m_ObjectHideFlags: 0
@@ -2656,7 +2656,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4140,7 +4140,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4762,6 +4762,7 @@ MonoBehaviour:
   playerBoundary: {fileID: 2004004936}
   _canvasMain: {fileID: 416904151}
   _canvasUIStats: {fileID: 704993143}
+  uiRoot: {fileID: 1302313188}
   selectionPanel: {fileID: 761690054}
   OutsideChurch: {fileID: 1041187257}
   playerTransform: {fileID: 2004004907}

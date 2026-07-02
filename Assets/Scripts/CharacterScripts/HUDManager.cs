@@ -10,6 +10,7 @@ public class HUDManager : MonoBehaviour
     [SerializeField] GameObject _canvasUIStats;
 
     [Header("UI")]
+    [SerializeField] private GameObject uiRoot;
     [SerializeField] private GameObject selectionPanel;
 
     [Header("References")]
@@ -45,8 +46,14 @@ public class HUDManager : MonoBehaviour
 
     private void Awake()
     {
-        _canvasMain.SetActive(true);
+        ActivateUiForPlayMode();
         Time.timeScale = 0f;
+    }
+
+    private void ActivateUiForPlayMode()
+    {
+        if (uiRoot != null) uiRoot.SetActive(true);
+        if (_canvasMain != null) _canvasMain.SetActive(true);
     }
 
     private void ActivateCinemachine()

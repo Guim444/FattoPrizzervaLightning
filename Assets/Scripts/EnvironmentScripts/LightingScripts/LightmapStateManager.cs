@@ -37,12 +37,13 @@ public class LightmapStateManager : MonoBehaviour
     [SerializeField] private bool applyWarmOnAwake = true;
 
     private int _lightmapStartIndex = -1;
+    private int _sceneLightmapCount = -1;
     private int _currentState = -1;
     private bool _warnedWarm2Fallback;
 
     private void Awake()
     {
-        _lightmapStartIndex = FindSceneLightmapStartIndex();
+        FindSceneLightmapRange(out _lightmapStartIndex, out _sceneLightmapCount);
 
         if (applyWarmOnAwake)
             ApplyWarm1();
@@ -82,7 +83,7 @@ public class LightmapStateManager : MonoBehaviour
         if (_currentState == (int)state)
             return;
 
-        if (!IsValid(set, state))
+        if (!IsValid(set, state) || !MatchesLoadedSceneLayout(set, state))
             return;
 
         int startIndex = Mathf.Max(0, _lightmapStartIndex);
@@ -142,6 +143,21 @@ public class LightmapStateManager : MonoBehaviour
         return true;
     }
 
+    private bool MatchesLoadedSceneLayout(LightmapSet set, LightmapState state)
+    {
+        if (_sceneLightmapCount <= 0 || set.colors.Length == _sceneLightmapCount)
+            return true;
+
+        int startIndex = Mathf.Max(0, _lightmapStartIndex);
+        int endIndex = startIndex + _sceneLightmapCount - 1;
+        int loadedCount = LightmapSettings.lightmaps != null ? LightmapSettings.lightmaps.Length : 0;
+
+        Debug.LogError(
+            $"[{nameof(LightmapStateManager)}] El bake {state} tiene {set.colors.Length} atlas, pero los renderers baked de esta escena usan {_sceneLightmapCount} atlas desde el indice {startIndex} hasta el {endIndex}. LightmapSettings tiene {loadedCount} slots globales. No se aplica para evitar lightmaps cruzados/grises. Rehaz o reasigna ese bake usando el mismo LightingData de la escena.",
+            this);
+        return false;
+    }
+
     private static bool HasShadowMasks(LightmapSet set)
     {
         return set.shadowMasks != null && set.shadowMasks.Length > 0;
@@ -152,9 +168,10 @@ public class LightmapStateManager : MonoBehaviour
         return set.colors == null || set.colors.Length == 0;
     }
 
-    private int FindSceneLightmapStartIndex()
+    private void FindSceneLightmapRange(out int startIndex, out int atlasCount)
     {
         int minimumIndex = int.MaxValue;
+        int maximumIndex = -1;
 
         foreach (var sceneRenderer in FindObjectsByType<Renderer>(FindObjectsInactive.Include, FindObjectsSortMode.None))
         {
@@ -163,13 +180,21 @@ public class LightmapStateManager : MonoBehaviour
 
             int index = sceneRenderer.lightmapIndex;
             if (index >= 0 && index < 65534)
+            {
                 minimumIndex = Mathf.Min(minimumIndex, index);
+                maximumIndex = Mathf.Max(maximumIndex, index);
+            }
         }
 
         if (minimumIndex != int.MaxValue)
-            return minimumIndex;
+        {
+            startIndex = minimumIndex;
+            atlasCount = maximumIndex - minimumIndex + 1;
+            return;
+        }
 
         Debug.LogWarning($"[{nameof(LightmapStateManager)}] No se encontro ningun Renderer baked en la escena. Se usara el indice 0.", this);
-        return 0;
+        startIndex = 0;
+        atlasCount = 0;
     }
 }

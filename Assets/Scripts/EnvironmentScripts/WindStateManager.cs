@@ -304,6 +304,18 @@ public class WindStateManager : MonoBehaviour
         return managers.Length;
     }
 
+    public static int PrewarmAllVideoPlayersHidden()
+    {
+        WindStateManager[] managers = Object.FindObjectsByType<WindStateManager>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None);
+
+        foreach (WindStateManager manager in managers)
+            manager.PrewarmVideoPlayersHidden();
+
+        return managers.Length;
+    }
+
     public void ActivateVideoPlayersRoot()
     {
         if (_playersRoot == null)
@@ -333,6 +345,42 @@ public class WindStateManager : MonoBehaviour
         }
 
         ActivateLegacyVideoPlayer();
+        ApplyCurrentVideoAlphas();
+    }
+
+    public void PrewarmVideoPlayersHidden()
+    {
+        bool wasVisible = _videoPlayersVisible;
+
+        if (_playersRoot == null)
+            BuildAndPrepareFixedPlayers();
+
+        if (_playersRoot == null)
+            return;
+
+        _playersRoot.gameObject.SetActive(true);
+        _videoPlayersVisible = false;
+        RefreshVideoCamera();
+        ResetHorizontalMotionReference();
+
+        foreach (VideoPlayer player in _allPlayers)
+        {
+            if (player == null) continue;
+
+            AssignCameraToPlayer(player);
+
+            if (player.isPrepared)
+            {
+                if (!player.isPlaying)
+                    player.Play();
+            }
+            else
+            {
+                player.Prepare();
+            }
+        }
+
+        _videoPlayersVisible = wasVisible;
         ApplyCurrentVideoAlphas();
     }
 

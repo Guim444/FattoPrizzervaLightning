@@ -4776,6 +4776,18 @@ MonoBehaviour:
   cinemachineZoomController: {fileID: 685871263}
   cinemachineBrain: {fileID: 1613816023}
   cameraMovement: {fileID: 1613816024}
+  requireStartupLoading: 1
+  startupLoadingMinimumSeconds: 2
+  particlePrewarmSeconds: 0.35
+  alembicPrewarmSampleTime: 0.05
+  loadingBarSize: {x: 420, y: 18}
+  loadingFillColor: {r: 0.9, g: 0.18, b: 0.1, a: 1}
+  prewarmLightmaps: 1
+  prewarmBlizzardVideos: 1
+  prewarmAlembicTrees: 1
+  prewarmAnimators: 1
+  prewarmParticles: 1
+  prewarmShaders: 1
 --- !u!1001 &3828182740764195160
 PrefabInstance:
   m_ObjectHideFlags: 0

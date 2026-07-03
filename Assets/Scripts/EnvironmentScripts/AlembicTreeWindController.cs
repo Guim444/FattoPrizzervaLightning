@@ -130,4 +130,28 @@ public class AlembicTreeWindController : MonoBehaviour
         if (slowPlayer != null) slowPlayer.gameObject.SetActive(!useFast);
         if (fastPlayer != null) fastPlayer.gameObject.SetActive(useFast);
     }
+
+    public void PrewarmPlayers(float sampleTime)
+    {
+        ResolveMissingPlayers();
+        PrewarmPlayer(slowPlayer, sampleTime);
+        PrewarmPlayer(fastPlayer, sampleTime);
+    }
+
+    private static void PrewarmPlayer(AlembicStreamPlayer player, float sampleTime)
+    {
+        if (player == null) return;
+
+        float duration = player.Duration;
+        if (duration <= 0f) return;
+
+        bool wasActive = player.gameObject.activeSelf;
+        if (!wasActive)
+            player.gameObject.SetActive(true);
+
+        player.CurrentTime = Mathf.Clamp(sampleTime, 0f, duration);
+
+        if (!wasActive)
+            player.gameObject.SetActive(false);
+    }
 }

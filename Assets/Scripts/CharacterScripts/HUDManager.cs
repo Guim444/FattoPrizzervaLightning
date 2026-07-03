@@ -1,5 +1,7 @@
+using System.Collections;
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HUDManager : MonoBehaviour
 {
@@ -43,11 +45,46 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private CinemachineBrain cinemachineBrain;
     [SerializeField] private CameraMovement cameraMovement;
 
+    [Header("Startup Loading")]
+    [SerializeField] private bool requireStartupLoading = true;
+    [SerializeField, Min(0f)] private float startupLoadingMinimumSeconds = 2f;
+    [SerializeField, Min(0f)] private float particlePrewarmSeconds = 0.35f;
+    [SerializeField, Min(0f)] private float alembicPrewarmSampleTime = 0.05f;
+    [SerializeField] private Vector2 loadingBarSize = new Vector2(420f, 18f);
+    [SerializeField] private Color loadingFillColor = new Color(0.9f, 0.18f, 0.1f, 1f);
+    [SerializeField] private bool prewarmLightmaps = true;
+    [SerializeField] private bool prewarmBlizzardVideos = true;
+    [SerializeField] private bool prewarmAlembicTrees = true;
+    [SerializeField] private bool prewarmAnimators = true;
+    [SerializeField] private bool prewarmParticles = true;
+    [SerializeField] private bool prewarmShaders = true;
+
+    private CanvasGroup _selectionCanvasGroup;
+    private Selectable[] _selectionSelectables;
+    private GameObject _loadingRoot;
+    private Image _loadingFill;
+    private Text _loadingText;
+    private bool _startupLoadingComplete;
+    private Coroutine _startupLoadingCoroutine;
+
 
     private void Awake()
     {
         ActivateUiForPlayMode();
+        CacheSelectionControls();
+        BuildStartupLoadingUi();
         Time.timeScale = 0f;
+
+        if (requireStartupLoading)
+            SetSelectionInteractable(false);
+        else
+            CompleteStartupLoading(hideLoadingUi: true);
+    }
+
+    private void Start()
+    {
+        if (requireStartupLoading && _startupLoadingCoroutine == null)
+            _startupLoadingCoroutine = StartCoroutine(StartupLoadingCoroutine());
     }
 
     private void ActivateUiForPlayMode()
@@ -72,6 +109,8 @@ public class HUDManager : MonoBehaviour
 
     public void OnClickCombatPosition()
     {
+        if (!CanUseModeSelection()) return;
+
         ActivateGameplayBlizzard();
         introSequenceManager?.RestoreOriginalAnimator();
         Time.timeScale = 1f;
@@ -94,6 +133,8 @@ public class HUDManager : MonoBehaviour
 
     public void OnClickStartHere()
     {
+        if (!CanUseModeSelection()) return;
+
         _canvasUIStats.SetActive(false);
         playableAreaManager.SetActive(false);
         ActivateCinemachine();
@@ -125,6 +166,8 @@ public class HUDManager : MonoBehaviour
 
     public void OnClickFreeMove()
     {
+        if (!CanUseModeSelection()) return;
+
         ActivateGameplayBlizzard();
         introSequenceManager?.RestoreOriginalAnimator();
         Time.timeScale = 1f;
@@ -145,6 +188,302 @@ public class HUDManager : MonoBehaviour
         int activatedManagers = WindStateManager.ActivateAllVideoPlayersRoots();
         if (activatedManagers == 0)
             Debug.LogWarning("[HUDManager] No se encontró ningún WindStateManager para activar la ventisca.", this);
+    }
+
+    private IEnumerator StartupLoadingCoroutine()
+    {
+        SetSelectionInteractable(false);
+        SetLoadingVisible(true);
+        SetLoadingProgress(0f, "Preparando escena");
+
+        float loadingStartedAt = Time.realtimeSinceStartup;
+        yield return null;
+
+        if (prewarmLightmaps)
+            yield return StartCoroutine(PrewarmLightmapStates());
+        else
+            SetLoadingProgress(0.25f, "Bakes omitidos");
+
+        if (prewarmBlizzardVideos)
+        {
+            WindStateManager.PrewarmAllVideoPlayersHidden();
+            SetLoadingProgress(0.45f, "Preparando ventisca");
+            yield return null;
+        }
+
+        if (prewarmAlembicTrees)
+            yield return StartCoroutine(PrewarmAlembicTreePlayers());
+
+        if (prewarmAnimators)
+            yield return StartCoroutine(PrewarmSceneAnimators());
+
+        if (prewarmParticles)
+            yield return StartCoroutine(PrewarmSceneParticles());
+
+        if (prewarmShaders)
+        {
+            SetLoadingProgress(0.9f, "Calentando shaders");
+            Shader.WarmupAllShaders();
+            yield return null;
+        }
+
+        while (Time.realtimeSinceStartup - loadingStartedAt < startupLoadingMinimumSeconds)
+        {
+            float elapsed = Time.realtimeSinceStartup - loadingStartedAt;
+            float t = startupLoadingMinimumSeconds <= 0f ? 1f : Mathf.Clamp01(elapsed / startupLoadingMinimumSeconds);
+            SetLoadingProgress(Mathf.Lerp(0.92f, 0.99f, t), "Estabilizando primer frame");
+            yield return null;
+        }
+
+        SetLoadingProgress(1f, "Listo");
+        yield return new WaitForSecondsRealtime(0.2f);
+        CompleteStartupLoading(hideLoadingUi: true);
+        _startupLoadingCoroutine = null;
+    }
+
+    private IEnumerator PrewarmLightmapStates()
+    {
+        LightmapStateManager[] managers = Object.FindObjectsByType<LightmapStateManager>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None);
+
+        if (managers.Length == 0)
+        {
+            SetLoadingProgress(0.25f, "Sin bakes runtime");
+            yield return null;
+            yield break;
+        }
+
+        foreach (LightmapStateManager manager in managers)
+            manager.ApplyWarm1();
+        SetLoadingProgress(0.12f, "Bake warm 1");
+        yield return null;
+
+        foreach (LightmapStateManager manager in managers)
+            manager.ApplyWarm2();
+        SetLoadingProgress(0.2f, "Bake warm 2");
+        yield return null;
+
+        foreach (LightmapStateManager manager in managers)
+            manager.ApplyBlue();
+        SetLoadingProgress(0.25f, "Bake azul");
+        yield return null;
+
+        foreach (LightmapStateManager manager in managers)
+            manager.ApplyWarm1();
+    }
+
+    private IEnumerator PrewarmAlembicTreePlayers()
+    {
+        AlembicTreeWindController[] trees = Object.FindObjectsByType<AlembicTreeWindController>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None);
+
+        int processed = 0;
+        foreach (AlembicTreeWindController tree in trees)
+        {
+            if (tree == null || !tree.HasAvailablePlayers) continue;
+
+            tree.PrewarmPlayers(alembicPrewarmSampleTime);
+            processed++;
+
+            if (processed % 12 == 0)
+            {
+                SetLoadingProgress(Mathf.Lerp(0.45f, 0.62f, processed / Mathf.Max(1f, trees.Length)), "Preparando árboles");
+                yield return null;
+            }
+        }
+
+        SetLoadingProgress(0.62f, "Árboles preparados");
+        yield return null;
+    }
+
+    private IEnumerator PrewarmSceneAnimators()
+    {
+        Animator[] animators = Object.FindObjectsByType<Animator>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None);
+
+        int processed = 0;
+        foreach (Animator animator in animators)
+        {
+            if (animator == null || !animator.enabled || !animator.gameObject.activeInHierarchy)
+                continue;
+
+            animator.Update(0f);
+            processed++;
+
+            if (processed % 16 == 0)
+            {
+                SetLoadingProgress(Mathf.Lerp(0.62f, 0.72f, processed / Mathf.Max(1f, animators.Length)), "Preparando animaciones");
+                yield return null;
+            }
+        }
+
+        SetLoadingProgress(0.72f, "Animaciones preparadas");
+        yield return null;
+    }
+
+    private IEnumerator PrewarmSceneParticles()
+    {
+        ParticleSystem[] particles = Object.FindObjectsByType<ParticleSystem>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None);
+
+        int processed = 0;
+        foreach (ParticleSystem particle in particles)
+        {
+            if (particle == null || !particle.gameObject.activeInHierarchy)
+                continue;
+
+            bool wasPlaying = particle.isPlaying;
+            if (particlePrewarmSeconds > 0f)
+                particle.Simulate(particlePrewarmSeconds, true, true, false);
+
+            if (wasPlaying)
+                particle.Play(true);
+            else
+                particle.Clear(true);
+
+            processed++;
+
+            if (processed % 12 == 0)
+            {
+                SetLoadingProgress(Mathf.Lerp(0.72f, 0.84f, processed / Mathf.Max(1f, particles.Length)), "Preparando partículas");
+                yield return null;
+            }
+        }
+
+        SetLoadingProgress(0.84f, "Partículas preparadas");
+        yield return null;
+    }
+
+    private bool CanUseModeSelection()
+    {
+        if (_startupLoadingComplete)
+            return true;
+
+        Debug.Log("[HUDManager] La selección de modo está bloqueada hasta completar la carga inicial.", this);
+        return false;
+    }
+
+    private void CompleteStartupLoading(bool hideLoadingUi)
+    {
+        _startupLoadingComplete = true;
+        SetSelectionInteractable(true);
+        SetLoadingProgress(1f, "Listo");
+
+        if (hideLoadingUi)
+            SetLoadingVisible(false);
+    }
+
+    private void CacheSelectionControls()
+    {
+        if (selectionPanel == null) return;
+
+        _selectionCanvasGroup = selectionPanel.GetComponent<CanvasGroup>();
+        if (_selectionCanvasGroup == null)
+            _selectionCanvasGroup = selectionPanel.AddComponent<CanvasGroup>();
+
+        _selectionSelectables = selectionPanel.GetComponentsInChildren<Selectable>(true);
+    }
+
+    private void SetSelectionInteractable(bool interactable)
+    {
+        if (_selectionCanvasGroup != null)
+        {
+            _selectionCanvasGroup.interactable = interactable;
+            _selectionCanvasGroup.blocksRaycasts = true;
+        }
+
+        if (_selectionSelectables == null) return;
+
+        foreach (Selectable selectable in _selectionSelectables)
+        {
+            if (selectable != null)
+                selectable.interactable = interactable;
+        }
+    }
+
+    private void BuildStartupLoadingUi()
+    {
+        if (_canvasMain == null || _loadingRoot != null)
+            return;
+
+        _loadingRoot = new GameObject("StartupLoading");
+        _loadingRoot.transform.SetParent(_canvasMain.transform, false);
+
+        RectTransform rootRect = _loadingRoot.AddComponent<RectTransform>();
+        rootRect.anchorMin = new Vector2(0f, 0f);
+        rootRect.anchorMax = new Vector2(1f, 1f);
+        rootRect.offsetMin = Vector2.zero;
+        rootRect.offsetMax = Vector2.zero;
+
+        GameObject label = new GameObject("Label");
+        label.transform.SetParent(_loadingRoot.transform, false);
+        _loadingText = label.AddComponent<Text>();
+        _loadingText.alignment = TextAnchor.MiddleCenter;
+        _loadingText.color = new Color(0.82f, 0.82f, 0.82f, 1f);
+        _loadingText.font = ResolveBuiltinFont();
+        _loadingText.fontSize = 18;
+        _loadingText.text = "Preparando escena";
+
+        RectTransform labelRect = label.GetComponent<RectTransform>();
+        labelRect.anchorMin = new Vector2(0.5f, 0.5f);
+        labelRect.anchorMax = new Vector2(0.5f, 0.5f);
+        labelRect.sizeDelta = new Vector2(loadingBarSize.x, 28f);
+        labelRect.anchoredPosition = new Vector2(0f, -148f);
+
+        GameObject bar = new GameObject("Bar");
+        bar.transform.SetParent(_loadingRoot.transform, false);
+        Image barImage = bar.AddComponent<Image>();
+        barImage.color = new Color(0.11f, 0.11f, 0.11f, 0.95f);
+
+        RectTransform barRect = bar.GetComponent<RectTransform>();
+        barRect.anchorMin = new Vector2(0.5f, 0.5f);
+        barRect.anchorMax = new Vector2(0.5f, 0.5f);
+        barRect.sizeDelta = loadingBarSize;
+        barRect.anchoredPosition = new Vector2(0f, -178f);
+
+        GameObject fill = new GameObject("Fill");
+        fill.transform.SetParent(bar.transform, false);
+        _loadingFill = fill.AddComponent<Image>();
+        _loadingFill.color = loadingFillColor;
+
+        RectTransform fillRect = fill.GetComponent<RectTransform>();
+        fillRect.anchorMin = Vector2.zero;
+        fillRect.anchorMax = new Vector2(0f, 1f);
+        fillRect.offsetMin = Vector2.zero;
+        fillRect.offsetMax = Vector2.zero;
+
+        SetLoadingProgress(0f, "Preparando escena");
+    }
+
+    private Font ResolveBuiltinFont()
+    {
+        Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        return font != null ? font : Resources.GetBuiltinResource<Font>("Arial.ttf");
+    }
+
+    private void SetLoadingVisible(bool visible)
+    {
+        if (_loadingRoot != null)
+            _loadingRoot.SetActive(visible);
+    }
+
+    private void SetLoadingProgress(float progress, string label)
+    {
+        float clamped = Mathf.Clamp01(progress);
+
+        if (_loadingFill != null)
+        {
+            RectTransform fillRect = _loadingFill.rectTransform;
+            fillRect.anchorMax = new Vector2(clamped, 1f);
+            fillRect.offsetMax = Vector2.zero;
+        }
+
+        if (_loadingText != null)
+            _loadingText.text = $"{label}  {Mathf.RoundToInt(clamped * 100f)}%";
     }
 
     private void MovePlayerToX(float x)

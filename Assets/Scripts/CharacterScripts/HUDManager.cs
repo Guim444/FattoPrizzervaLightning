@@ -57,7 +57,7 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private bool prewarmAlembicTrees = true;
     [SerializeField] private bool prewarmAnimators = true;
     [SerializeField] private bool prewarmParticles = true;
-    [SerializeField] private bool prewarmShaders = true;
+    [SerializeField] private bool prewarmShaders = false;
 
     private CanvasGroup _selectionCanvasGroup;
     private Selectable[] _selectionSelectables;
@@ -222,8 +222,8 @@ public class HUDManager : MonoBehaviour
 
         if (prewarmShaders)
         {
-            SetLoadingProgress(0.9f, "Calentando shaders");
-            Shader.WarmupAllShaders();
+            Debug.LogWarning("[HUDManager] Shader warmup global desactivado: Shader.WarmupAllShaders puede generar asserts de keyword space con shaders de partículas URP. Usar ShaderVariantCollection si hace falta un warmup fino.", this);
+            SetLoadingProgress(0.9f, "Shaders omitidos");
             yield return null;
         }
 
@@ -379,13 +379,14 @@ public class HUDManager : MonoBehaviour
 
     private void CacheSelectionControls()
     {
-        if (selectionPanel == null) return;
+        GameObject controlsRoot = selectionPanel != null ? selectionPanel : _canvasMain;
+        if (controlsRoot == null) return;
 
-        _selectionCanvasGroup = selectionPanel.GetComponent<CanvasGroup>();
+        _selectionCanvasGroup = controlsRoot.GetComponent<CanvasGroup>();
         if (_selectionCanvasGroup == null)
-            _selectionCanvasGroup = selectionPanel.AddComponent<CanvasGroup>();
+            _selectionCanvasGroup = controlsRoot.AddComponent<CanvasGroup>();
 
-        _selectionSelectables = selectionPanel.GetComponentsInChildren<Selectable>(true);
+        _selectionSelectables = controlsRoot.GetComponentsInChildren<Selectable>(true);
     }
 
     private void SetSelectionInteractable(bool interactable)
@@ -407,17 +408,50 @@ public class HUDManager : MonoBehaviour
 
     private void BuildStartupLoadingUi()
     {
-        if (_canvasMain == null || _loadingRoot != null)
+        if (_loadingRoot != null)
             return;
 
-        _loadingRoot = new GameObject("StartupLoading");
-        _loadingRoot.transform.SetParent(_canvasMain.transform, false);
+        Transform loadingParent = uiRoot != null
+            ? uiRoot.transform
+            : (_canvasMain != null ? _canvasMain.transform : transform);
 
-        RectTransform rootRect = _loadingRoot.AddComponent<RectTransform>();
+        _loadingRoot = new GameObject(
+            "StartupLoadingCanvas",
+            typeof(RectTransform),
+            typeof(Canvas),
+            typeof(CanvasScaler),
+            typeof(GraphicRaycaster));
+        _loadingRoot.transform.SetParent(loadingParent, false);
+        _loadingRoot.transform.localPosition = Vector3.zero;
+        _loadingRoot.transform.localRotation = Quaternion.identity;
+        _loadingRoot.transform.localScale = Vector3.one;
+
+        Canvas loadingCanvas = _loadingRoot.GetComponent<Canvas>();
+        loadingCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        loadingCanvas.sortingOrder = 5000;
+
+        CanvasScaler canvasScaler = _loadingRoot.GetComponent<CanvasScaler>();
+        canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        canvasScaler.referenceResolution = new Vector2(1920f, 1080f);
+        canvasScaler.matchWidthOrHeight = 0.5f;
+
+        RectTransform rootRect = _loadingRoot.GetComponent<RectTransform>();
         rootRect.anchorMin = new Vector2(0f, 0f);
         rootRect.anchorMax = new Vector2(1f, 1f);
         rootRect.offsetMin = Vector2.zero;
         rootRect.offsetMax = Vector2.zero;
+
+        GameObject blockerObject = new GameObject("Blocker", typeof(RectTransform), typeof(Image));
+        blockerObject.transform.SetParent(_loadingRoot.transform, false);
+        RectTransform blockerRect = blockerObject.GetComponent<RectTransform>();
+        blockerRect.anchorMin = Vector2.zero;
+        blockerRect.anchorMax = Vector2.one;
+        blockerRect.offsetMin = Vector2.zero;
+        blockerRect.offsetMax = Vector2.zero;
+
+        Image blocker = blockerObject.GetComponent<Image>();
+        blocker.color = new Color(0.05f, 0.05f, 0.05f, 0.45f);
+        blocker.raycastTarget = true;
 
         GameObject label = new GameObject("Label");
         label.transform.SetParent(_loadingRoot.transform, false);
@@ -468,7 +502,11 @@ public class HUDManager : MonoBehaviour
     private void SetLoadingVisible(bool visible)
     {
         if (_loadingRoot != null)
+        {
             _loadingRoot.SetActive(visible);
+            if (visible)
+                _loadingRoot.transform.SetAsLastSibling();
+        }
     }
 
     private void SetLoadingProgress(float progress, string label)

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Formats.Alembic.Importer;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using UnityEngine.Video;
@@ -75,6 +76,11 @@ public class WindStateManager : MonoBehaviour
     [Header("Árboles Alembic")]
     [SerializeField] private AlembicTreeWindController[] treeControllers;
 
+    [Header("Alembic standalone")]
+    [Tooltip("Reproduce en loop el Alembic de la planta colocado en escena como Planta_MJ.")]
+    [SerializeField] private bool playPlantaMjAlembic = true;
+    [SerializeField, Min(0f)] private float plantaMjPlaybackSpeed = 1f;
+
     [Header("Preload / Playback")]
     [Tooltip("Crea el root y sus VideoPlayers en Awake. Si se desactiva, se crean al entrar en la iglesia.")]
     [SerializeField] private bool preloadPlayersOnAwake = true;
@@ -139,6 +145,9 @@ public class WindStateManager : MonoBehaviour
     private bool  _hasHorizontalMotionReference;
     private float _horizontalMotionReferenceX;
     private Camera _horizontalMotionReferenceCamera;
+    private readonly List<AlembicStreamPlayer> _plantaMjPlayers = new List<AlembicStreamPlayer>();
+    private readonly List<float> _plantaMjTimes = new List<float>();
+    private bool _plantaMjAutoPlaybackReported;
 
     private sealed class VideoSurface
     {
@@ -165,6 +174,7 @@ public class WindStateManager : MonoBehaviour
         _cameraWasAssigned = blizzardVideoCamera != null;
 
         ResolveMissingReferences();
+        ResolvePlantaMjAlembicPlayers();
 
         if (preloadPlayersOnAwake)
             BuildAndPrepareFixedPlayers();
@@ -197,6 +207,8 @@ public class WindStateManager : MonoBehaviour
         // Mantiene el alpha correcto aunque algún prepareCompleted tardío,
         // recarga de escena o llamada repetida apague el player activo.
         MaintainActiveVideoAlpha();
+
+        AdvancePlantaMjAlembicPlayers();
     }
 
     private void LateUpdate()
@@ -382,6 +394,7 @@ public class WindStateManager : MonoBehaviour
 
         _videoPlayersVisible = wasVisible;
         ApplyCurrentVideoAlphas();
+        PrewarmPlantaMjAlembicPlayers(0.05f);
     }
 
     // ── Preload de VideoPlayers fijos ─────────────────────────────────────────
@@ -851,6 +864,7 @@ public class WindStateManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         ResolveMissingReferences();
+        ResolvePlantaMjAlembicPlayers();
         AssignCameraToAllPlayers();
     }
 
@@ -1234,6 +1248,109 @@ public class WindStateManager : MonoBehaviour
 
         foreach (var tree in treeControllers)
             if (tree != null) tree.SetFast(fast);
+    }
+
+    // ── Alembic standalone ───────────────────────────────────────────────────
+
+    private void ResolvePlantaMjAlembicPlayers()
+    {
+        _plantaMjPlayers.Clear();
+        _plantaMjTimes.Clear();
+
+        if (!playPlantaMjAlembic)
+            return;
+
+        foreach (var player in Object.FindObjectsByType<AlembicStreamPlayer>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            if (player == null) continue;
+            if (player.GetComponentInParent<AlembicTreeWindController>(true) != null) continue;
+            if (!IsInsideNamedHierarchy(player.transform, "planta_mj")) continue;
+
+            _plantaMjPlayers.Add(player);
+            _plantaMjTimes.Add(GetClampedAlembicTime(player));
+        }
+
+        if (_plantaMjPlayers.Count > 0 && !_plantaMjAutoPlaybackReported)
+        {
+            _plantaMjAutoPlaybackReported = true;
+            Debug.Log($"[{nameof(WindStateManager)}] Planta_MJ Alembic enlazado para reproducción en loop: {_plantaMjPlayers.Count} player(s).", this);
+        }
+    }
+
+    private void AdvancePlantaMjAlembicPlayers()
+    {
+        if (!playPlantaMjAlembic || _plantaMjPlayers.Count == 0)
+            return;
+
+        float speed = Mathf.Max(0f, plantaMjPlaybackSpeed);
+        if (speed <= 0f)
+            return;
+
+        for (int i = _plantaMjPlayers.Count - 1; i >= 0; i--)
+        {
+            AlembicStreamPlayer player = _plantaMjPlayers[i];
+            if (player == null)
+            {
+                _plantaMjPlayers.RemoveAt(i);
+                _plantaMjTimes.RemoveAt(i);
+                continue;
+            }
+
+            float duration = player.Duration;
+            if (duration <= 0f) continue;
+
+            float time = _plantaMjTimes[i] + Time.deltaTime * speed;
+            if (time > duration)
+                time %= duration;
+
+            _plantaMjTimes[i] = time;
+            player.CurrentTime = time;
+        }
+    }
+
+    private void PrewarmPlantaMjAlembicPlayers(float sampleTime)
+    {
+        if (!playPlantaMjAlembic)
+            return;
+
+        if (_plantaMjPlayers.Count == 0)
+            ResolvePlantaMjAlembicPlayers();
+
+        for (int i = 0; i < _plantaMjPlayers.Count; i++)
+        {
+            AlembicStreamPlayer player = _plantaMjPlayers[i];
+            if (player == null) continue;
+
+            float duration = player.Duration;
+            if (duration <= 0f) continue;
+
+            float time = Mathf.Clamp(sampleTime, 0f, duration);
+            _plantaMjTimes[i] = time;
+            player.CurrentTime = time;
+        }
+    }
+
+    private static float GetClampedAlembicTime(AlembicStreamPlayer player)
+    {
+        if (player == null) return 0f;
+
+        float duration = player.Duration;
+        if (duration <= 0f) return 0f;
+
+        return Mathf.Clamp((float)player.CurrentTime, 0f, duration);
+    }
+
+    private static bool IsInsideNamedHierarchy(Transform candidate, string normalizedName)
+    {
+        while (candidate != null)
+        {
+            if (candidate.name.ToLowerInvariant().Contains(normalizedName))
+                return true;
+
+            candidate = candidate.parent;
+        }
+
+        return false;
     }
 
     // ── Auto-reparación de referencias ───────────────────────────────────────

@@ -61,9 +61,7 @@ public class AlembicTreeWindController : MonoBehaviour
         float duration = player.Duration;
         if (duration <= 0f) return;
 
-        time += Time.deltaTime * speed;
-        if (time > duration) time -= duration;
-
+        time = WrapAlembicTime(time + Time.deltaTime * speed, duration);
         player.CurrentTime = time;
     }
 
@@ -131,6 +129,14 @@ public class AlembicTreeWindController : MonoBehaviour
         if (fastPlayer != null) fastPlayer.gameObject.SetActive(useFast);
     }
 
+    public void SetPlaybackOffset(float offsetSeconds)
+    {
+        ResolveMissingPlayers();
+
+        _slowTime = SamplePlayerAtOffset(slowPlayer, offsetSeconds);
+        _fastTime = SamplePlayerAtOffset(fastPlayer, offsetSeconds);
+    }
+
     public void PrewarmPlayers(float sampleTime)
     {
         ResolveMissingPlayers();
@@ -153,5 +159,28 @@ public class AlembicTreeWindController : MonoBehaviour
 
         if (!wasActive)
             player.gameObject.SetActive(false);
+    }
+
+    private static float SamplePlayerAtOffset(AlembicStreamPlayer player, float offsetSeconds)
+    {
+        if (player == null) return 0f;
+
+        float duration = player.Duration;
+        if (duration <= 0f) return 0f;
+
+        float time = WrapAlembicTime(offsetSeconds, duration);
+        player.CurrentTime = time;
+        return time;
+    }
+
+    private static float WrapAlembicTime(float time, float duration)
+    {
+        if (duration <= 0f) return 0f;
+
+        time %= duration;
+        if (time < 0f)
+            time += duration;
+
+        return time;
     }
 }

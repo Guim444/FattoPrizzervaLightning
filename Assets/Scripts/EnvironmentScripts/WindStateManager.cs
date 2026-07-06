@@ -75,6 +75,8 @@ public class WindStateManager : MonoBehaviour
 
     [Header("Árboles Alembic")]
     [SerializeField] private AlembicTreeWindController[] treeControllers;
+    [Tooltip("Desfase en segundos entre cada TreeController del array. 0.3 = cada árbol empieza 0.3s más adelante que el anterior.")]
+    [SerializeField, Min(0f)] private float treePlaybackOffsetStep = 0.3f;
 
     [Header("Alembic standalone")]
     [Tooltip("Reproduce en loop el Alembic de la planta colocado en escena como Planta_MJ.")]
@@ -174,6 +176,7 @@ public class WindStateManager : MonoBehaviour
         _cameraWasAssigned = blizzardVideoCamera != null;
 
         ResolveMissingReferences();
+        ApplyTreePlaybackOffsets();
         ResolvePlantaMjAlembicPlayers();
 
         if (preloadPlayersOnAwake)
@@ -864,6 +867,7 @@ public class WindStateManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         ResolveMissingReferences();
+        ApplyTreePlaybackOffsets();
         ResolvePlantaMjAlembicPlayers();
         AssignCameraToAllPlayers();
     }
@@ -1248,6 +1252,20 @@ public class WindStateManager : MonoBehaviour
 
         foreach (var tree in treeControllers)
             if (tree != null) tree.SetFast(fast);
+    }
+
+    private void ApplyTreePlaybackOffsets()
+    {
+        if (treeControllers == null)
+            return;
+
+        float offsetStep = Mathf.Max(0f, treePlaybackOffsetStep);
+        for (int i = 0; i < treeControllers.Length; i++)
+        {
+            AlembicTreeWindController tree = treeControllers[i];
+            if (tree != null)
+                tree.SetPlaybackOffset(i * offsetStep);
+        }
     }
 
     // ── Alembic standalone ───────────────────────────────────────────────────

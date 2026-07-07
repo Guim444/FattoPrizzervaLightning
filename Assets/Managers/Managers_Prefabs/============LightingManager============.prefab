@@ -413,7 +413,18 @@ MonoBehaviour:
   quadCameraDistance: 3
   quadCameraLocalOffset: {x: 0, y: 0, z: 0}
   quadViewportOverscan: 1.12
+  horizontalMotionCompensation: 0.35
+  horizontalWorldUnitsPerTextureRepeat: 24
   blizzardRenderingLayerMask: 4294967295
+  enableIdleBackgroundLayer: 1
+  idleBackgroundAnchoredToWorld: 1
+  idleBackgroundWidth: 160
+  idleBackgroundHeight: 90
+  idleBackgroundDepth: 80
+  idleBackgroundOffset: {x: 0, y: 0}
+  idleBackgroundUvTiling: {x: 4, y: 3}
+  idleBackgroundOpacityMultiplier: 0.35
+  idleBackgroundHorizontalMotionCompensation: 0.12
   blizzardVideoClip: {fileID: 32900000, guid: a60fd6f076ed8644e84a910246c5eed2, type: 3}
   blizzardVideoPlayer: {fileID: 0}
   blizzardVideoCamera: {fileID: 0}

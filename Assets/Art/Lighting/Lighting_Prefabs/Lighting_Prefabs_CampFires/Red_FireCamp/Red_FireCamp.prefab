@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 961774499568666790}
   - component: {fileID: 8357206804224871365}
-  - component: {fileID: 3069635889447301278}
+  - component: {fileID: 7296255178060313001}
   m_Layer: 0
   m_Name: Fire_Red_FireCamp_0
   m_TagString: Untagged
@@ -88,28 +88,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &3069635889447301278
-Animator:
-  serializedVersion: 7
+--- !u!114 &7296255178060313001
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2576914894740839063}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: dc3c8a104cd493644bac40a6185698d3, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4c657ab88c242f4871396fbf90ff936, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  videoClip: {fileID: 32900000, guid: 5df43bbb0ad432c4da4a67d123bb681e, type: 3}
+  playOnAwake: 1
+  keepSpriteUntilPrepared: 1
+  renderTextureWidth: 0
+  renderTextureHeight: 0
+  surfaceName: VideoSurface
+  localOffset: {x: 0, y: 0, z: 0}
+  sizeMultiplier: {x: 1, y: 1}
+  copySpriteRendererSorting: 1
 --- !u!1 &5215303394725099564
 GameObject:
   m_ObjectHideFlags: 0

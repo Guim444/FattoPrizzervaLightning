@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5821838431034117978}
   - component: {fileID: 525319430904974159}
   - component: {fileID: 3633038857487357919}
+  - component: {fileID: 114502000000000012}
   m_Layer: 0
   m_Name: Candle_Center_Blue
   m_TagString: Untagged
@@ -110,3 +111,24 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &114502000000000012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3567551817931217417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4c657ab88c242f4871396fbf90ff936, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  videoClip: {fileID: 32900000, guid: ae27812e9f2da304aaac7c989f174b70, type: 3}
+  playOnAwake: 1
+  keepSpriteUntilPrepared: 1
+  renderTextureWidth: 0
+  renderTextureHeight: 0
+  surfaceName: VideoSurface
+  localOffset: {x: 0, y: 0, z: 0}
+  sizeMultiplier: {x: 1, y: 1}
+  copySpriteRendererSorting: 1

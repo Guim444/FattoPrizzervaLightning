@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4327354391811305481}
   - component: {fileID: 4957436108520152914}
   - component: {fileID: 6276299269120632316}
+  - component: {fileID: 114501000000000014}
   m_Layer: 0
   m_Name: Fire_Blue_Brazier4_0
   m_TagString: Untagged
@@ -205,3 +206,24 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5083ab33662252f4282dc481f6071065, type: 3}
   m_PrefabInstance: {fileID: 9066996041275610047}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &114501000000000014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986189523982291633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4c657ab88c242f4871396fbf90ff936, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  videoClip: {fileID: 32900000, guid: bbd07a6244d979b48b9a90511aafbe79, type: 3}
+  playOnAwake: 1
+  keepSpriteUntilPrepared: 1
+  renderTextureWidth: 0
+  renderTextureHeight: 0
+  surfaceName: VideoSurface
+  localOffset: {x: 0, y: 0, z: 0}
+  sizeMultiplier: {x: 1, y: 1}
+  copySpriteRendererSorting: 1

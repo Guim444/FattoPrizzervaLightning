@@ -7991,10 +7991,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2102239963}
     m_Modifications:
-    - target: {fileID: 170569594231421946, guid: 7c9b1d4f697143946ba81e77440a2e0a, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 4bcaa77bfebf1a84092980230d0fe5bf, type: 2}
     - target: {fileID: 4749326227318138526, guid: 7c9b1d4f697143946ba81e77440a2e0a, type: 3}
       propertyPath: m_LocalPosition.x
       value: -8.984
@@ -8038,22 +8034,6 @@ PrefabInstance:
     - target: {fileID: 5648572221191665219, guid: 7c9b1d4f697143946ba81e77440a2e0a, type: 3}
       propertyPath: m_Name
       value: Brazier_Red1 (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 6140770267340095072, guid: 7c9b1d4f697143946ba81e77440a2e0a, type: 3}
-      propertyPath: m_Size.x
-      value: 0.4501058
-      objectReference: {fileID: 0}
-    - target: {fileID: 6140770267340095072, guid: 7c9b1d4f697143946ba81e77440a2e0a, type: 3}
-      propertyPath: m_Size.y
-      value: 0.4275
-      objectReference: {fileID: 0}
-    - target: {fileID: 6140770267340095072, guid: 7c9b1d4f697143946ba81e77440a2e0a, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 2133442568, guid: d54d9bfb63ef46447845360aa4547004, type: 3}
-    - target: {fileID: 6140770267340095072, guid: 7c9b1d4f697143946ba81e77440a2e0a, type: 3}
-      propertyPath: m_WasSpriteAssigned
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -26946,43 +26926,6 @@ Transform:
   - {fileID: 1024656098}
   m_Father: {fileID: 1432079889}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!84 &1640429579
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 256
-  m_Height: 256
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 0
-  m_ColorFormat: 8
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 0
-    m_WrapV: 0
-    m_WrapW: 0
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1001 &1646116959
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27865,7 +27808,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
-        m_Texture: {fileID: 1640429579}
+        m_Texture: {fileID: 2059120794}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -27888,7 +27831,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DetailColor: {r: 0.5231373, g: 0.5231373, b: 0.5231373, a: 0}
     - _DetailData: {r: 0.5, g: 4, b: -0.5, a: 0}
-    - _DetailWindDirection: {r: 0.29674506, g: 0, b: 0, a: 0}
+    - _DetailWindDirection: {r: 0.75964594, g: 0, b: 0, a: 0}
     - _DistanceData: {r: 0, g: 7.74, b: 0.000004, a: 0.007741638}
     - _FogOfWarCenter: {r: 0, g: 0, b: 0, a: 1}
     - _FogOfWarCenterAdjusted: {r: 0, g: 0, b: 0, a: 1}
@@ -27901,7 +27844,7 @@ Material:
     - _ShadowData: {r: 0.4, g: 0, b: 250, a: 0}
     - _SpecularColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
     - _SunDir: {r: 0.88837695, g: 0.45570028, b: -0.055891793, a: 0}
-    - _WindDirection: {r: 0.29674506, g: 0, b: 0, a: 0}
+    - _WindDirection: {r: 0.75964594, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!84 &1714280917
@@ -29874,7 +29817,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8949837344184964250, guid: 18e3c7bc662375144a69bceb2e0dad74, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -31644,6 +31588,43 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5480997286640537182, guid: b19c8b283a22e49419a4662e0a682573, type: 3}
   m_PrefabInstance: {fileID: 4571003646763675979}
   m_PrefabAsset: {fileID: 0}
+--- !u!84 &2059120794
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 6
+  m_Width: 256
+  m_Height: 256
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 0
+  m_ColorFormat: 8
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_UseDynamicScaleExplicit: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 0
+    m_WrapV: 0
+    m_WrapW: 0
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1 &2066749389
 GameObject:
   m_ObjectHideFlags: 0
@@ -37879,14 +37860,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2102239963}
     m_Modifications:
-    - target: {fileID: 1172238805138656828, guid: f928eab3dbb38b643bd7ab2d48ab5c90, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -1394218323, guid: ffe315a4e1b855141a15c39c5e2bf801, type: 3}
-    - target: {fileID: 1172238805138656828, guid: f928eab3dbb38b643bd7ab2d48ab5c90, type: 3}
-      propertyPath: m_WasSpriteAssigned
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5132656793838334787, guid: f928eab3dbb38b643bd7ab2d48ab5c90, type: 3}
       propertyPath: m_Name
       value: Brazier_Red4
@@ -37931,10 +37904,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7284110270940954663, guid: f928eab3dbb38b643bd7ab2d48ab5c90, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 4bcaa77bfebf1a84092980230d0fe5bf, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -38530,14 +38499,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2102239963}
     m_Modifications:
-    - target: {fileID: 1350881886389746208, guid: e60873ae14d89fa468bd69a9be79f698, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 699365596, guid: e77567ba7d318e3459e43c92bda0ce02, type: 3}
-    - target: {fileID: 1350881886389746208, guid: e60873ae14d89fa468bd69a9be79f698, type: 3}
-      propertyPath: m_WasSpriteAssigned
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8919249887692954989, guid: e60873ae14d89fa468bd69a9be79f698, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.0290015
@@ -38805,7 +38766,8 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5744016739640043462, guid: 17334b87be3a708458ff5f46ef2b43ba, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -39960,26 +39922,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Brazier_Red2
       objectReference: {fileID: 0}
-    - target: {fileID: 4559814774046624958, guid: 047f824eca72c604390f25ccc28d30a3, type: 3}
-      propertyPath: m_Size.x
-      value: 0.6430083
-      objectReference: {fileID: 0}
-    - target: {fileID: 4559814774046624958, guid: 047f824eca72c604390f25ccc28d30a3, type: 3}
-      propertyPath: m_Size.y
-      value: 0.6107143
-      objectReference: {fileID: 0}
-    - target: {fileID: 4559814774046624958, guid: 047f824eca72c604390f25ccc28d30a3, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 1917461574, guid: b4bb51a54e3b3074f92329f249075db6, type: 3}
-    - target: {fileID: 4559814774046624958, guid: 047f824eca72c604390f25ccc28d30a3, type: 3}
-      propertyPath: m_WasSpriteAssigned
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9051781120159060518, guid: 047f824eca72c604390f25ccc28d30a3, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 4bcaa77bfebf1a84092980230d0fe5bf, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -40663,7 +40605,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: CandleGral_Right_Blue
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3129066225396704980, guid: 4e3a75c77222dfe4ba28e736d352e47a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -41801,25 +41744,33 @@ PrefabInstance:
       value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
+      propertyPath: windStates.Array.data[1].idleOpacity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
+      propertyPath: windStates.Array.data[2].idleOpacity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
       propertyPath: windStates.Array.data[3].idleOpacity
-      value: 0.07
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
       propertyPath: windStates.Array.data[0].idleLoopClip
       value: 
-      objectReference: {fileID: 32900000, guid: f498ec8f88beeea45926a691d6b557de, type: 3}
+      objectReference: {fileID: 32900000, guid: 4f57ca16bbfeb8b4aba6bf2133c73682, type: 3}
     - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
       propertyPath: windStates.Array.data[1].idleLoopClip
       value: 
-      objectReference: {fileID: 32900000, guid: f21af7c76901d024288564f9c65427b2, type: 3}
+      objectReference: {fileID: 32900000, guid: 60439cdfd226b2d4096ade7488baa8ae, type: 3}
     - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
       propertyPath: windStates.Array.data[2].idleLoopClip
       value: 
-      objectReference: {fileID: 32900000, guid: 5c041aafd8dfe024fb9c94919b11285e, type: 3}
+      objectReference: {fileID: 32900000, guid: c9c5ec67be8457e4c8fb3ad58f397eaf, type: 3}
     - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
       propertyPath: windStates.Array.data[3].idleLoopClip
       value: 
-      objectReference: {fileID: 32900000, guid: f498ec8f88beeea45926a691d6b557de, type: 3}
+      objectReference: {fileID: 32900000, guid: 4f57ca16bbfeb8b4aba6bf2133c73682, type: 3}
     - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
       propertyPath: windStates.Array.data[0].transitionClip
       value: 
@@ -41827,22 +41778,30 @@ PrefabInstance:
     - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
       propertyPath: windStates.Array.data[1].transitionClip
       value: 
-      objectReference: {fileID: 32900000, guid: 4d1c047b0fe4d3d449f9c06fab560371, type: 3}
+      objectReference: {fileID: 32900000, guid: f99029239ec68af43b7c124480140815, type: 3}
     - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
       propertyPath: windStates.Array.data[2].transitionClip
       value: 
-      objectReference: {fileID: 32900000, guid: c5037f46a21e0e44c88762fea4f2aecf, type: 3}
+      objectReference: {fileID: 32900000, guid: 683aa5e7e2275f3478b7f9d23bd21420, type: 3}
     - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
       propertyPath: windStates.Array.data[3].transitionClip
       value: 
-      objectReference: {fileID: 32900000, guid: 497c31f496a16be4db59d140d74ce83a, type: 3}
+      objectReference: {fileID: 32900000, guid: b4db4ad2d988b26419a9964c2def23a6, type: 3}
     - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
       propertyPath: windStates.Array.data[0].transitionOpacity
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
+      propertyPath: windStates.Array.data[1].transitionOpacity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
+      propertyPath: windStates.Array.data[2].transitionOpacity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7443403615731962900, guid: 2d9375674999f234493c06101bc5c824, type: 3}
       propertyPath: windStates.Array.data[3].transitionOpacity
-      value: 0.1
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8183958482278946327, guid: 2d9375674999f234493c06101bc5c824, type: 3}
       propertyPath: m_Name
@@ -41976,10 +41935,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2102239963}
     m_Modifications:
-    - target: {fileID: 170569594231421946, guid: 7c9b1d4f697143946ba81e77440a2e0a, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 4bcaa77bfebf1a84092980230d0fe5bf, type: 2}
     - target: {fileID: 4749326227318138526, guid: 7c9b1d4f697143946ba81e77440a2e0a, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.982
@@ -42024,22 +41979,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Brazier_Red1
       objectReference: {fileID: 0}
-    - target: {fileID: 6140770267340095072, guid: 7c9b1d4f697143946ba81e77440a2e0a, type: 3}
-      propertyPath: m_Size.x
-      value: 0.4501058
-      objectReference: {fileID: 0}
-    - target: {fileID: 6140770267340095072, guid: 7c9b1d4f697143946ba81e77440a2e0a, type: 3}
-      propertyPath: m_Size.y
-      value: 0.4275
-      objectReference: {fileID: 0}
-    - target: {fileID: 6140770267340095072, guid: 7c9b1d4f697143946ba81e77440a2e0a, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 2133442568, guid: d54d9bfb63ef46447845360aa4547004, type: 3}
-    - target: {fileID: 6140770267340095072, guid: 7c9b1d4f697143946ba81e77440a2e0a, type: 3}
-      propertyPath: m_WasSpriteAssigned
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -42077,14 +42016,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2102239963}
     m_Modifications:
-    - target: {fileID: 2027638681851748403, guid: 230090b4e610bd845a2c8caba4dbd6ab, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3558436999555815881, guid: 230090b4e610bd845a2c8caba4dbd6ab, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 4bcaa77bfebf1a84092980230d0fe5bf, type: 2}
     - target: {fileID: 4110659132977643134, guid: 230090b4e610bd845a2c8caba4dbd6ab, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.471
@@ -42125,21 +42056,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4741541790101013595, guid: 230090b4e610bd845a2c8caba4dbd6ab, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5260614960492719307, guid: 230090b4e610bd845a2c8caba4dbd6ab, type: 3}
       propertyPath: m_Name
       value: Brazier_Red3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6151134871220600748, guid: 230090b4e610bd845a2c8caba4dbd6ab, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 1033378051, guid: 2f94315942444ef40b1db0641b1af128, type: 3}
-    - target: {fileID: 6151134871220600748, guid: 230090b4e610bd845a2c8caba4dbd6ab, type: 3}
-      propertyPath: m_WasSpriteAssigned
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

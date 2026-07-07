@@ -114,10 +114,14 @@ public class WindStateManager : MonoBehaviour
 
     [Header("Video Surface - Idle Background Copy")]
     [SerializeField] private bool enableIdleBackgroundLayer = true;
-    [SerializeField, Min(0.01f)] private float idleBackgroundWidth = 42f;
-    [SerializeField, Min(0.01f)] private float idleBackgroundHeight = 24f;
-    [SerializeField, Min(0.01f)] private float idleBackgroundDepth = 18f;
+    [Tooltip("Ancla la capa grande al mundo cuando se hace visible. Si se desactiva, vuelve a seguir a la camara.")]
+    [SerializeField] private bool idleBackgroundAnchoredToWorld = true;
+    [SerializeField, Min(0.01f)] private float idleBackgroundWidth = 160f;
+    [SerializeField, Min(0.01f)] private float idleBackgroundHeight = 90f;
+    [SerializeField, Min(0.01f)] private float idleBackgroundDepth = 80f;
     [SerializeField] private Vector2 idleBackgroundOffset = Vector2.zero;
+    [Tooltip("Repeticiones del video sobre la capa grande para evitar que la ventisca se estire.")]
+    [SerializeField] private Vector2 idleBackgroundUvTiling = new Vector2(4f, 3f);
     [SerializeField, Range(0f, 1f)] private float idleBackgroundOpacityMultiplier = 0.35f;
     [SerializeField, Range(0f, 1f)] private float idleBackgroundHorizontalMotionCompensation = 0.12f;
 
@@ -160,11 +164,17 @@ public class WindStateManager : MonoBehaviour
         public RenderTexture texture;
         public bool ownsTexture;
         public bool usesFixedCameraPlane;
+        public bool usesWorldPlane;
+        public bool worldPoseInitialized;
         public float fixedWidth;
         public float fixedHeight;
         public float fixedDepth;
         public Vector2 fixedOffset;
+        public Vector2 uvTiling = Vector2.one;
         public float horizontalMotionCompensation;
+        public float alpha;
+        public Vector3 worldCenter;
+        public Quaternion worldRotation = Quaternion.identity;
         public readonly Vector3[] vertices = new Vector3[4];
         public readonly Vector2[] uvs = new Vector2[4];
     }
@@ -346,6 +356,7 @@ public class WindStateManager : MonoBehaviour
         _videoPlayersVisible = true;
         RefreshVideoCamera();
         ResetHorizontalMotionReference();
+        ResetWorldBackgroundAnchors();
 
         foreach (VideoPlayer player in _allPlayers)
         {
@@ -870,6 +881,7 @@ public class WindStateManager : MonoBehaviour
         ApplyTreePlaybackOffsets();
         ResolvePlantaMjAlembicPlayers();
         AssignCameraToAllPlayers();
+        ResetWorldBackgroundAnchors();
     }
 
     // ── Superficie de vídeo ───────────────────────────────────────────────────
@@ -929,10 +941,12 @@ public class WindStateManager : MonoBehaviour
         background.texture = texture;
         background.ownsTexture = false;
         background.usesFixedCameraPlane = true;
+        background.usesWorldPlane = idleBackgroundAnchoredToWorld;
         background.fixedWidth = idleBackgroundWidth;
         background.fixedHeight = idleBackgroundHeight;
         background.fixedDepth = idleBackgroundDepth;
         background.fixedOffset = idleBackgroundOffset;
+        background.uvTiling = ClampUvTiling(idleBackgroundUvTiling);
         background.horizontalMotionCompensation = idleBackgroundHorizontalMotionCompensation;
         if (background.material != null)
             background.material.renderQueue = (int)RenderQueue.Transparent + 5;
@@ -1057,13 +1071,15 @@ public class WindStateManager : MonoBehaviour
     {
         if (surface == null) return;
 
+        surface.alpha = Mathf.Clamp01(alpha);
+
         if (surface.renderer != null)
         {
-            surface.renderer.enabled = alpha > 0.001f;
+            surface.renderer.enabled = surface.alpha > 0.001f;
             surface.renderer.renderingLayerMask = blizzardRenderingLayerMask;
         }
 
-        SetSurfaceMaterialAlpha(surface.material, alpha);
+        SetSurfaceMaterialAlpha(surface.material, surface.alpha);
     }
 
     private void SetSurfaceMaterialAlpha(Material material, float alpha)
@@ -1114,11 +1130,25 @@ public class WindStateManager : MonoBehaviour
         Transform cameraTransform = blizzardVideoCamera.transform;
         Transform quadTransform = surface.quad.transform;
 
-        quadTransform.position = cameraTransform.position;
-        quadTransform.rotation = cameraTransform.rotation;
+        if (surface.usesWorldPlane)
+        {
+            if (!TryEnsureWorldPlanePose(surface, cameraTransform))
+                return;
+
+            quadTransform.position = surface.worldCenter;
+            quadTransform.rotation = surface.worldRotation;
+        }
+        else
+        {
+            quadTransform.position = cameraTransform.position;
+            quadTransform.rotation = cameraTransform.rotation;
+        }
+
         quadTransform.localScale = Vector3.one;
 
-        if (surface.usesFixedCameraPlane)
+        if (surface.usesFixedCameraPlane && surface.usesWorldPlane)
+            PositionWorldPlaneSurface(surface);
+        else if (surface.usesFixedCameraPlane)
             PositionFixedCameraPlaneSurface(surface);
         else
             PositionViewportSurface(surface, quadTransform);
@@ -1153,16 +1183,57 @@ public class WindStateManager : MonoBehaviour
         surface.vertices[3] = center + new Vector3( halfWidth, -halfHeight, 0f);
     }
 
+    private void PositionWorldPlaneSurface(VideoSurface surface)
+    {
+        float halfWidth = Mathf.Max(0.01f, surface.fixedWidth) * 0.5f;
+        float halfHeight = Mathf.Max(0.01f, surface.fixedHeight) * 0.5f;
+
+        surface.vertices[0] = new Vector3(-halfWidth, -halfHeight, 0f);
+        surface.vertices[1] = new Vector3(-halfWidth,  halfHeight, 0f);
+        surface.vertices[2] = new Vector3( halfWidth,  halfHeight, 0f);
+        surface.vertices[3] = new Vector3( halfWidth, -halfHeight, 0f);
+    }
+
     private void UpdateSurfaceUvs(VideoSurface surface)
     {
         float uOffset = GetHorizontalUvOffset(surface);
+        Vector2 uvTiling = ClampUvTiling(surface.uvTiling);
 
         surface.uvs[0] = new Vector2(uOffset, 0f);
-        surface.uvs[1] = new Vector2(uOffset, 1f);
-        surface.uvs[2] = new Vector2(1f + uOffset, 1f);
-        surface.uvs[3] = new Vector2(1f + uOffset, 0f);
+        surface.uvs[1] = new Vector2(uOffset, uvTiling.y);
+        surface.uvs[2] = new Vector2(uvTiling.x + uOffset, uvTiling.y);
+        surface.uvs[3] = new Vector2(uvTiling.x + uOffset, 0f);
 
         surface.mesh.uv = surface.uvs;
+    }
+
+    private bool TryEnsureWorldPlanePose(VideoSurface surface, Transform cameraTransform)
+    {
+        if (surface == null || cameraTransform == null)
+            return false;
+
+        if (surface.worldPoseInitialized)
+            return true;
+
+        if (surface.alpha <= 0.001f)
+            return false;
+
+        Vector3 localCenter = new Vector3(
+            surface.fixedOffset.x,
+            surface.fixedOffset.y,
+            Mathf.Max(0.01f, surface.fixedDepth));
+
+        surface.worldCenter = cameraTransform.TransformPoint(localCenter);
+        surface.worldRotation = cameraTransform.rotation;
+        surface.worldPoseInitialized = true;
+        return true;
+    }
+
+    private Vector2 ClampUvTiling(Vector2 tiling)
+    {
+        return new Vector2(
+            Mathf.Max(0.01f, tiling.x),
+            Mathf.Max(0.01f, tiling.y));
     }
 
     private float GetHorizontalUvOffset(VideoSurface surface)
@@ -1200,6 +1271,17 @@ public class WindStateManager : MonoBehaviour
         _horizontalMotionReferenceX = blizzardVideoCamera.transform.position.x;
         _horizontalMotionReferenceCamera = blizzardVideoCamera;
         _hasHorizontalMotionReference = true;
+    }
+
+    private void ResetWorldBackgroundAnchors()
+    {
+        foreach (VideoSurface surface in _idleBackgroundSurfaces.Values)
+        {
+            if (surface == null || !surface.usesWorldPlane)
+                continue;
+
+            surface.worldPoseInitialized = false;
+        }
     }
 
     private Vector3 GetViewportCornerLocal(Transform surfaceTransform, float viewportX, float viewportY, float distance)

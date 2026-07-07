@@ -319,7 +319,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5407188115998428456}
   - component: {fileID: 6140770267340095072}
-  - component: {fileID: 8827362222287429854}
+  - component: {fileID: 114501000000000001}
   m_Layer: 0
   m_Name: Fire_Red_Brazier1_0
   m_TagString: Untagged
@@ -386,39 +386,38 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: ce41a586fce22184db6f7698c38a88bb, type: 3}
+  m_Sprite: {fileID: 2133442568, guid: d54d9bfb63ef46447845360aa4547004, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 9, y: 8.55}
+  m_Size: {x: 0.4501058, y: 0.4275}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &8827362222287429854
-Animator:
-  serializedVersion: 7
+--- !u!114 &114501000000000001
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7821566957774409995}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 92e53477ea67cf44da9e1ad88b0696e4, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4c657ab88c242f4871396fbf90ff936, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  videoClip: {fileID: 32900000, guid: 0bdac1c2c4eb7f742ae25f426d3dbc66, type: 3}
+  playOnAwake: 1
+  keepSpriteUntilPrepared: 1
+  renderTextureWidth: 0
+  renderTextureHeight: 0
+  surfaceName: VideoSurface
+  localOffset: {x: 0, y: 0, z: 0}
+  sizeMultiplier: {x: 1, y: 1}
+  copySpriteRendererSorting: 1
 --- !u!1001 &1557235594252773246
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -470,7 +469,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 5083ab33662252f4282dc481f6071065, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 9ed0f5a2cada65b47a05f9cbe74978ab, type: 2}
+      objectReference: {fileID: 2100000, guid: 4bcaa77bfebf1a84092980230d0fe5bf, type: 2}
     - target: {fileID: -6372312433188386923, guid: 5083ab33662252f4282dc481f6071065, type: 3}
       propertyPath: m_Layer
       value: 2

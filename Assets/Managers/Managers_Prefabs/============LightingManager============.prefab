@@ -410,9 +410,11 @@ MonoBehaviour:
   prewarmPlayersWhileHidden: 1
   renderTextureWidth: 0
   renderTextureHeight: 0
-  quadCameraDistance: 3
-  quadCameraLocalOffset: {x: 0, y: 0, z: 0}
-  quadViewportOverscan: 1.12
+  cameraSurfaceWidth: 220
+  cameraSurfaceHeight: 140
+  cameraSurfaceDepth: 18
+  cameraSurfaceLocalOffset: {x: 0, y: 0}
+  cameraBackgroundDistanceFromFirst: 35
   horizontalMotionCompensation: 0.35
   horizontalWorldUnitsPerTextureRepeat: 24
   blizzardRenderingLayerMask: 4294967295

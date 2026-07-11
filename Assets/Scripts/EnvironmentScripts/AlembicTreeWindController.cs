@@ -9,9 +9,9 @@ using UnityEngine.Formats.Alembic.Importer;
 ///     └─ Slow       ← AlembicStreamPlayer con Tree_X_anim_slow.abc
 ///     └─ Fast       ← AlembicStreamPlayer con Tree_X_anim_fast.abc
 ///
-/// Ambos clips hacen loop manual avanzando currentTime cada frame.
-/// Solo el GO activo es visible; el otro sigue avanzando en background
-/// para que al reactivarse no salte a frame 0.
+/// Ambos clips hacen loop manual avanzando CurrentTime.
+/// Solo el GO activo se actualiza cada frame; al cambiar de velocidad,
+/// el clip que entra se sincroniza con la fase del clip que sale.
 /// </summary>
 public class AlembicTreeWindController : MonoBehaviour
 {
@@ -22,6 +22,10 @@ public class AlembicTreeWindController : MonoBehaviour
     [Header("Velocidades de reproducción (multiplicador sobre tiempo real)")]
     [SerializeField] private float slowPlaybackSpeed = 1f;
     [SerializeField] private float fastPlaybackSpeed = 1f;
+
+    [Header("Rendimiento")]
+    [Tooltip("Activa el comportamiento antiguo: el clip visible y el oculto avanzan cada frame. Útil solo para comparar stutter/jumps.")]
+    [SerializeField] private bool advanceInactivePlayersInBackground = false;
 
     private float _slowTime;
     private float _fastTime;
@@ -50,8 +54,11 @@ public class AlembicTreeWindController : MonoBehaviour
 
     private void Update()
     {
-        AdvancePlayer(slowPlayer, ref _slowTime, slowPlaybackSpeed);
-        AdvancePlayer(fastPlayer, ref _fastTime, fastPlaybackSpeed);
+        if (advanceInactivePlayersInBackground || IsPlayerActive(slowPlayer))
+            AdvancePlayer(slowPlayer, ref _slowTime, slowPlaybackSpeed);
+
+        if (advanceInactivePlayersInBackground || IsPlayerActive(fastPlayer))
+            AdvancePlayer(fastPlayer, ref _fastTime, fastPlaybackSpeed);
     }
 
     private void AdvancePlayer(AlembicStreamPlayer player, ref float time, float speed)
@@ -125,6 +132,9 @@ public class AlembicTreeWindController : MonoBehaviour
     {
         bool useFast = fastPlayer != null && (fast || slowPlayer == null);
 
+        if (!advanceInactivePlayersInBackground)
+            SyncPlayerBeforeSwitch(useFast);
+
         if (slowPlayer != null) slowPlayer.gameObject.SetActive(!useFast);
         if (fastPlayer != null) fastPlayer.gameObject.SetActive(useFast);
     }
@@ -171,6 +181,44 @@ public class AlembicTreeWindController : MonoBehaviour
         float time = WrapAlembicTime(offsetSeconds, duration);
         player.CurrentTime = time;
         return time;
+    }
+
+    private void SyncPlayerBeforeSwitch(bool useFast)
+    {
+        if (useFast)
+            SyncPlayerTime(slowPlayer, fastPlayer, _slowTime, ref _fastTime);
+        else
+            SyncPlayerTime(fastPlayer, slowPlayer, _fastTime, ref _slowTime);
+    }
+
+    private static void SyncPlayerTime(AlembicStreamPlayer source, AlembicStreamPlayer target, float sourceTime, ref float targetTime)
+    {
+        if (target == null) return;
+
+        float targetDuration = target.Duration;
+        if (targetDuration <= 0f) return;
+
+        float normalizedTime = 0f;
+        if (source != null && source.Duration > 0f)
+            normalizedTime = Mathf.Clamp01(sourceTime / source.Duration);
+        else
+            normalizedTime = Mathf.Clamp01(targetTime / targetDuration);
+
+        targetTime = WrapAlembicTime(normalizedTime * targetDuration, targetDuration);
+
+        bool wasActive = target.gameObject.activeSelf;
+        if (!wasActive)
+            target.gameObject.SetActive(true);
+
+        target.CurrentTime = targetTime;
+
+        if (!wasActive)
+            target.gameObject.SetActive(false);
+    }
+
+    private static bool IsPlayerActive(AlembicStreamPlayer player)
+    {
+        return player != null && player.gameObject.activeInHierarchy;
     }
 
     private static float WrapAlembicTime(float time, float duration)

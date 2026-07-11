@@ -38,8 +38,10 @@ public class PlayerDepthScaler : MonoBehaviour
         float t = Mathf.Clamp01(Mathf.InverseLerp(minZ, maxZ, z));
         float scaleFactor = Mathf.Lerp(maxScale, minScale, t);
 
-        // Preserve the sign on X to avoid breaking sprite flips
         float signX = Mathf.Sign(transform.localScale.x);
+        if (Mathf.Approximately(signX, 0f))
+            signX = 1f;
+
         transform.localScale = new Vector3(scaleFactor * signX, scaleFactor, scaleFactor);
     }
 }

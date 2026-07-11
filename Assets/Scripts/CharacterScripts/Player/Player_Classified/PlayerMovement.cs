@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
     public float punchRunningBaseSpeed = 6f;
 
     [Header("Visuals")]
-    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Transform visualFlipRoot;
 
     // ==================================================
     // TURN SPEEDS
@@ -71,6 +71,7 @@ public class PlayerMovement : MonoBehaviour
     private PlayerInputHandler _input;
     private PlayerController _playerController;
     private PlayerAnimations _animations;
+    private SpriteRenderer _spriteRenderer;
 
     // ==================================================
     // INITIALIZATION
@@ -82,6 +83,8 @@ public class PlayerMovement : MonoBehaviour
         _input = GetComponent<PlayerInputHandler>();
         _playerController = GetComponent<PlayerController>();
         _animations = GetComponent<PlayerAnimations>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+
         _verticalVelocity = -2f;
     }
 
@@ -109,7 +112,10 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 ApplyInertia(Vector3 inputDir, float deltaTime, float turnSpeed)
     {
         if (inputDir.magnitude > 0.1f)
+        {
             LastFacingDirection = inputDir.normalized;
+            ApplyCurrentStateSpriteFlip();
+        }
 
         var dir = Vector3.MoveTowards(LastDirection, inputDir, turnSpeed * deltaTime);
 
@@ -144,9 +150,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Mathf.Abs(dirZ) < 0.1f) return;
 
-        Vector3 scale = transform.localScale;
-        scale.x = dirZ < 0 ? -Mathf.Abs(scale.x) : Mathf.Abs(scale.x);
-        transform.localScale = scale;
+        ApplyVisualFlip(directionZ: dirZ, inverted: true);
     }
 
     private void UpdateSpriteFlip(float directionZ)
@@ -155,17 +159,89 @@ public class PlayerMovement : MonoBehaviour
         _playerController?.animator?.SetBool("IdleFront",
             Mathf.Abs(LastFacingDirection.x) > Mathf.Abs(directionZ));
 
-        if (spriteRenderer == null) return;
         if (Mathf.Abs(directionZ) < 0.1f) return;
 
-        // In this game the camera looks along X → Z is left/right on screen.
-        // Z < 0 → player faces left (positive scale)
-        // Z > 0 → player faces right (negative scale)
-        Vector3 scale = transform.localScale;
-        scale.x = directionZ < 0
-            ? Mathf.Abs(scale.x)
-            : -Mathf.Abs(scale.x);
-        transform.localScale = scale;
+        ApplyVisualFlip(directionZ, inverted: false);
+    }
+
+    private void ApplyVisualFlip(float directionZ, bool inverted)
+    {
+        float targetSign = GetFacingScaleSign(directionZ, inverted);
+
+        if (visualFlipRoot != null)
+            ApplyScaleSign(visualFlipRoot, targetSign);
+        else if (_spriteRenderer != null)
+            ApplySpriteRendererFlip(targetSign);
+        else
+            ApplyBodyScaleSign(targetSign);
+    }
+
+    public float GetFacingCompensatedCenterX(float baseCenterX)
+    {
+        if (visualFlipRoot != null || _spriteRenderer != null) return baseCenterX;
+
+        return baseCenterX / GetNonZeroSign(transform.localScale.x);
+    }
+
+    private float GetFacingScaleSign(float directionZ, bool inverted)
+    {
+        // This preserves the original project convention: Z drives screen left/right.
+        if (inverted)
+            return directionZ < 0f ? -1f : 1f;
+
+        return directionZ < 0f ? 1f : -1f;
+    }
+
+    private void ApplyScaleSign(Transform target, float sign)
+    {
+        Vector3 scale = target.localScale;
+        float magnitude = Mathf.Abs(scale.x);
+        if (Mathf.Approximately(magnitude, 0f))
+            magnitude = 1f;
+
+        scale.x = magnitude * sign;
+        target.localScale = scale;
+    }
+
+    private void ApplySpriteRendererFlip(float sign)
+    {
+        _spriteRenderer.flipX = sign < 0f;
+    }
+
+    private void ApplyBodyScaleSign(float sign)
+    {
+        float currentSign = GetNonZeroSign(transform.localScale.x);
+        if (Mathf.Approximately(currentSign, sign)) return;
+
+        Vector3 previousControllerWorldCenter = _cc != null
+            ? transform.TransformPoint(_cc.center)
+            : Vector3.zero;
+
+        ApplyScaleSign(transform, sign);
+
+        if (_cc == null) return;
+
+        Vector3 compensatedCenter = transform.InverseTransformPoint(previousControllerWorldCenter);
+        Vector3 center = _cc.center;
+        center.x = compensatedCenter.x;
+        _cc.center = center;
+    }
+
+    private float GetNonZeroSign(float value)
+    {
+        float sign = Mathf.Sign(value);
+        return Mathf.Approximately(sign, 0f) ? 1f : sign;
+    }
+
+    private void ApplyCurrentStateSpriteFlip()
+    {
+        if (_playerController == null) return;
+
+        State state = _playerController.currentState;
+        if (state == State.Moving || state == State.Running || state == State.Idle)
+            EnforceInvertedSpriteFlip();
+        else
+            RefreshSpriteFlip();
     }
 
     /// <summary>

@@ -8,6 +8,7 @@ public class PlayerAnimations : MonoBehaviour
     public bool pauseAnimatorControl = false;
 
     [Header("Character Controller: Idle Front")]
+    [SerializeField] private bool lockControllerCenterX = true;
     [SerializeField] private float idleFrontCenterX = 0f;
     [SerializeField] private float defaultCenterX = -1f;
 
@@ -58,6 +59,14 @@ public class PlayerAnimations : MonoBehaviour
         EnforceSpriteFlip();
     }
 
+    void OnDidApplyAnimationProperties()
+    {
+        if (player == null || animator == null) return;
+        if (pauseAnimatorControl) return;
+
+        EnforceSpriteFlip();
+    }
+
     bool IsAnimatorInIdleFront()
     {
         const int baseLayer = 0;
@@ -72,17 +81,22 @@ public class PlayerAnimations : MonoBehaviour
     void UpdateCharacterControllerCenter(bool isIdleFront)
     {
         if (_characterController == null) return;
+        if (lockControllerCenterX) return;
 
-        float targetX;
+        float baseTargetX;
         if (isIdleFront)
-            targetX = idleFrontCenterX;
+            baseTargetX = idleFrontCenterX;
         else
         {
             bool isMoving = player.currentState == State.Moving
                          || player.currentState == State.Running
                          || player.currentState == State.PunchRunning;
-            targetX = isMoving ? idleFrontCenterX : defaultCenterX;
+            baseTargetX = isMoving ? idleFrontCenterX : defaultCenterX;
         }
+
+        float targetX = player.movement != null
+            ? player.movement.GetFacingCompensatedCenterX(baseTargetX)
+            : baseTargetX;
 
         if (Mathf.Approximately(_characterController.center.x, targetX)) return;
 
@@ -93,6 +107,8 @@ public class PlayerAnimations : MonoBehaviour
 
     void EnforceSpriteFlip()
     {
+        if (player == null || player.movement == null) return;
+
         var state = player.currentState;
 
         if (state == State.Moving || state == State.Running || state == State.Idle)

@@ -62,8 +62,8 @@ MonoBehaviour:
       startIntensity: 2
       targetIntensity: 2
     - light: {fileID: 0}
-      startIntensity: 0.005
-      targetIntensity: 0.005
+      startIntensity: 0.01
+      targetIntensity: 0.01
     - light: {fileID: 0}
       startIntensity: 2
       targetIntensity: 2
@@ -89,11 +89,11 @@ MonoBehaviour:
       startIntensity: 20
       targetIntensity: 20
     - light: {fileID: 0}
-      startIntensity: 4
-      targetIntensity: 4
+      startIntensity: 10.28
+      targetIntensity: 10.28
     - light: {fileID: 0}
-      startIntensity: 7
-      targetIntensity: 7
+      startIntensity: 20
+      targetIntensity: 20
   - stateName: Radiografia
     skyAnimatorTrigger: Radiog
     entries:

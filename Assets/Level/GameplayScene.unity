@@ -1178,6 +1178,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 301409532}
     m_Modifications:
+    - target: {fileID: 918273645091827364, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1009434755670034052, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -1238,6 +1242,14 @@ PrefabInstance:
       propertyPath: onDied.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1713666894}
+    - target: {fileID: 5181433476781225031, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: visualFlipRoot
+      value: 
+      objectReference: {fileID: 2004004907}
+    - target: {fileID: 7686821030642128762, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: m_Center.x
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2388,28 +2400,27 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4654253183378279498, guid: 63b2d33719d5275479a7038743b4f1b0, type: 3}
   m_PrefabInstance: {fileID: 3998327810194665210}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &1209652342
-Animator:
-  serializedVersion: 7
+--- !u!114 &1209652344
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1041187257}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 28a9bd20bfb47d54aa121a812e13e3e5, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4c657ab88c242f4871396fbf90ff936, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  videoClip: {fileID: 32900000, guid: c10544840a8e55e45bff37cbfa62330c, type: 3}
+  playOnAwake: 1
+  keepSpriteUntilPrepared: 1
+  renderTextureWidth: 0
+  renderTextureHeight: 0
+  surfaceName: VideoSurface
+  localOffset: {x: 0, y: 0, z: 0}
+  sizeMultiplier: {x: 1, y: 1}
+  copySpriteRendererSorting: 1
 --- !u!1 &1302313188
 GameObject:
   m_ObjectHideFlags: 0
@@ -2537,7 +2548,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1473173184}
   - component: {fileID: 1473173183}
-  - component: {fileID: 1473173182}
+  - component: {fileID: 1473173185}
   m_Layer: 0
   m_Name: Animation_General_Bandana_SpriteSheet_0 (1)
   m_TagString: Untagged
@@ -2545,28 +2556,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!95 &1473173182
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1473173181}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2b5503fb8633c7744bc25bc4359d42c1, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!212 &1473173183
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2637,6 +2626,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1972989679}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &1473173185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1473173181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4c657ab88c242f4871396fbf90ff936, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  videoClip: {fileID: 32900000, guid: 86e22ac68fe653e42a41428631825633, type: 3}
+  playOnAwake: 1
+  keepSpriteUntilPrepared: 1
+  renderTextureWidth: 0
+  renderTextureHeight: 0
+  surfaceName: VideoSurface
+  localOffset: {x: 0, y: 0, z: 0}
+  sizeMultiplier: {x: 1, y: 1}
+  copySpriteRendererSorting: 1
 --- !u!1 &1497444814
 GameObject:
   m_ObjectHideFlags: 0
@@ -3911,7 +3921,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1862101532}
   - component: {fileID: 1862101531}
-  - component: {fileID: 1862101530}
+  - component: {fileID: 1862101533}
   m_Layer: 0
   m_Name: Animation_General_Bandana_SpriteSheet_0
   m_TagString: Untagged
@@ -3919,28 +3929,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!95 &1862101530
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1862101529}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: eb2b4a54fe1d2c94387bb5a9a77b86bd, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!212 &1862101531
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4011,6 +3999,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1972989679}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &1862101533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862101529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4c657ab88c242f4871396fbf90ff936, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  videoClip: {fileID: 32900000, guid: 760368bf15924ba4cb68a4abbee0786f, type: 3}
+  playOnAwake: 1
+  keepSpriteUntilPrepared: 1
+  renderTextureWidth: 0
+  renderTextureHeight: 0
+  surfaceName: VideoSurface
+  localOffset: {x: 0, y: 0, z: 0}
+  sizeMultiplier: {x: 1, y: 1}
+  copySpriteRendererSorting: 1
 --- !u!1 &1884281754
 GameObject:
   m_ObjectHideFlags: 0
@@ -4785,7 +4794,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3490750591552211510, guid: 63b2d33719d5275479a7038743b4f1b0, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1209652342}
+      addedObject: {fileID: 1209652344}
   m_SourcePrefab: {fileID: 100100000, guid: 63b2d33719d5275479a7038743b4f1b0, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

@@ -27,6 +27,7 @@ GameObject:
   - component: {fileID: 6110129550315152802}
   - component: {fileID: 1457295679428446297}
   - component: {fileID: 1993278659528858592}
+  - component: {fileID: 918273645091827364}
   m_Layer: 3
   m_Name: Protagonist
   m_TagString: 2D
@@ -245,7 +246,7 @@ MonoBehaviour:
   glidingSpeed: 3
   punchingSpeed: 2
   punchRunningBaseSpeed: 6
-  spriteRenderer: {fileID: 8518268266261273643}
+  visualFlipRoot: {fileID: 0}
   runningTurnSpeedNormal: 4
   runningTurnSpeedPhase3: 2
   walkingTurnSpeed: 5
@@ -355,6 +356,7 @@ MonoBehaviour:
   animator: {fileID: 2058333521518567832}
   player: {fileID: 3136478325201886202}
   pauseAnimatorControl: 0
+  lockControllerCenterX: 1
   idleFrontCenterX: 0
   defaultCenterX: -1
   walkThreshold: 4.4
@@ -464,6 +466,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minZ: -1.8
   maxZ: 1.8
+--- !u!114 &918273645091827364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1375970196312274560}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6af9c87a0c5e4bf4917a8d7e59915c2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkClip: {fileID: 32900000, guid: 266c40cf8d2b55b4da4dc8f25ca2bbc1, type: 3}
+  runClip: {fileID: 32900000, guid: 091966d97ae857640a0e7442a1c359f0, type: 3}
+  surfaceName: PlayerMovementVideoSurface
+  localOffset: {x: 0, y: 0, z: 0}
+  sizeMultiplier: {x: 1, y: 1}
+  renderTextureWidth: 0
+  renderTextureHeight: 0
+  keepSpriteUntilPrepared: 1
 --- !u!1001 &3200516523585364600
 PrefabInstance:
   m_ObjectHideFlags: 0

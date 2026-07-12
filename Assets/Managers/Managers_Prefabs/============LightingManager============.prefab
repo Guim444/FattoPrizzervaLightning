@@ -414,7 +414,7 @@ MonoBehaviour:
   cameraSurfaceHeight: 140
   cameraSurfaceDepth: 18
   cameraSurfaceLocalOffset: {x: 0, y: 0}
-  cameraBackgroundDistanceFromFirst: 35
+  backgroundCopyDistanceFromNearBlizzard: 12
   horizontalMotionCompensation: 0.35
   horizontalWorldUnitsPerTextureRepeat: 24
   blizzardRenderingLayerMask: 4294967295
@@ -422,7 +422,7 @@ MonoBehaviour:
   idleBackgroundAnchoredToWorld: 1
   idleBackgroundWidth: 160
   idleBackgroundHeight: 90
-  idleBackgroundDepth: 80
+  idleBackgroundDepth: 55
   idleBackgroundOffset: {x: 0, y: 0}
   idleBackgroundUvTiling: {x: 4, y: 3}
   idleBackgroundOpacityMultiplier: 0.35

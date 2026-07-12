@@ -4576,6 +4576,16 @@ MonoBehaviour:
   ratioQ4: 0.15
   lockHumanForm: 0
   introAnimatorController: {fileID: 9100000, guid: 857fd31268726194e9441f46f1a0475e, type: 2}
+  useIntroFormVideos: 1
+  introSoulWalkClip: {fileID: 32900000, guid: 1604cbacbbf148a419556db953c6889a, type: 3}
+  introHumanWalkClip: {fileID: 32900000, guid: 63be137bd4ec2484a91bef7a2a1c70d3, type: 3}
+  introVideoSurfaceName: IntroPlayerVideoSurface
+  introVideoLocalOffset: {x: 0, y: 0, z: 0}
+  introVideoSizeMultiplier: {x: 1, y: 1}
+  introHumanVideoUvCrop: {x: 0, y: 0, z: 0, w: 0}
+  introVideoRenderTextureWidth: 0
+  introVideoRenderTextureHeight: 0
+  keepAnimatorUntilIntroVideoPrepared: 1
 --- !u!114 &2021292074
 MonoBehaviour:
   m_ObjectHideFlags: 0

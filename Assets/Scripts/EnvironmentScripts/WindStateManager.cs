@@ -109,8 +109,11 @@ public class WindStateManager : MonoBehaviour
     [SerializeField, Min(0.01f)] private float cameraSurfaceDepth = 18f;
     [Tooltip("Offset local del plano cercano. Y negativo baja la ventisca en pantalla.")]
     [SerializeField] private Vector2 cameraSurfaceLocalOffset = Vector2.zero;
-    [Tooltip("Distancia en profundidad entre la ventisca cercana y su copia de fondo.")]
-    [SerializeField, Min(0.01f)] private float cameraBackgroundDistanceFromFirst = 35f;
+
+    [Header("Video Surface - Background Copy")]
+    [Tooltip("Distancia extra desde la ventisca cercana hasta su copia de fondo. Bajarlo acerca la copia al plano cercano.")]
+    [SerializeField, Min(0.01f)] private float backgroundCopyDistanceFromNearBlizzard = 12f;
+
     [Tooltip("Compensa el movimiento horizontal de la camara desplazando las UVs del video. 0 = pegado a pantalla, 1 = mayor sensacion de mundo.")]
     [SerializeField, Range(0f, 1f)] private float horizontalMotionCompensation = 0.35f;
     [Tooltip("Cuantos metros horizontales de camara equivalen a una repeticion completa del video.")]
@@ -1210,7 +1213,7 @@ public class WindStateManager : MonoBehaviour
         surface.usesFixedCameraPlane = true;
         surface.fixedWidth = Mathf.Max(0.01f, cameraSurfaceWidth);
         surface.fixedHeight = Mathf.Max(0.01f, cameraSurfaceHeight);
-        float extraDepth = surface.usesCameraBackgroundSettings ? cameraBackgroundDistanceFromFirst : 0f;
+        float extraDepth = surface.usesCameraBackgroundSettings ? backgroundCopyDistanceFromNearBlizzard : 0f;
         surface.fixedDepth = Mathf.Max(0.01f, cameraSurfaceDepth + extraDepth);
         surface.fixedOffset = cameraSurfaceLocalOffset;
         surface.horizontalMotionCompensation = horizontalMotionCompensation;

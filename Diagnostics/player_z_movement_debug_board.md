@@ -1,6 +1,34 @@
 # Player Z Movement Debug Board
 
-Objetivo de mañana: corregir el giro izquierda/derecha del player sobre el eje Z sin introducir saltos de posicion ni romper el sistema de escala por profundidad.
+Estado: CHECK - movimiento izquierda/derecha del player en Z queda aceptado. El salto restante es poco perceptible tras bloquear el cambio dinamico de `CharacterController.center.x`.
+
+Objetivo completado: corregir el giro izquierda/derecha del player sobre el eje Z sin introducir saltos grandes de posicion ni romper el sistema de escala por profundidad.
+
+## Siguiente tarea guardada
+
+Estado 2026-07-12: aplicado en `IntroSequenceManager` como capa de video para Start. Pendiente de verificacion visual en Unity.
+
+Nota 2026-07-12: revertido el ajuste de tamano por forma que ocultaba el video. Se vuelve al plano unico visible; `introHumanVideoUvCrop` queda a cero por defecto y disponible como ajuste de revision si hace falta recortar el video humano.
+
+Limpieza 2026-07-12: retirados restos no usados de esta etapa: `introSoulVideoUvCrop`, `_currentCooldown`, `SetPlayerAlpha()` y el atributo de migracion `FormerlySerializedAs` de la distancia de ventisca, porque ya no quedaban referencias al nombre antiguo.
+
+Sustituir en Start las animaciones que ahora estan con `Idle` y `Human` por estas:
+
+```text
+Idle  -> Animation_Characters_Protagonist_BackWalk: aplicado como `introSoulWalkClip`
+Human -> Animation_Characters_Protagonist_HumanWalk: aplicado como `introHumanWalkClip`
+```
+
+Tambien en Start: ajustar la ventisca copia del fondo para que quede mas pegada a la ventisca cercana a camara.
+
+```text
+idleBackgroundDepth: 80 -> 55
+backgroundCopyDistanceFromNearBlizzard: 35 -> 12
+```
+
+Nota: `backgroundCopyDistanceFromNearBlizzard` queda serializado en `WindStateManager` como ajuste comodo de Inspector para acercar/alejar la copia de ventisca respecto a la capa cercana.
+
+Nota para retomarlo: revisar primero que los assets existan/importen bien en `Assets`, localizar el Animator/estado de Start que usa `Idle` y `Human`, y cambiar referencias sin tocar aun el sistema de movimiento Z. Para la ventisca, revisar `WindStateManager` y buscar el parametro de distancia/profundidad de la copia de fondo antes de tocar escena.
 
 ## Flujo actual
 

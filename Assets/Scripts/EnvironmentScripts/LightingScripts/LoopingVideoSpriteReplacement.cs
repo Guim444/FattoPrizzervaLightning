@@ -29,6 +29,9 @@ public class LoopingVideoSpriteReplacement : MonoBehaviour
 
     private void Awake()
     {
+        if (!enabled)
+            return;
+
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
 

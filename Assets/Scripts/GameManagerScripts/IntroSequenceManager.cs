@@ -66,7 +66,7 @@ public class IntroSequenceManager : MonoBehaviour
     [SerializeField] private RuntimeAnimatorController introAnimatorController;
 
     [Header("Animator — Intro Video Forms")]
-    [SerializeField] private bool useIntroFormVideos = true;
+    [SerializeField] private bool useIntroFormVideos = false;
     [SerializeField] private VideoClip introSoulWalkClip;
     [SerializeField] private VideoClip introHumanWalkClip;
     [SerializeField] private string introVideoSurfaceName = "IntroPlayerVideoSurface";
@@ -724,7 +724,8 @@ public class IntroSequenceManager : MonoBehaviour
 
     private void PrepareIntroFormVideos()
     {
-        if (!useIntroFormVideos || playerTransform == null)
+        if (!useIntroFormVideos || playerTransform == null ||
+            (introSoulWalkClip == null && introHumanWalkClip == null))
             return;
 
         BuildIntroVideoSurface();

@@ -37,6 +37,9 @@ public class PlayerMovementVideoRenderer : MonoBehaviour
 
     private void Awake()
     {
+        if (!enabled)
+            return;
+
         _player = GetComponent<PlayerController>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
 

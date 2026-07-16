@@ -47,6 +47,7 @@ public class PlantWindController : MonoBehaviour
     [SerializeField] private float loopDurationBeforeOut = 2f;
 
     private Coroutine _exitCoroutine;
+    private bool _animationPlaybackEnabled = true;
 
     private void Awake()
     {
@@ -71,6 +72,8 @@ public class PlantWindController : MonoBehaviour
     /// <summary>entry → loop. Fuerza WindyEntry independientemente del estado actual.</summary>
     public void PlayWindy()
     {
+        if (!_animationPlaybackEnabled) return;
+
         StopExitCoroutine();
         CrossFadeAll(windyEntryState);
     }
@@ -78,6 +81,8 @@ public class PlantWindController : MonoBehaviour
     /// <summary>Mantiene el loop durante loopDurationBeforeOut segundos y luego fuerza WindyOut.</summary>
     public void PlayWindyExit()
     {
+        if (!_animationPlaybackEnabled) return;
+
         StopExitCoroutine();
         _exitCoroutine = StartCoroutine(WindyExitRoutine());
     }
@@ -85,8 +90,27 @@ public class PlantWindController : MonoBehaviour
     /// <summary>Fuerza IdleSmooth directamente.</summary>
     public void PlayIdleSmooth()
     {
+        if (!_animationPlaybackEnabled) return;
+
         StopExitCoroutine();
         CrossFadeAll(idleSmoothState);
+    }
+
+    public void SetAnimationPlaybackEnabled(bool shouldRun)
+    {
+        _animationPlaybackEnabled = shouldRun;
+
+        if (!shouldRun)
+            StopExitCoroutine();
+
+        if (plants == null)
+            return;
+
+        foreach (var plant in plants)
+        {
+            if (plant.animator != null)
+                plant.animator.enabled = shouldRun;
+        }
     }
 
     // ── Privado ──────────────────────────────────────────────────────────────

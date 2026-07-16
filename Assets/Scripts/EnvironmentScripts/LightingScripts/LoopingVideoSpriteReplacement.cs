@@ -26,6 +26,7 @@ public class LoopingVideoSpriteReplacement : MonoBehaviour
     private Material _material;
     private Mesh _mesh;
     private bool _videoReady;
+    private bool _playbackAllowed = true;
 
     private void Awake()
     {
@@ -53,7 +54,7 @@ public class LoopingVideoSpriteReplacement : MonoBehaviour
 
     private void OnEnable()
     {
-        if (_videoReady && playOnAwake && _videoPlayer != null && !_videoPlayer.isPlaying)
+        if (_playbackAllowed && _videoReady && playOnAwake && _videoPlayer != null && !_videoPlayer.isPlaying)
             _videoPlayer.Play();
     }
 
@@ -190,18 +191,44 @@ public class LoopingVideoSpriteReplacement : MonoBehaviour
         if (_videoPlayer.isPrepared)
         {
             ShowVideoSurface();
-            _videoPlayer.Play();
+            if (_playbackAllowed)
+                _videoPlayer.Play();
             return;
         }
 
         _videoPlayer.Prepare();
     }
 
+    public void SetPlaybackEnabled(bool shouldRun)
+    {
+        _playbackAllowed = shouldRun;
+
+        if (_videoPlayer == null)
+            return;
+
+        if (shouldRun)
+        {
+            if (_videoPlayer.isPrepared)
+            {
+                ShowVideoSurface();
+                _videoPlayer.Play();
+            }
+            else
+            {
+                _videoPlayer.Prepare();
+            }
+        }
+        else if (_videoPlayer.isPlaying)
+        {
+            _videoPlayer.Pause();
+        }
+    }
+
     private void HandleVideoPrepared(VideoPlayer source)
     {
         ShowVideoSurface();
 
-        if (playOnAwake)
+        if (playOnAwake && _playbackAllowed)
             source.Play();
     }
 

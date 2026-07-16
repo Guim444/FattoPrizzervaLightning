@@ -29,6 +29,7 @@ public class AlembicTreeWindController : MonoBehaviour
 
     private float _slowTime;
     private float _fastTime;
+    private bool _animationPlaybackEnabled = true;
 
     public bool HasAvailablePlayers =>
         slowPlayer != null
@@ -54,6 +55,9 @@ public class AlembicTreeWindController : MonoBehaviour
 
     private void Update()
     {
+        if (!_animationPlaybackEnabled)
+            return;
+
         if (advanceInactivePlayersInBackground || IsPlayerActive(slowPlayer))
             AdvancePlayer(slowPlayer, ref _slowTime, slowPlaybackSpeed);
 
@@ -145,6 +149,11 @@ public class AlembicTreeWindController : MonoBehaviour
 
         _slowTime = SamplePlayerAtOffset(slowPlayer, offsetSeconds);
         _fastTime = SamplePlayerAtOffset(fastPlayer, offsetSeconds);
+    }
+
+    public void SetAnimationPlaybackEnabled(bool shouldRun)
+    {
+        _animationPlaybackEnabled = shouldRun;
     }
 
     public void PrewarmPlayers(float sampleTime)

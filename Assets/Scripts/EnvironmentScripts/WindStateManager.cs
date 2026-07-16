@@ -164,6 +164,8 @@ public class WindStateManager : MonoBehaviour
     private readonly List<AlembicStreamPlayer> _plantaMjPlayers = new List<AlembicStreamPlayer>();
     private readonly List<float> _plantaMjTimes = new List<float>();
     private bool _plantaMjAutoPlaybackReported;
+    private bool _treeAnimationPlaybackEnabled = true;
+    private bool _blizzardVideoPlaybackEnabled = true;
 
     private sealed class VideoSurface
     {
@@ -370,6 +372,13 @@ public class WindStateManager : MonoBehaviour
         ResetHorizontalMotionReference();
         ResetWorldBackgroundAnchors();
 
+        if (!_blizzardVideoPlaybackEnabled)
+        {
+            HideAllVideos();
+            PauseAllVideoPlayers();
+            return;
+        }
+
         foreach (VideoPlayer player in _allPlayers)
         {
             if (player == null) continue;
@@ -401,6 +410,15 @@ public class WindStateManager : MonoBehaviour
         RefreshVideoCamera();
         ResetHorizontalMotionReference();
 
+        if (!_blizzardVideoPlaybackEnabled)
+        {
+            HideAllVideos();
+            PauseAllVideoPlayers();
+            _videoPlayersVisible = wasVisible;
+            ApplyCurrentVideoAlphas();
+            return;
+        }
+
         foreach (VideoPlayer player in _allPlayers)
         {
             if (player == null) continue;
@@ -421,6 +439,43 @@ public class WindStateManager : MonoBehaviour
         _videoPlayersVisible = wasVisible;
         ApplyCurrentVideoAlphas();
         PrewarmPlantaMjAlembicPlayers(0.05f);
+    }
+
+    public void SetTreeAnimationPlaybackEnabled(bool shouldRun)
+    {
+        _treeAnimationPlaybackEnabled = shouldRun;
+
+        if (treeControllers == null)
+            return;
+
+        foreach (var tree in treeControllers)
+            if (tree != null) tree.SetAnimationPlaybackEnabled(shouldRun);
+    }
+
+    public void SetBlizzardVideoPlaybackEnabled(bool shouldRun)
+    {
+        _blizzardVideoPlaybackEnabled = shouldRun;
+
+        if (!shouldRun)
+        {
+            HideAllVideos();
+            PauseAllVideoPlayers();
+            return;
+        }
+
+        if (_playersRoot == null && preloadPlayersOnAwake)
+            BuildAndPrepareFixedPlayers();
+
+        if (_playersRoot == null || !_videoPlayersVisible)
+        {
+            ApplyCurrentVideoAlphas();
+            return;
+        }
+
+        _playersRoot.gameObject.SetActive(true);
+        PlayAllVideoPlayers();
+        ActivateLegacyVideoPlayer();
+        ApplyCurrentVideoAlphas();
     }
 
     // ── Preload de VideoPlayers fijos ─────────────────────────────────────────
@@ -575,6 +630,40 @@ public class WindStateManager : MonoBehaviour
             VideoPlayer player = _allPlayers[i];
             if (player != null)
                 SetVideoOpacity(player, 0f);
+        }
+    }
+
+    private void PlayAllVideoPlayers()
+    {
+        for (int i = 0; i < _allPlayers.Count; i++)
+        {
+            VideoPlayer player = _allPlayers[i];
+            if (player == null) continue;
+
+            AssignCameraToPlayer(player);
+
+            if (player.isPrepared)
+                player.Play();
+            else
+                player.Prepare();
+        }
+    }
+
+    private void PauseAllVideoPlayers()
+    {
+        for (int i = 0; i < _allPlayers.Count; i++)
+        {
+            VideoPlayer player = _allPlayers[i];
+            if (player != null && player.isPlaying)
+                player.Pause();
+        }
+
+        if (blizzardVideoPlayer != null)
+        {
+            blizzardVideoPlayer.targetCameraAlpha = 0f;
+
+            if (blizzardVideoPlayer.isPlaying)
+                blizzardVideoPlayer.Pause();
         }
     }
 
@@ -765,7 +854,7 @@ public class WindStateManager : MonoBehaviour
     }
 
     private bool CanRunVideoPlayers =>
-        _playersRoot != null && _playersRoot.gameObject.activeInHierarchy;
+        _blizzardVideoPlaybackEnabled && _playersRoot != null && _playersRoot.gameObject.activeInHierarchy;
 
     private bool ShouldShowVideos =>
         CanRunVideoPlayers && _videoPlayersVisible;
@@ -1398,7 +1487,14 @@ public class WindStateManager : MonoBehaviour
         if (treeControllers == null) return;
 
         foreach (var tree in treeControllers)
-            if (tree != null) tree.SetFast(fast);
+        {
+            if (tree == null) continue;
+
+            tree.SetAnimationPlaybackEnabled(_treeAnimationPlaybackEnabled);
+
+            if (_treeAnimationPlaybackEnabled)
+                tree.SetFast(fast);
+        }
     }
 
     private void ApplyTreePlaybackOffsets()
@@ -1444,7 +1540,7 @@ public class WindStateManager : MonoBehaviour
 
     private void AdvancePlantaMjAlembicPlayers()
     {
-        if (!playPlantaMjAlembic || _plantaMjPlayers.Count == 0)
+        if (!_treeAnimationPlaybackEnabled || !playPlantaMjAlembic || _plantaMjPlayers.Count == 0)
             return;
 
         float speed = Mathf.Max(0f, plantaMjPlaybackSpeed);

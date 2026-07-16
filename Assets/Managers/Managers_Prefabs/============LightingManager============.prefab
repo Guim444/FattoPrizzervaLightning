@@ -59,11 +59,11 @@ MonoBehaviour:
     skyAnimatorTrigger: Tapat
     entries:
     - light: {fileID: 0}
-      startIntensity: 2
-      targetIntensity: 2
+      startIntensity: 7
+      targetIntensity: 8
     - light: {fileID: 0}
-      startIntensity: 0.01
-      targetIntensity: 0.01
+      startIntensity: 0.02
+      targetIntensity: 0.05
     - light: {fileID: 0}
       startIntensity: 2
       targetIntensity: 2
@@ -143,11 +143,11 @@ MonoBehaviour:
     skyAnimatorTrigger: Lluna
     entries:
     - light: {fileID: 0}
-      startIntensity: 2
-      targetIntensity: 110
+      startIntensity: 60
+      targetIntensity: 70
     - light: {fileID: 0}
       startIntensity: 0.05
-      targetIntensity: 0.1
+      targetIntensity: 0.08
     - light: {fileID: 0}
       startIntensity: 2
       targetIntensity: 2
@@ -182,14 +182,14 @@ MonoBehaviour:
       startIntensity: 50
       targetIntensity: 50
     - light: {fileID: 0}
-      startIntensity: 100
+      startIntensity: 60
       targetIntensity: 100
+    - light: {fileID: 0}
+      startIntensity: 0
+      targetIntensity: 20
     - light: {fileID: 0}
       startIntensity: 0
       targetIntensity: 50
-    - light: {fileID: 0}
-      startIntensity: 0
-      targetIntensity: 100
     - light: {fileID: 0}
       startIntensity: 0
       targetIntensity: 3
@@ -213,55 +213,55 @@ MonoBehaviour:
     entries:
     - light: {fileID: 0}
       startIntensity: 0
-      targetIntensity: 0
+      targetIntensity: 0.01
     - light: {fileID: 0}
       startIntensity: 0
-      targetIntensity: 0
+      targetIntensity: 5
+    - light: {fileID: 0}
+      startIntensity: 100
+      targetIntensity: 200
     - light: {fileID: 0}
       startIntensity: 0
-      targetIntensity: 0
+      targetIntensity: 3
     - light: {fileID: 0}
       startIntensity: 0
-      targetIntensity: 0
+      targetIntensity: 2
     - light: {fileID: 0}
       startIntensity: 0
-      targetIntensity: 0
+      targetIntensity: 2
     - light: {fileID: 0}
       startIntensity: 0
-      targetIntensity: 0
+      targetIntensity: 2
     - light: {fileID: 0}
       startIntensity: 0
-      targetIntensity: 0
+      targetIntensity: 2
     - light: {fileID: 0}
       startIntensity: 0
-      targetIntensity: 0
+      targetIntensity: 0.75
     - light: {fileID: 0}
       startIntensity: 0
-      targetIntensity: 0
+      targetIntensity: 1
     - light: {fileID: 0}
       startIntensity: 0
-      targetIntensity: 0
+      targetIntensity: 1
     - light: {fileID: 0}
       startIntensity: 0
-      targetIntensity: 0
+      targetIntensity: 0.75
     - light: {fileID: 0}
       startIntensity: 0
-      targetIntensity: 0
+      targetIntensity: 1
     - light: {fileID: 0}
       startIntensity: 0
-      targetIntensity: 0
+      targetIntensity: 10
+    - light: {fileID: 0}
+      startIntensity: 500
+      targetIntensity: 1000
     - light: {fileID: 0}
       startIntensity: 0
-      targetIntensity: 0
+      targetIntensity: 10.28
     - light: {fileID: 0}
       startIntensity: 0
-      targetIntensity: 0
-    - light: {fileID: 0}
-      startIntensity: 0
-      targetIntensity: 0
-    - light: {fileID: 0}
-      startIntensity: 0
-      targetIntensity: 0
+      targetIntensity: 20
   transitionDuration: 3
   blueLightsDelay: 2
   _previewState: 0
@@ -279,32 +279,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windStates:
-  - stateName: Blizzard_Fast
-    crossFadeTime: 0
-    playVideo: 1
-    videoStartTime: 2
-    videoEndTime: 3
+  - transitionClip: {fileID: 0}
+    idleLoopClip: {fileID: 32900000, guid: 4f57ca16bbfeb8b4aba6bf2133c73682, type: 3}
+    transitionOpacity: 0
+    idleOpacity: 1
     videoOpacity: 0.36
-  - stateName: Blizzard_Fast_to_Medium
-    crossFadeTime: 0.1
-    playVideo: 1
-    videoStartTime: 1
-    videoEndTime: 2
+  - transitionClip: {fileID: 32900000, guid: f99029239ec68af43b7c124480140815, type: 3}
+    idleLoopClip: {fileID: 32900000, guid: 60439cdfd226b2d4096ade7488baa8ae, type: 3}
+    transitionOpacity: 1
+    idleOpacity: 1
     videoOpacity: 0.22
-  - stateName: Blizzard_Slow
-    crossFadeTime: 0.1
-    playVideo: 1
-    videoStartTime: 1
-    videoEndTime: 2
+  - transitionClip: {fileID: 32900000, guid: 683aa5e7e2275f3478b7f9d23bd21420, type: 3}
+    idleLoopClip: {fileID: 32900000, guid: c9c5ec67be8457e4c8fb3ad58f397eaf, type: 3}
+    transitionOpacity: 1
+    idleOpacity: 1
     videoOpacity: 0.08
-  - stateName: Blizzard_Medium
-    crossFadeTime: 0.1
-    playVideo: 1
-    videoStartTime: 2
-    videoEndTime: 3
+  - transitionClip: {fileID: 32900000, guid: b4db4ad2d988b26419a9964c2def23a6, type: 3}
+    idleLoopClip: {fileID: 32900000, guid: 4f57ca16bbfeb8b4aba6bf2133c73682, type: 3}
+    transitionOpacity: 1
+    idleOpacity: 1
     videoOpacity: 0.18
-  windAnimators:
-  - {fileID: 0}
+  blizzardVideoCamera: {fileID: 0}
   treeControllers:
   - {fileID: 0}
   - {fileID: 0}
@@ -404,32 +399,34 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  treePlaybackOffsetStep: 0.3
+  playPlantaMjAlembic: 1
+  plantaMjPlaybackSpeed: 1
   preloadPlayersOnAwake: 1
   videoPlayersRootName: Runtime_VideoPlayers
   videoPlayersRootStartsActive: 0
   prewarmPlayersWhileHidden: 1
   renderTextureWidth: 0
   renderTextureHeight: 0
-  cameraSurfaceWidth: 220
-  cameraSurfaceHeight: 140
-  cameraSurfaceDepth: 18
+  cameraSurfaceWidth: 44
+  cameraSurfaceHeight: 28
+  cameraSurfaceDepth: 6
   cameraSurfaceLocalOffset: {x: 0, y: 0}
   backgroundCopyDistanceFromNearBlizzard: 12
-  horizontalMotionCompensation: 0.35
+  horizontalMotionCompensation: 0.2
   horizontalWorldUnitsPerTextureRepeat: 24
-  blizzardRenderingLayerMask: 4294967295
+  blizzardRenderingLayerMask: 1
   enableIdleBackgroundLayer: 1
   idleBackgroundAnchoredToWorld: 1
   idleBackgroundWidth: 160
   idleBackgroundHeight: 90
-  idleBackgroundDepth: 55
+  idleBackgroundDepth: 5
   idleBackgroundOffset: {x: 0, y: 0}
   idleBackgroundUvTiling: {x: 4, y: 3}
   idleBackgroundOpacityMultiplier: 0.35
   idleBackgroundHorizontalMotionCompensation: 0.12
-  blizzardVideoClip: {fileID: 32900000, guid: a60fd6f076ed8644e84a910246c5eed2, type: 3}
+  blizzardVideoClip: {fileID: 32900000, guid: e50672ac1f82d8e4dbcdc945aa7aeedb, type: 3}
   blizzardVideoPlayer: {fileID: 0}
-  blizzardVideoCamera: {fileID: 0}
 --- !u!114 &8216613400829712707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -444,6 +441,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   windManager: {fileID: 7443403615731962900}
   plantManager: {fileID: 4621595609330186204}
+  runTreeAnimations: 0
+  runFireAnimations: 0
+  runBlizzardVideos: 0
+  autoCollectPerformanceTargets: 1
   enableKeyboardShortcuts: 1
 --- !u!114 &4621595609330186204
 MonoBehaviour:

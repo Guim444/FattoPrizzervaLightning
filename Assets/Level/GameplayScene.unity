@@ -209,7 +209,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 2004004907}
   m_Lens:
-    FieldOfView: 35.02451
+    FieldOfView: 35.01965
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 20000
@@ -2880,7 +2880,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 20000
-  field of view: 35.02451
+  field of view: 35.01965
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -4130,16 +4130,6 @@ MonoBehaviour:
   ratioQ4: 0.15
   lockHumanForm: 0
   introAnimatorController: {fileID: 9100000, guid: 857fd31268726194e9441f46f1a0475e, type: 2}
-  useIntroFormVideos: 0
-  introSoulWalkClip: {fileID: 0}
-  introHumanWalkClip: {fileID: 0}
-  introVideoSurfaceName: IntroPlayerVideoSurface
-  introVideoLocalOffset: {x: 0, y: 0, z: 0}
-  introVideoSizeMultiplier: {x: 1, y: 1}
-  introHumanVideoUvCrop: {x: 0, y: 0, z: 0, w: 0}
-  introVideoRenderTextureWidth: 0
-  introVideoRenderTextureHeight: 0
-  keepAnimatorUntilIntroVideoPrepared: 1
 --- !u!114 &2021292074
 MonoBehaviour:
   m_ObjectHideFlags: 0

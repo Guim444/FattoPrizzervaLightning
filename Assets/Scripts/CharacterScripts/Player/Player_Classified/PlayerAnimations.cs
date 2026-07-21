@@ -1,7 +1,16 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAnimations : MonoBehaviour
 {
+    private static readonly int SpeedHash = Animator.StringToHash("Speed");
+    private static readonly int IsMovingHash = Animator.StringToHash("isMoving");
+    private static readonly int IsRunningHash = Animator.StringToHash("isRunning");
+    private static readonly int IsGlidingHash = Animator.StringToHash("isGliding");
+    private static readonly int IsKnockedbackHash = Animator.StringToHash("isKnockedback");
+    private static readonly int IsDeadHash = Animator.StringToHash("isDead");
+    private static readonly int IdleFrontHash = Animator.StringToHash("IdleFront");
+
     public Animator animator;
     public PlayerController player;
 
@@ -29,6 +38,9 @@ public class PlayerAnimations : MonoBehaviour
     public float BlendSpeed => _blendSpeed;
     private float _blendSpeed;
     private CharacterController _characterController;
+    private RuntimeAnimatorController _cachedAnimatorController;
+    private readonly Dictionary<int, AnimatorControllerParameterType> _animatorParameterTypes =
+        new Dictionary<int, AnimatorControllerParameterType>();
 
     void Awake()
     {
@@ -42,19 +54,19 @@ public class PlayerAnimations : MonoBehaviour
 
         UpdateBlendSpeed();
 
-        animator.SetFloat("Speed",        _blendSpeed);
-        animator.SetBool("isMoving",      player.currentState == State.Moving
-                                       || player.currentState == State.Running
-                                       || player.currentState == State.Deenergized);
-        animator.SetBool("isRunning",     player.currentState == State.Running
+        SetFloatIfAvailable(SpeedHash, _blendSpeed);
+        SetBoolIfAvailable(IsMovingHash, player.currentState == State.Moving
+                                      || player.currentState == State.Running
+                                      || player.currentState == State.Deenergized);
+        SetBoolIfAvailable(IsRunningHash, player.currentState == State.Running
                                        || player.currentState == State.PunchRunning);
-        animator.SetBool("isGliding",     player.currentState == State.Gliding);
-        animator.SetBool("isKnockedback", player.knockbackHandler.ShowKnockbackAnim);
-        animator.SetBool("isDead",        player.combat.HP <= 0);
+        SetBoolIfAvailable(IsGlidingHash, player.currentState == State.Gliding);
+        SetBoolIfAvailable(IsKnockedbackHash, player.knockbackHandler.ShowKnockbackAnim);
+        SetBoolIfAvailable(IsDeadHash, player.combat.HP <= 0);
         bool isIdleFront = player.currentState == State.Idle
                         && Mathf.Abs(player.movement.LastFacingDirection.x) > 0.1f;
 
-        animator.SetBool("IdleFront", isIdleFront);
+        SetBoolIfAvailable(IdleFrontHash, isIdleFront);
         UpdateCharacterControllerCenter(IsAnimatorInIdleFront());
         EnforceSpriteFlip();
     }
@@ -146,5 +158,35 @@ public class PlayerAnimations : MonoBehaviour
                     :                                  accelMidToMax;
 
         _blendSpeed = Mathf.Min(_blendSpeed + accel * Time.deltaTime, runMaxThreshold);
+    }
+
+    private void SetFloatIfAvailable(int parameterHash, float value)
+    {
+        if (HasAnimatorParameter(parameterHash, AnimatorControllerParameterType.Float))
+            animator.SetFloat(parameterHash, value);
+    }
+
+    private void SetBoolIfAvailable(int parameterHash, bool value)
+    {
+        if (HasAnimatorParameter(parameterHash, AnimatorControllerParameterType.Bool))
+            animator.SetBool(parameterHash, value);
+    }
+
+    private bool HasAnimatorParameter(int parameterHash, AnimatorControllerParameterType expectedType)
+    {
+        if (animator == null || animator.runtimeAnimatorController == null)
+            return false;
+
+        if (_cachedAnimatorController != animator.runtimeAnimatorController)
+        {
+            _cachedAnimatorController = animator.runtimeAnimatorController;
+            _animatorParameterTypes.Clear();
+
+            foreach (AnimatorControllerParameter parameter in animator.parameters)
+                _animatorParameterTypes[parameter.nameHash] = parameter.type;
+        }
+
+        return _animatorParameterTypes.TryGetValue(parameterHash, out AnimatorControllerParameterType actualType)
+            && actualType == expectedType;
     }
 }

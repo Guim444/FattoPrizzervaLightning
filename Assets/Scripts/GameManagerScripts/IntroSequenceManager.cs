@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.Video;
 
 public class IntroSequenceManager : MonoBehaviour
 {
+    private static readonly int IdleFrontHash = Animator.StringToHash("IdleFront");
+    private static readonly int IdleFrontHumanHash = Animator.StringToHash("IdleFrontHuman");
+    private static readonly int TransformToGhostHash = Animator.StringToHash("TransformToGhost");
+
     [Header("References")]
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Animator playerAnimator;
@@ -65,19 +67,6 @@ public class IntroSequenceManager : MonoBehaviour
     [Header("Animator — Intro Controller")]
     [SerializeField] private RuntimeAnimatorController introAnimatorController;
 
-    [Header("Animator — Intro Video Forms")]
-    [SerializeField] private bool useIntroFormVideos = false;
-    [SerializeField] private VideoClip introSoulWalkClip;
-    [SerializeField] private VideoClip introHumanWalkClip;
-    [SerializeField] private string introVideoSurfaceName = "IntroPlayerVideoSurface";
-    [SerializeField] private Vector3 introVideoLocalOffset = Vector3.zero;
-    [SerializeField] private Vector2 introVideoSizeMultiplier = Vector2.one;
-    [Tooltip("Recorte UV del video humano: X=izquierda, Y=derecha, Z=abajo, W=arriba.")]
-    [SerializeField] private Vector4 introHumanVideoUvCrop = Vector4.zero;
-    [SerializeField, Min(0)] private int introVideoRenderTextureWidth = 0;
-    [SerializeField, Min(0)] private int introVideoRenderTextureHeight = 0;
-    [SerializeField] private bool keepAnimatorUntilIntroVideoPrepared = true;
-
     private RuntimeAnimatorController _originalAnimatorController;
     private Material[] _originalMaterials;
     private Material[] _playerFadeMaterials;
@@ -89,24 +78,16 @@ public class IntroSequenceManager : MonoBehaviour
     private Vector3 _originalIntroTrackedObjectOffset;
     private CameraClearFlags _originalClearFlags;
     private float _activePlayerFadeAlpha = -1f;
+    private PlayerAnimations _playerAnimations;
+    private RuntimeAnimatorController _cachedAnimatorController;
+    private bool _originalPauseAnimatorControl;
+    private bool _hasOriginalPauseAnimatorControl;
     private bool _playerFadeMaterialRestored;
     private bool _isIntroBlizzardCameraAnchored;
     private bool _hasOriginalIntroTrackedObjectOffset;
+    private readonly Dictionary<int, AnimatorControllerParameterType> _animatorParameterTypes =
+        new Dictionary<int, AnimatorControllerParameterType>();
     private readonly List<ParticleSystem> _introBlizzardParticles = new List<ParticleSystem>();
-    private IntroVideoSlot _introSoulVideoSlot;
-    private IntroVideoSlot _introHumanVideoSlot;
-    private IntroVideoSlot _activeIntroVideoSlot;
-    private MeshRenderer _introVideoRenderer;
-    private Mesh _introVideoMesh;
-    private Material _introVideoMaterial;
-
-    private sealed class IntroVideoSlot
-    {
-        public VideoClip clip;
-        public VideoPlayer player;
-        public RenderTexture texture;
-        public bool ready;
-    }
 
     public float IntroPlayerZ => introPlayerZ;
 
@@ -129,7 +110,7 @@ public class IntroSequenceManager : MonoBehaviour
         CachePlayerSpriteRenderers();
         CacheOriginalMaterials();
         CacheOriginalColors();
-        PrepareIntroFormVideos();
+        CachePlayerAnimations();
 
         if (mainCamera != null)
             _originalClearFlags = mainCamera.clearFlags;
@@ -144,26 +125,6 @@ public class IntroSequenceManager : MonoBehaviour
 
         if (_isIntroBlizzardCameraAnchored)
             PositionIntroBlizzardParticles();
-
-        if (_activeIntroVideoSlot != null)
-            UpdateIntroVideoCropForActiveSlot();
-    }
-
-    private void OnDisable()
-    {
-        HideIntroFormVideo(restorePlayerRenderers: true);
-    }
-
-    private void OnDestroy()
-    {
-        ReleaseIntroVideoSlot(_introSoulVideoSlot);
-        ReleaseIntroVideoSlot(_introHumanVideoSlot);
-
-        if (_introVideoMaterial != null)
-            Destroy(_introVideoMaterial);
-
-        if (_introVideoMesh != null)
-            Destroy(_introVideoMesh);
     }
 
     private void Update()
@@ -174,7 +135,7 @@ public class IntroSequenceManager : MonoBehaviour
 
             if (_timer >= 5f)
             {
-                playerAnimator.SetTrigger("TransformToGhost");
+                SetPlayerAnimatorTriggerIfAvailable(TransformToGhostHash);
                 played = true;
             }
         }
@@ -182,6 +143,8 @@ public class IntroSequenceManager : MonoBehaviour
 
     public void ShowBlackScreen()
     {
+        PauseGameplayAnimatorControl();
+
         if (playerController != null)
         {
             playerController.ResetToIdle();
@@ -198,7 +161,6 @@ public class IntroSequenceManager : MonoBehaviour
         if (playerAnimator != null)     playerAnimator.enabled = false;
         if (playerInputHandler != null) playerInputHandler.enabled = false;
         if (playerTransform != null)    playerTransform.gameObject.SetActive(false);
-        SetHumanForm();
     }
 
     public void StartIntro()
@@ -305,6 +267,7 @@ public class IntroSequenceManager : MonoBehaviour
 
     private IEnumerator PlayIntroSequence()
     {
+        PauseGameplayAnimatorControl();
         ActivatePlayerInvisible();
 
         yield return StartCoroutine(HoldBlack());
@@ -506,8 +469,6 @@ public class IntroSequenceManager : MonoBehaviour
 
             renderer.color = fadeColor;
         }
-
-        SetIntroVideoAlpha(clampedAlpha);
     }
 
     private void SetPlayerRenderersEnabled(bool enabled)
@@ -722,400 +683,6 @@ public class IntroSequenceManager : MonoBehaviour
         }
     }
 
-    private void PrepareIntroFormVideos()
-    {
-        if (!useIntroFormVideos || playerTransform == null ||
-            (introSoulWalkClip == null && introHumanWalkClip == null))
-            return;
-
-        BuildIntroVideoSurface();
-
-        if (_introSoulVideoSlot == null)
-            _introSoulVideoSlot = CreateIntroVideoSlot(introSoulWalkClip, "Soul");
-
-        if (_introHumanVideoSlot == null)
-            _introHumanVideoSlot = CreateIntroVideoSlot(introHumanWalkClip, "Human");
-
-        PrepareIntroVideoSlot(_introSoulVideoSlot);
-        PrepareIntroVideoSlot(_introHumanVideoSlot);
-    }
-
-    private void BuildIntroVideoSurface()
-    {
-        if (_introVideoRenderer != null)
-            return;
-
-        GameObject surface = new GameObject(introVideoSurfaceName);
-        surface.layer = playerTransform.gameObject.layer;
-        surface.transform.SetParent(playerTransform, false);
-        surface.transform.localPosition = introVideoLocalOffset;
-        surface.transform.localRotation = Quaternion.identity;
-        surface.transform.localScale = Vector3.one;
-
-        MeshFilter meshFilter = surface.AddComponent<MeshFilter>();
-        _introVideoRenderer = surface.AddComponent<MeshRenderer>();
-        _introVideoRenderer.enabled = false;
-        _introVideoRenderer.shadowCastingMode = ShadowCastingMode.Off;
-        _introVideoRenderer.receiveShadows = false;
-        _introVideoRenderer.lightProbeUsage = LightProbeUsage.Off;
-        _introVideoRenderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
-
-        if (playerSpriteRenderer != null)
-        {
-            _introVideoRenderer.sortingLayerID = playerSpriteRenderer.sortingLayerID;
-            _introVideoRenderer.sortingOrder = playerSpriteRenderer.sortingOrder;
-            _introVideoRenderer.renderingLayerMask = playerSpriteRenderer.renderingLayerMask;
-        }
-
-        _introVideoMesh = CreateIntroVideoMesh();
-        meshFilter.sharedMesh = _introVideoMesh;
-
-        _introVideoMaterial = CreateIntroVideoMaterial();
-        _introVideoRenderer.sharedMaterial = _introVideoMaterial;
-    }
-
-    private Mesh CreateIntroVideoMesh()
-    {
-        Mesh mesh = new Mesh { name = $"{name}_IntroVideoSurfaceMesh" };
-        ApplyIntroVideoMeshSize(mesh);
-        ApplyIntroVideoCrop(mesh, null);
-        mesh.triangles = new[] { 0, 1, 2, 0, 2, 3 };
-        return mesh;
-    }
-
-    private void UpdateIntroVideoCropForActiveSlot()
-    {
-        if (_introVideoMesh == null)
-            return;
-
-        ApplyIntroVideoCrop(_introVideoMesh, _activeIntroVideoSlot);
-    }
-
-    private void ApplyIntroVideoMeshSize(Mesh mesh)
-    {
-        if (mesh == null)
-            return;
-
-        Bounds bounds = GetIntroVideoReferenceBounds();
-        Vector2 finalMultiplier = new Vector2(
-            Mathf.Max(0.01f, introVideoSizeMultiplier.x),
-            Mathf.Max(0.01f, introVideoSizeMultiplier.y)
-        );
-
-        Vector3 center = bounds.center;
-        Vector3 extents = bounds.extents;
-        extents.x *= finalMultiplier.x;
-        extents.y *= finalMultiplier.y;
-
-        Vector3 min = center - extents;
-        Vector3 max = center + extents;
-
-        mesh.vertices = new[]
-        {
-            new Vector3(min.x, min.y, 0f),
-            new Vector3(min.x, max.y, 0f),
-            new Vector3(max.x, max.y, 0f),
-            new Vector3(max.x, min.y, 0f)
-        };
-        mesh.RecalculateBounds();
-    }
-
-    private void ApplyIntroVideoCrop(Mesh mesh, IntroVideoSlot slot)
-    {
-        if (mesh == null)
-            return;
-
-        Vector4 crop = GetIntroVideoUvCrop(slot);
-        float left = Mathf.Clamp(crop.x, 0f, 0.49f);
-        float right = Mathf.Clamp(crop.y, 0f, 0.49f);
-        float bottom = Mathf.Clamp(crop.z, 0f, 0.49f);
-        float top = Mathf.Clamp(crop.w, 0f, 0.49f);
-
-        ClampCropPair(ref left, ref right);
-        ClampCropPair(ref bottom, ref top);
-
-        float uMin = left;
-        float uMax = 1f - right;
-        float vMin = bottom;
-        float vMax = 1f - top;
-
-        mesh.uv = new[]
-        {
-            new Vector2(uMin, vMin),
-            new Vector2(uMin, vMax),
-            new Vector2(uMax, vMax),
-            new Vector2(uMax, vMin)
-        };
-    }
-
-    private Vector4 GetIntroVideoUvCrop(IntroVideoSlot slot)
-    {
-        if (slot == _introHumanVideoSlot)
-            return introHumanVideoUvCrop;
-
-        return Vector4.zero;
-    }
-
-    private void ClampCropPair(ref float first, ref float second)
-    {
-        float total = first + second;
-        if (total < 0.98f)
-            return;
-
-        float factor = 0.98f / total;
-        first *= factor;
-        second *= factor;
-    }
-
-    private Bounds GetIntroVideoReferenceBounds()
-    {
-        if (playerSpriteRenderer != null)
-        {
-            if (playerSpriteRenderer.drawMode == SpriteDrawMode.Simple && playerSpriteRenderer.sprite != null)
-                return playerSpriteRenderer.sprite.bounds;
-
-            return new Bounds(Vector3.zero, new Vector3(playerSpriteRenderer.size.x, playerSpriteRenderer.size.y, 0f));
-        }
-
-        return new Bounds(Vector3.zero, new Vector3(GetIntroVideoAspectRatio(), 1f, 0f));
-    }
-
-    private IntroVideoSlot CreateIntroVideoSlot(VideoClip clip, string slotName)
-    {
-        if (clip == null)
-            return null;
-
-        IntroVideoSlot slot = new IntroVideoSlot
-        {
-            clip = clip,
-            texture = CreateIntroVideoRenderTexture(clip, slotName)
-        };
-
-        slot.player = gameObject.AddComponent<VideoPlayer>();
-        slot.player.playOnAwake = false;
-        slot.player.isLooping = true;
-        slot.player.skipOnDrop = true;
-        slot.player.waitForFirstFrame = true;
-        slot.player.source = VideoSource.VideoClip;
-        slot.player.clip = clip;
-        slot.player.renderMode = VideoRenderMode.RenderTexture;
-        slot.player.targetTexture = slot.texture;
-        slot.player.audioOutputMode = VideoAudioOutputMode.None;
-        slot.player.prepareCompleted += HandleIntroVideoPrepared;
-        slot.player.errorReceived += HandleIntroVideoError;
-
-        return slot;
-    }
-
-    private RenderTexture CreateIntroVideoRenderTexture(VideoClip clip, string slotName)
-    {
-        int width = introVideoRenderTextureWidth > 0 ? introVideoRenderTextureWidth : GetIntroClipWidthSafe(clip);
-        int height = introVideoRenderTextureHeight > 0 ? introVideoRenderTextureHeight : GetIntroClipHeightSafe(clip);
-
-        RenderTexture texture = new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32)
-        {
-            name = $"{name}_{slotName}_{clip.name}_RT",
-            filterMode = FilterMode.Bilinear,
-            wrapMode = TextureWrapMode.Clamp,
-            useMipMap = false,
-            autoGenerateMips = false
-        };
-        texture.Create();
-        return texture;
-    }
-
-    private Material CreateIntroVideoMaterial()
-    {
-        Material material = new Material(ResolveIntroVideoSurfaceShader())
-        {
-            name = $"{name}_IntroVideo_MAT"
-        };
-
-        if (material.HasProperty("_Surface")) material.SetFloat("_Surface", 1f);
-        if (material.HasProperty("_Blend")) material.SetFloat("_Blend", 0f);
-        if (material.HasProperty("_ZWrite")) material.SetFloat("_ZWrite", 0f);
-        if (material.HasProperty("_SrcBlend")) material.SetFloat("_SrcBlend", (float)BlendMode.SrcAlpha);
-        if (material.HasProperty("_DstBlend")) material.SetFloat("_DstBlend", (float)BlendMode.OneMinusSrcAlpha);
-        if (material.HasProperty("_Cull")) material.SetFloat("_Cull", (float)CullMode.Off);
-        if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", Color.white);
-        if (material.HasProperty("_Color")) material.SetColor("_Color", Color.white);
-
-        material.SetOverrideTag("RenderType", "Transparent");
-        material.renderQueue = (int)RenderQueue.Transparent;
-        material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
-        material.DisableKeyword("_ALPHATEST_ON");
-        return material;
-    }
-
-    private Shader ResolveIntroVideoSurfaceShader()
-    {
-        Shader shader = Shader.Find("Universal Render Pipeline/Unlit");
-        if (shader != null) return shader;
-
-        shader = Shader.Find("Unlit/Transparent");
-        if (shader != null) return shader;
-
-        return Shader.Find("Sprites/Default");
-    }
-
-    private void PrepareIntroVideoSlot(IntroVideoSlot slot)
-    {
-        if (slot?.player == null)
-            return;
-
-        if (slot.player.isPrepared)
-        {
-            slot.ready = true;
-            return;
-        }
-
-        slot.player.Prepare();
-    }
-
-    private bool ShowIntroFormVideo(IntroVideoSlot slot)
-    {
-        if (!useIntroFormVideos || slot?.player == null || _introVideoRenderer == null)
-            return false;
-
-        if (!slot.ready && !slot.player.isPrepared)
-        {
-            PrepareIntroVideoSlot(slot);
-            if (keepAnimatorUntilIntroVideoPrepared)
-            {
-                HideIntroFormVideo(restorePlayerRenderers: true);
-                return false;
-            }
-        }
-
-        slot.ready = slot.ready || slot.player.isPrepared;
-
-        if (_activeIntroVideoSlot != slot)
-        {
-            PauseIntroVideoSlot(_activeIntroVideoSlot);
-            SetIntroVideoMaterialTexture(slot.texture);
-            _activeIntroVideoSlot = slot;
-        }
-
-        UpdateIntroVideoCropForActiveSlot();
-        SetPlayerRenderersEnabled(false);
-        _introVideoRenderer.enabled = true;
-        SetIntroVideoAlpha(_activePlayerFadeAlpha >= 0f ? _activePlayerFadeAlpha : 1f);
-
-        if (!slot.player.isPlaying)
-            slot.player.Play();
-
-        return true;
-    }
-
-    private void HideIntroFormVideo(bool restorePlayerRenderers)
-    {
-        PauseIntroVideoSlot(_activeIntroVideoSlot);
-        _activeIntroVideoSlot = null;
-
-        if (_introVideoRenderer != null)
-            _introVideoRenderer.enabled = false;
-
-        if (restorePlayerRenderers)
-            RestorePlayerRenderersEnabled();
-    }
-
-    private void SetIntroVideoMaterialTexture(Texture texture)
-    {
-        if (_introVideoMaterial == null || texture == null)
-            return;
-
-        SetIntroMaterialTexture("_BaseMap", texture);
-        SetIntroMaterialTexture("_MainTex", texture);
-    }
-
-    private void SetIntroMaterialTexture(string propertyName, Texture texture)
-    {
-        if (_introVideoMaterial == null || texture == null || !_introVideoMaterial.HasProperty(propertyName))
-            return;
-
-        _introVideoMaterial.SetTexture(propertyName, texture);
-    }
-
-    private void SetIntroVideoAlpha(float alpha)
-    {
-        if (_introVideoMaterial == null)
-            return;
-
-        Color color = Color.white;
-        if (_introVideoMaterial.HasProperty("_BaseColor"))
-            color = _introVideoMaterial.GetColor("_BaseColor");
-        else if (_introVideoMaterial.HasProperty("_Color"))
-            color = _introVideoMaterial.GetColor("_Color");
-
-        color.a = Mathf.Clamp01(alpha);
-
-        if (_introVideoMaterial.HasProperty("_BaseColor")) _introVideoMaterial.SetColor("_BaseColor", color);
-        if (_introVideoMaterial.HasProperty("_Color")) _introVideoMaterial.SetColor("_Color", color);
-    }
-
-    private void PauseIntroVideoSlot(IntroVideoSlot slot)
-    {
-        if (slot?.player != null && slot.player.isPlaying)
-            slot.player.Pause();
-    }
-
-    private void ReleaseIntroVideoSlot(IntroVideoSlot slot)
-    {
-        if (slot == null)
-            return;
-
-        if (slot.player != null)
-        {
-            slot.player.prepareCompleted -= HandleIntroVideoPrepared;
-            slot.player.errorReceived -= HandleIntroVideoError;
-            slot.player.targetTexture = null;
-        }
-
-        if (slot.texture != null)
-        {
-            slot.texture.Release();
-            Destroy(slot.texture);
-        }
-    }
-
-    private void HandleIntroVideoPrepared(VideoPlayer source)
-    {
-        IntroVideoSlot slot = ResolveIntroVideoSlot(source);
-        if (slot != null)
-            slot.ready = true;
-    }
-
-    private void HandleIntroVideoError(VideoPlayer source, string message)
-    {
-        IntroVideoSlot slot = ResolveIntroVideoSlot(source);
-        string clipName = slot?.clip != null ? slot.clip.name : source.name;
-        Debug.LogWarning($"[{nameof(IntroSequenceManager)}] Error reproduciendo video de intro '{clipName}': {message}", this);
-    }
-
-    private IntroVideoSlot ResolveIntroVideoSlot(VideoPlayer source)
-    {
-        if (_introSoulVideoSlot != null && _introSoulVideoSlot.player == source)
-            return _introSoulVideoSlot;
-
-        if (_introHumanVideoSlot != null && _introHumanVideoSlot.player == source)
-            return _introHumanVideoSlot;
-
-        return null;
-    }
-
-    private int GetIntroClipWidthSafe(VideoClip clip)
-        => clip != null && clip.width > 0 ? (int)clip.width : 512;
-
-    private int GetIntroClipHeightSafe(VideoClip clip)
-        => clip != null && clip.height > 0 ? (int)clip.height : 512;
-
-    private float GetIntroVideoAspectRatio()
-    {
-        VideoClip clip = introHumanWalkClip != null ? introHumanWalkClip : introSoulWalkClip;
-        int height = GetIntroClipHeightSafe(clip);
-        return height > 0 ? GetIntroClipWidthSafe(clip) / (float)height : 1f;
-    }
-
     private IEnumerator BlinkCoroutine()
     {
         while (true)
@@ -1150,17 +717,15 @@ public class IntroSequenceManager : MonoBehaviour
     private void SetHumanForm()
     {
         if (playerAnimator == null || !playerAnimator.enabled) return;
-        playerAnimator.SetBool("IdleFrontHuman", true);
-        playerAnimator.SetBool("IdleFront", false);
-        ShowIntroFormVideo(_introHumanVideoSlot);
+        SetPlayerAnimatorBoolIfAvailable(IdleFrontHumanHash, true);
+        SetPlayerAnimatorBoolIfAvailable(IdleFrontHash, false);
     }
 
     private void SetSoulForm()
     {
         if (playerAnimator == null || !playerAnimator.enabled) return;
-        playerAnimator.SetBool("IdleFront", true);
-        playerAnimator.SetBool("IdleFrontHuman", false);
-        ShowIntroFormVideo(_introSoulVideoSlot);
+        SetPlayerAnimatorBoolIfAvailable(IdleFrontHash, true);
+        SetPlayerAnimatorBoolIfAvailable(IdleFrontHumanHash, false);
     }
 
     private float GetHumanRatio()
@@ -1176,16 +741,20 @@ public class IntroSequenceManager : MonoBehaviour
 
     public void RestoreOriginalAnimator()
     {
-        HideIntroFormVideo(restorePlayerRenderers: true);
-
         if (playerAnimator != null && _originalAnimatorController != null)
             playerAnimator.runtimeAnimatorController = _originalAnimatorController;
 
+        RestoreGameplayAnimatorControl();
         _activePlayerFadeAlpha = -1f;
         _isIntroBlizzardCameraAnchored = false;
         RestoreIntroCameraFraming();
         RestoreOriginalColors();
         RestoreOriginalMaterials();
+    }
+
+    private void OnDisable()
+    {
+        RestoreGameplayAnimatorControl();
     }
 
     public void OnPlayerEnterChurch(Transform churchPosition)
@@ -1210,7 +779,7 @@ public class IntroSequenceManager : MonoBehaviour
         boundaryClamp.enabled = true;
         yield return StartCoroutine(MovePlayerToPosition(target.position, 2f));
 
-        playerAnimator.SetBool("IdleFront", false);
+        SetPlayerAnimatorBoolIfAvailable(IdleFrontHash, false);
         playerInputHandler.enabled = true;
 
         hudManager?.OnClickCombatPosition();
@@ -1230,5 +799,69 @@ public class IntroSequenceManager : MonoBehaviour
         }
         playerTransform.position = target;
         playerCC.enabled = true;
+    }
+
+    private void CachePlayerAnimations()
+    {
+        if (_playerAnimations != null) return;
+
+        if (playerController != null)
+            _playerAnimations = playerController.GetComponent<PlayerAnimations>();
+
+        if (_playerAnimations == null && playerTransform != null)
+            _playerAnimations = playerTransform.GetComponent<PlayerAnimations>();
+    }
+
+    private void PauseGameplayAnimatorControl()
+    {
+        CachePlayerAnimations();
+        if (_playerAnimations == null) return;
+
+        if (!_hasOriginalPauseAnimatorControl)
+        {
+            _originalPauseAnimatorControl = _playerAnimations.pauseAnimatorControl;
+            _hasOriginalPauseAnimatorControl = true;
+        }
+
+        _playerAnimations.pauseAnimatorControl = true;
+    }
+
+    private void RestoreGameplayAnimatorControl()
+    {
+        CachePlayerAnimations();
+        if (_playerAnimations == null || !_hasOriginalPauseAnimatorControl) return;
+
+        _playerAnimations.pauseAnimatorControl = _originalPauseAnimatorControl;
+        _hasOriginalPauseAnimatorControl = false;
+    }
+
+    private void SetPlayerAnimatorBoolIfAvailable(int parameterHash, bool value)
+    {
+        if (HasPlayerAnimatorParameter(parameterHash, AnimatorControllerParameterType.Bool))
+            playerAnimator.SetBool(parameterHash, value);
+    }
+
+    private void SetPlayerAnimatorTriggerIfAvailable(int parameterHash)
+    {
+        if (HasPlayerAnimatorParameter(parameterHash, AnimatorControllerParameterType.Trigger))
+            playerAnimator.SetTrigger(parameterHash);
+    }
+
+    private bool HasPlayerAnimatorParameter(int parameterHash, AnimatorControllerParameterType expectedType)
+    {
+        if (playerAnimator == null || playerAnimator.runtimeAnimatorController == null)
+            return false;
+
+        if (_cachedAnimatorController != playerAnimator.runtimeAnimatorController)
+        {
+            _cachedAnimatorController = playerAnimator.runtimeAnimatorController;
+            _animatorParameterTypes.Clear();
+
+            foreach (AnimatorControllerParameter parameter in playerAnimator.parameters)
+                _animatorParameterTypes[parameter.nameHash] = parameter.type;
+        }
+
+        return _animatorParameterTypes.TryGetValue(parameterHash, out AnimatorControllerParameterType actualType)
+            && actualType == expectedType;
     }
 }

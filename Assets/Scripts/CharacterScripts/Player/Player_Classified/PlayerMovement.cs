@@ -9,6 +9,8 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
+    private static readonly int IdleFrontHash = Animator.StringToHash("IdleFront");
+
     // ==================================================
     // MOVEMENT SPEEDS
     // ==================================================
@@ -72,6 +74,8 @@ public class PlayerMovement : MonoBehaviour
     private PlayerController _playerController;
     private PlayerAnimations _animations;
     private SpriteRenderer _spriteRenderer;
+    private RuntimeAnimatorController _cachedAnimatorController;
+    private bool _cachedHasIdleFrontParameter;
 
     // ==================================================
     // INITIALIZATION
@@ -145,8 +149,7 @@ public class PlayerMovement : MonoBehaviour
         float dirX = LastFacingDirection.x;
 
         // IdleFront: active when the last direction is mainly in X (depth)
-        _playerController?.animator?.SetBool("IdleFront",
-            Mathf.Abs(dirX) > Mathf.Abs(dirZ));
+        SetIdleFrontIfAvailable(Mathf.Abs(dirX) > Mathf.Abs(dirZ));
 
         if (Mathf.Abs(dirZ) < 0.1f) return;
 
@@ -156,8 +159,7 @@ public class PlayerMovement : MonoBehaviour
     private void UpdateSpriteFlip(float directionZ)
     {
         // IdleFront: active when the player moves in depth (X), not horizontal (Z)
-        _playerController?.animator?.SetBool("IdleFront",
-            Mathf.Abs(LastFacingDirection.x) > Mathf.Abs(directionZ));
+        SetIdleFrontIfAvailable(Mathf.Abs(LastFacingDirection.x) > Mathf.Abs(directionZ));
 
         if (Mathf.Abs(directionZ) < 0.1f) return;
 
@@ -225,6 +227,38 @@ public class PlayerMovement : MonoBehaviour
         Vector3 center = _cc.center;
         center.x = compensatedCenter.x;
         _cc.center = center;
+    }
+
+    private void SetIdleFrontIfAvailable(bool value)
+    {
+        Animator animator = _playerController != null ? _playerController.animator : null;
+        if (!HasIdleFrontParameter(animator)) return;
+
+        animator.SetBool(IdleFrontHash, value);
+    }
+
+    private bool HasIdleFrontParameter(Animator animator)
+    {
+        if (animator == null || animator.runtimeAnimatorController == null)
+            return false;
+
+        if (_cachedAnimatorController == animator.runtimeAnimatorController)
+            return _cachedHasIdleFrontParameter;
+
+        _cachedAnimatorController = animator.runtimeAnimatorController;
+        _cachedHasIdleFrontParameter = false;
+
+        foreach (AnimatorControllerParameter parameter in animator.parameters)
+        {
+            if (parameter.nameHash != IdleFrontHash ||
+                parameter.type != AnimatorControllerParameterType.Bool)
+                continue;
+
+            _cachedHasIdleFrontParameter = true;
+            break;
+        }
+
+        return _cachedHasIdleFrontParameter;
     }
 
     private float GetNonZeroSign(float value)

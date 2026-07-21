@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class HUDManager : MonoBehaviour
 {
+    private static readonly int IdleFrontHash = Animator.StringToHash("IdleFront");
+
     [SerializeField] private GameObject enemy;
     [SerializeField] private GameObject enemyRio;
     [SerializeField] private PlayerBoundaryClamp playerBoundary;
@@ -147,7 +149,7 @@ public class HUDManager : MonoBehaviour
         playerTransformFront.SetActive(false);
         MoveStartPlayerToX(startPositionX);
         ringManager.enabled = false;
-        playerAnimator?.SetBool("IdleFront", true);
+        SetPlayerIdleFrontIfAvailable(true);
         HidePanel();
         introSequenceManager?.StartIntro();
         playerBoundary.enabled = true;
@@ -569,5 +571,21 @@ public class HUDManager : MonoBehaviour
     private void HidePanel()
     {
         _canvasMain.SetActive(false);
+    }
+
+    private void SetPlayerIdleFrontIfAvailable(bool value)
+    {
+        if (playerAnimator == null || playerAnimator.runtimeAnimatorController == null)
+            return;
+
+        foreach (AnimatorControllerParameter parameter in playerAnimator.parameters)
+        {
+            if (parameter.nameHash != IdleFrontHash ||
+                parameter.type != AnimatorControllerParameterType.Bool)
+                continue;
+
+            playerAnimator.SetBool(IdleFrontHash, value);
+            return;
+        }
     }
 }

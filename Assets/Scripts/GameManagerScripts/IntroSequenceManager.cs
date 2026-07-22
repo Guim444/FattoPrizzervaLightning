@@ -35,6 +35,10 @@ public class IntroSequenceManager : MonoBehaviour
     [SerializeField] private float introBlizzardEmissionRate = 5500f;
     [SerializeField] private float introBlizzardPrewarmTime = 4f;
     [SerializeField] private bool anchorIntroBlizzardToCamera = true;
+    [Tooltip("Mantiene la ventisca pegada visualmente a pantalla para evitar parallax al cambiar la Z de camara.")]
+    [SerializeField] private bool stabilizeIntroBlizzardOnScreen = true;
+    [Tooltip("Evita que la ventisca copie el desplazamiento lateral de la camara en Z.")]
+    [SerializeField] private bool lockIntroBlizzardWorldZ = false;
     [SerializeField] private float introBlizzardCameraDistance = 15f;
     [SerializeField] private Vector3 introBlizzardCameraOffset = Vector3.zero;
     [SerializeField] private Vector3 introBlizzardShapeScale = new Vector3(95f, 55f, 25f);
@@ -84,6 +88,8 @@ public class IntroSequenceManager : MonoBehaviour
     private bool _hasOriginalPauseAnimatorControl;
     private bool _playerFadeMaterialRestored;
     private bool _isIntroBlizzardCameraAnchored;
+    private bool _hasIntroBlizzardWorldZAnchor;
+    private float _introBlizzardWorldZAnchor;
     private bool _hasOriginalIntroTrackedObjectOffset;
     private readonly Dictionary<int, AnimatorControllerParameterType> _animatorParameterTypes =
         new Dictionary<int, AnimatorControllerParameterType>();
@@ -175,6 +181,7 @@ public class IntroSequenceManager : MonoBehaviour
     {
         WindStateManager.ActivateAllVideoPlayersRoots();
         _introBlizzardParticles.Clear();
+        _hasIntroBlizzardWorldZAnchor = false;
 
         ParticleSystem[] blizzardParticles = Object.FindObjectsByType<ParticleSystem>(
             FindObjectsInactive.Include,
@@ -251,8 +258,20 @@ public class IntroSequenceManager : MonoBehaviour
 
         Transform cameraTransform = mainCamera.transform;
         Vector3 localOffset = introBlizzardCameraOffset + Vector3.forward * introBlizzardCameraDistance;
+        Vector3 targetPosition = cameraTransform.TransformPoint(localOffset);
 
-        particles.transform.position = cameraTransform.TransformPoint(localOffset);
+        if (!stabilizeIntroBlizzardOnScreen && lockIntroBlizzardWorldZ)
+        {
+            if (!_hasIntroBlizzardWorldZAnchor)
+            {
+                _introBlizzardWorldZAnchor = targetPosition.z;
+                _hasIntroBlizzardWorldZAnchor = true;
+            }
+
+            targetPosition.z = _introBlizzardWorldZAnchor;
+        }
+
+        particles.transform.position = targetPosition;
         particles.transform.rotation = cameraTransform.rotation;
     }
 

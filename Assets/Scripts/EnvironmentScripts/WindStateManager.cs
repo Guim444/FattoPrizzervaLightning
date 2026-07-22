@@ -109,6 +109,10 @@ public class WindStateManager : MonoBehaviour
     [SerializeField, Min(0.01f)] private float cameraSurfaceDepth = 18f;
     [Tooltip("Offset local del plano cercano. Y negativo baja la ventisca en pantalla.")]
     [SerializeField] private Vector2 cameraSurfaceLocalOffset = Vector2.zero;
+    [Tooltip("Mantiene las capas de ventisca pegadas a pantalla para evitar parallax al cambiar de dentro/fuera.")]
+    [SerializeField] private bool stabilizeBlizzardSurfaceOnScreen = true;
+    [Tooltip("Mantiene fija la posicion Z de la ventisca aunque la camara se desplace lateralmente en Z.")]
+    [SerializeField] private bool lockBlizzardSurfaceWorldZ = false;
 
     [Header("Video Surface - Background Copy")]
     [Tooltip("Distancia extra desde la ventisca cercana hasta su copia de fondo. Bajarlo acerca la copia al plano cercano.")]
@@ -161,6 +165,9 @@ public class WindStateManager : MonoBehaviour
     private bool  _hasHorizontalMotionReference;
     private float _horizontalMotionReferenceX;
     private Camera _horizontalMotionReferenceCamera;
+    private bool _hasBlizzardSurfaceWorldZAnchor;
+    private float _blizzardSurfaceWorldZAnchor;
+    private Camera _blizzardSurfaceWorldZAnchorCamera;
     private readonly List<AlembicStreamPlayer> _plantaMjPlayers = new List<AlembicStreamPlayer>();
     private readonly List<float> _plantaMjTimes = new List<float>();
     private bool _plantaMjAutoPlaybackReported;
@@ -370,6 +377,7 @@ public class WindStateManager : MonoBehaviour
         _videoPlayersVisible = true;
         RefreshVideoCamera();
         ResetHorizontalMotionReference();
+        ResetBlizzardSurfaceWorldZAnchor();
         ResetWorldBackgroundAnchors();
 
         if (!_blizzardVideoPlaybackEnabled)
@@ -409,6 +417,7 @@ public class WindStateManager : MonoBehaviour
         _videoPlayersVisible = false;
         RefreshVideoCamera();
         ResetHorizontalMotionReference();
+        ResetBlizzardSurfaceWorldZAnchor();
 
         if (!_blizzardVideoPlaybackEnabled)
         {
@@ -983,6 +992,7 @@ public class WindStateManager : MonoBehaviour
         ApplyTreePlaybackOffsets();
         ResolvePlantaMjAlembicPlayers();
         AssignCameraToAllPlayers();
+        ResetBlizzardSurfaceWorldZAnchor();
         ResetWorldBackgroundAnchors();
     }
 
@@ -1063,13 +1073,15 @@ public class WindStateManager : MonoBehaviour
         background.texture = texture;
         background.ownsTexture = false;
         background.usesFixedCameraPlane = true;
-        background.usesWorldPlane = idleBackgroundAnchoredToWorld;
+        background.usesWorldPlane = idleBackgroundAnchoredToWorld && !stabilizeBlizzardSurfaceOnScreen;
         background.fixedWidth = idleBackgroundWidth;
         background.fixedHeight = idleBackgroundHeight;
         background.fixedDepth = idleBackgroundDepth;
         background.fixedOffset = idleBackgroundOffset;
         background.uvTiling = ClampUvTiling(idleBackgroundUvTiling);
-        background.horizontalMotionCompensation = idleBackgroundHorizontalMotionCompensation;
+        background.horizontalMotionCompensation = stabilizeBlizzardSurfaceOnScreen
+            ? 0f
+            : idleBackgroundHorizontalMotionCompensation;
         if (background.material != null)
             background.material.renderQueue = (int)RenderQueue.Transparent + 5;
         _idleBackgroundSurfaces[player] = background;
@@ -1276,7 +1288,9 @@ public class WindStateManager : MonoBehaviour
         }
         else
         {
-            quadTransform.position = cameraTransform.position;
+            quadTransform.position = stabilizeBlizzardSurfaceOnScreen
+                ? cameraTransform.position
+                : GetCameraSurfacePosition(cameraTransform, surface);
             quadTransform.rotation = cameraTransform.rotation;
         }
 
@@ -1305,7 +1319,9 @@ public class WindStateManager : MonoBehaviour
         float extraDepth = surface.usesCameraBackgroundSettings ? backgroundCopyDistanceFromNearBlizzard : 0f;
         surface.fixedDepth = Mathf.Max(0.01f, cameraSurfaceDepth + extraDepth);
         surface.fixedOffset = cameraSurfaceLocalOffset;
-        surface.horizontalMotionCompensation = horizontalMotionCompensation;
+        surface.horizontalMotionCompensation = stabilizeBlizzardSurfaceOnScreen
+            ? 0f
+            : horizontalMotionCompensation;
     }
 
     private void PositionViewportSurface(VideoSurface surface, Transform quadTransform)
@@ -1373,7 +1389,7 @@ public class WindStateManager : MonoBehaviour
             surface.fixedOffset.y,
             Mathf.Max(0.01f, surface.fixedDepth));
 
-        surface.worldCenter = cameraTransform.TransformPoint(localCenter);
+        surface.worldCenter = ApplyBlizzardSurfaceWorldZLock(cameraTransform.TransformPoint(localCenter), surface);
         surface.worldRotation = cameraTransform.rotation;
         surface.worldPoseInitialized = true;
         return true;
@@ -1421,6 +1437,37 @@ public class WindStateManager : MonoBehaviour
         _horizontalMotionReferenceX = blizzardVideoCamera.transform.position.x;
         _horizontalMotionReferenceCamera = blizzardVideoCamera;
         _hasHorizontalMotionReference = true;
+    }
+
+    private Vector3 GetCameraSurfacePosition(Transform cameraTransform, VideoSurface surface)
+    {
+        if (cameraTransform == null)
+            return Vector3.zero;
+
+        return ApplyBlizzardSurfaceWorldZLock(cameraTransform.position, surface);
+    }
+
+    private Vector3 ApplyBlizzardSurfaceWorldZLock(Vector3 position, VideoSurface surface)
+    {
+        if (!lockBlizzardSurfaceWorldZ || surface == null || surface.alpha <= 0.001f)
+            return position;
+
+        if (!_hasBlizzardSurfaceWorldZAnchor ||
+            _blizzardSurfaceWorldZAnchorCamera != blizzardVideoCamera)
+        {
+            _blizzardSurfaceWorldZAnchor = position.z;
+            _blizzardSurfaceWorldZAnchorCamera = blizzardVideoCamera;
+            _hasBlizzardSurfaceWorldZAnchor = true;
+        }
+
+        position.z = _blizzardSurfaceWorldZAnchor;
+        return position;
+    }
+
+    private void ResetBlizzardSurfaceWorldZAnchor()
+    {
+        _hasBlizzardSurfaceWorldZAnchor = false;
+        _blizzardSurfaceWorldZAnchorCamera = null;
     }
 
     private void ResetWorldBackgroundAnchors()

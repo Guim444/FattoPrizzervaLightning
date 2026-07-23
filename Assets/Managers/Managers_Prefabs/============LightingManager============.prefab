@@ -59,8 +59,8 @@ MonoBehaviour:
     skyAnimatorTrigger: Tapat
     entries:
     - light: {fileID: 0}
-      startIntensity: 7
-      targetIntensity: 8
+      startIntensity: 0.38
+      targetIntensity: 0.38
     - light: {fileID: 0}
       startIntensity: 0.02
       targetIntensity: 0.05
@@ -68,8 +68,11 @@ MonoBehaviour:
       startIntensity: 2
       targetIntensity: 2
     - light: {fileID: 0}
-      startIntensity: 30
-      targetIntensity: 30
+      startIntensity: 26
+      targetIntensity: 26
+    - light: {fileID: 0}
+      startIntensity: 11.5
+      targetIntensity: 11.5
     - light: {fileID: 0}
       startIntensity: 0.7
       targetIntensity: 0.7
@@ -98,7 +101,7 @@ MonoBehaviour:
     skyAnimatorTrigger: Radiog
     entries:
     - light: {fileID: 0}
-      startIntensity: 8
+      startIntensity: 0.38
       targetIntensity: 9
     - light: {fileID: 0}
       startIntensity: 0.01
@@ -107,8 +110,11 @@ MonoBehaviour:
       startIntensity: 2
       targetIntensity: 2
     - light: {fileID: 0}
-      startIntensity: 30
-      targetIntensity: 30
+      startIntensity: 26
+      targetIntensity: 26
+    - light: {fileID: 0}
+      startIntensity: 11.6
+      targetIntensity: 11.6
     - light: {fileID: 0}
       startIntensity: 0.7
       targetIntensity: 0.7
@@ -152,8 +158,11 @@ MonoBehaviour:
       startIntensity: 2
       targetIntensity: 2
     - light: {fileID: 0}
-      startIntensity: 30
-      targetIntensity: 30
+      startIntensity: 26
+      targetIntensity: 26
+    - light: {fileID: 0}
+      startIntensity: 11.6
+      targetIntensity: 11.6
     - light: {fileID: 0}
       startIntensity: 0.7
       targetIntensity: 0.7
@@ -219,7 +228,10 @@ MonoBehaviour:
       targetIntensity: 5
     - light: {fileID: 0}
       startIntensity: 100
-      targetIntensity: 200
+      targetIntensity: 150
+    - light: {fileID: 0}
+      startIntensity: 100
+      targetIntensity: 150
     - light: {fileID: 0}
       startIntensity: 0
       targetIntensity: 3
@@ -412,6 +424,8 @@ MonoBehaviour:
   cameraSurfaceHeight: 28
   cameraSurfaceDepth: 6
   cameraSurfaceLocalOffset: {x: 0, y: 0}
+  stabilizeBlizzardSurfaceOnScreen: 1
+  lockBlizzardSurfaceWorldZ: 0
   backgroundCopyDistanceFromNearBlizzard: 12
   horizontalMotionCompensation: 0.2
   horizontalWorldUnitsPerTextureRepeat: 24
@@ -441,8 +455,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   windManager: {fileID: 7443403615731962900}
   plantManager: {fileID: 4621595609330186204}
-  runTreeAnimations: 0
-  runFireAnimations: 0
+  runTreeAnimations: 1
+  runFireAnimations: 1
   runBlizzardVideos: 0
   autoCollectPerformanceTargets: 1
   enableKeyboardShortcuts: 1

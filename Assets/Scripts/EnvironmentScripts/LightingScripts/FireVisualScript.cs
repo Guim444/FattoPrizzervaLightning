@@ -4,7 +4,7 @@ using UnityEngine;
 public class FireVisualScript : MonoBehaviour
 {
     [Range(0, 2)] public float fluctuationTime;
-    [Range(0, 5)] public float fluctuationRate;
+    [Range(0, 100)] public float fluctuationRate;
 
     public Light fireLight;
     public float baseIntensity;

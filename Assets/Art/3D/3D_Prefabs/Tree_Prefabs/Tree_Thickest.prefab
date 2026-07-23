@@ -72,10 +72,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Church_Animations_Trees_Thickest_Fast
       objectReference: {fileID: 0}
+    - target: {fileID: 5726944695379966152, guid: ed26684bd0e8f094c89381f75a1e29f5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8719847627311437211, guid: ed26684bd0e8f094c89381f75a1e29f5, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 7b422b4e996990c4ab3c16ac1839152a, type: 2}
+      objectReference: {fileID: 2100000, guid: 8fb681ba96e4de047b0bf57b3b1b4961, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -168,7 +172,7 @@ PrefabInstance:
     - target: {fileID: -1176197668703179362, guid: ba9a225112d08cc43b94de94518b6900, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 7b422b4e996990c4ab3c16ac1839152a, type: 2}
+      objectReference: {fileID: 2100000, guid: 8fb681ba96e4de047b0bf57b3b1b4961, type: 2}
     - target: {fileID: -29709261828233516, guid: ba9a225112d08cc43b94de94518b6900, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -265,7 +269,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: e94735c93bac6b7408128080102b33aa, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 8fb681ba96e4de047b0bf57b3b1b4961, type: 2}
+      objectReference: {fileID: 2100000, guid: 7b422b4e996990c4ab3c16ac1839152a, type: 2}
     - target: {fileID: 919132149155446097, guid: e94735c93bac6b7408128080102b33aa, type: 3}
       propertyPath: m_Name
       value: Tree_Thickest
@@ -344,6 +348,11 @@ MonoBehaviour:
   fastPlayer: {fileID: 2084228868153217163}
   slowPlaybackSpeed: 1
   fastPlaybackSpeed: 1
+  advanceInactivePlayersInBackground: 0
+  pauseWhenOffCamera: 1
+  visibilityCamera: {fileID: 0}
+  visibilityBoundsPadding: 1
+  visibilityCheckInterval: 0.2
 --- !u!23 &3896820141771526172 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: e94735c93bac6b7408128080102b33aa, type: 3}

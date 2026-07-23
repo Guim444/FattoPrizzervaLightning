@@ -33,6 +33,7 @@ public class HUDManager : MonoBehaviour
 
     [Header("Configuration — Player")]
     [SerializeField] private float startPositionX = 0f;
+    [SerializeField] private float startPositionZ = 0f;
 
 // Will be removed
     private float startPositionY = 1.8f;
@@ -147,10 +148,11 @@ public class HUDManager : MonoBehaviour
         enemy.SetActive(false);
         enemyRio.SetActive(false);
         playerTransformFront.SetActive(false);
-        MoveStartPlayerToX(startPositionX);
+        MoveStartPlayerToPosition(startPositionX, startPositionZ);
         ringManager.enabled = false;
         SetPlayerIdleFrontIfAvailable(true);
         HidePanel();
+        introSequenceManager?.SetIntroPlayerZ(startPositionZ);
         introSequenceManager?.StartIntro();
         playerBoundary.enabled = true;
     }
@@ -546,7 +548,7 @@ public class HUDManager : MonoBehaviour
         Debug.Log($"[HUDManager] MovePlayerToX — after: {playerTransform.position}");
     }
 
-    private void MoveStartPlayerToX(float x)
+    private void MoveStartPlayerToPosition(float x, float z)
     {
         if (playerTransform == null)
         {
@@ -554,18 +556,16 @@ public class HUDManager : MonoBehaviour
             return;
         }
 
-        float startZ = introSequenceManager != null ? introSequenceManager.IntroPlayerZ : 0f;
-
         Debug.Log(
-            $"[HUDManager] MoveStartPlayerToX — before: {playerTransform.position}  →  target X:{x} Y:{startPositionY} Z:{startZ}");
+            $"[HUDManager] MoveStartPlayerToPosition — before: {playerTransform.position}  →  target X:{x} Y:{startPositionY} Z:{z}");
 
         CharacterController cc = playerTransform.GetComponent<CharacterController>();
         if (cc != null) cc.enabled = false;
-        playerTransform.position = new Vector3(x, startPositionY, startZ);
+        playerTransform.position = new Vector3(x, startPositionY, z);
         Physics.SyncTransforms();
         if (cc != null) cc.enabled = true;
 
-        Debug.Log($"[HUDManager] MoveStartPlayerToX — after: {playerTransform.position}");
+        Debug.Log($"[HUDManager] MoveStartPlayerToPosition — after: {playerTransform.position}");
     }
 
     private void HidePanel()

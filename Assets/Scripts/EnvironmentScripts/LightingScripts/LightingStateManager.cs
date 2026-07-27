@@ -67,11 +67,15 @@ public class LightingStateManager : MonoBehaviour
     private Coroutine _activeTransition;
     private Coroutine _blueTransitionCoroutine;
     private readonly List<GameObject> _activatedByManager = new List<GameObject>();
+    private readonly Dictionary<Light, FireVisualScript> _fireVisualsByLight =
+        new Dictionary<Light, FireVisualScript>();
 
     private void Awake()
     {
         if (lightmapStateManager == null)
             lightmapStateManager = GetComponent<LightmapStateManager>();
+
+        CacheFireVisuals();
     }
 
     private void Update()
@@ -172,7 +176,7 @@ public class LightingStateManager : MonoBehaviour
         foreach (var entry in states[idx].entries)
         {
             if (entry.light != null)
-                entry.light.intensity = entry.targetIntensity;
+                ApplyLightIntensity(entry.light, entry.targetIntensity);
         }
         _currentStateIndex = idx;
     }
@@ -274,7 +278,13 @@ public class LightingStateManager : MonoBehaviour
             {
                 var entry = target.entries[i];
                 if (entry.light != null)
-                    entry.light.intensity = Mathf.Lerp(entry.startIntensity, entry.targetIntensity, t);
+                {
+                    float intensity = Mathf.Lerp(
+                        entry.startIntensity,
+                        entry.targetIntensity,
+                        t);
+                    ApplyLightIntensity(entry.light, intensity);
+                }
             }
 
             yield return null;
@@ -284,22 +294,54 @@ public class LightingStateManager : MonoBehaviour
         _activeTransition = null;
     }
 
-    private static void ApplyStartIntensities(LightingStateData target)
+    private void ApplyStartIntensities(LightingStateData target)
     {
         foreach (var entry in target.entries)
         {
             if (entry.light != null)
-                entry.light.intensity = entry.startIntensity;
+                ApplyLightIntensity(entry.light, entry.startIntensity);
         }
     }
 
-    private static void ApplyTargetIntensities(LightingStateData target)
+    private void ApplyTargetIntensities(LightingStateData target)
     {
         foreach (var entry in target.entries)
         {
             if (entry.light != null)
-                entry.light.intensity = entry.targetIntensity;
+                ApplyLightIntensity(entry.light, entry.targetIntensity);
         }
+    }
+
+    private void CacheFireVisuals()
+    {
+        _fireVisualsByLight.Clear();
+
+        foreach (var state in states)
+        {
+            if (state.entries == null)
+                continue;
+
+            foreach (var entry in state.entries)
+            {
+                if (entry.light == null || _fireVisualsByLight.ContainsKey(entry.light))
+                    continue;
+
+                if (entry.light.TryGetComponent(out FireVisualScript fireVisual))
+                    _fireVisualsByLight.Add(entry.light, fireVisual);
+            }
+        }
+    }
+
+    private void ApplyLightIntensity(Light targetLight, float intensity)
+    {
+        if (_fireVisualsByLight.TryGetValue(targetLight, out FireVisualScript fireVisual)
+            && fireVisual != null)
+        {
+            fireVisual.SetBaseIntensity(intensity);
+            return;
+        }
+
+        targetLight.intensity = intensity;
     }
 
     private void StopActiveTransition()

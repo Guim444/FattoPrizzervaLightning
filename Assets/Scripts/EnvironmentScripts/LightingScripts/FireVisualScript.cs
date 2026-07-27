@@ -1,40 +1,51 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(Light))]
 public class FireVisualScript : MonoBehaviour
 {
-    [Range(0, 2)] public float fluctuationTime;
-    [Range(0, 100)] public float fluctuationRate;
+    private const float MinimumFluctuationValue = 0.01f;
 
-    public Light fireLight;
-    public float baseIntensity;
+    [Header("Fire Fluctuation")]
+    [SerializeField, Range(MinimumFluctuationValue, 2f)]
+    private float fluctuationTime = 1f;
 
+    [SerializeField, Range(MinimumFluctuationValue, 100f)]
+    private float fluctuationRate = 1f;
+
+    private Light _fireLight;
     private Coroutine _fluctuationRoutine;
+    private float _baseIntensity;
+    private float _currentOffset;
+    private bool _baseIntensityInitialized;
+    private bool _isIncreasing = true;
     private bool _animationPlaybackEnabled = true;
 
-    public void Awake()
+    private void Awake()
     {
-        fireLight = GetComponent<Light>();
-        if (fireLight == null)
-        {
-            Debug.LogWarning($"[{nameof(FireVisualScript)}] {name} no tiene Light asociado.", this);
-            enabled = false;
-            return;
-        }
+        EnsureLightReference();
 
-        baseIntensity = fireLight.intensity;
-        StartFluctuation();
+        if (!_baseIntensityInitialized)
+        {
+            _baseIntensity = _fireLight.intensity;
+            _baseIntensityInitialized = true;
+        }
     }
 
     private void OnEnable()
     {
-        if (_animationPlaybackEnabled && _fluctuationRoutine == null && fireLight != null)
-            StartFluctuation();
+        StartFluctuation();
     }
 
     private void OnDisable()
     {
         StopFluctuation();
+    }
+
+    private void OnValidate()
+    {
+        fluctuationTime = Mathf.Max(MinimumFluctuationValue, fluctuationTime);
+        fluctuationRate = Mathf.Max(MinimumFluctuationValue, fluctuationRate);
     }
 
     public void SetAnimationPlaybackEnabled(bool shouldRun)
@@ -47,34 +58,59 @@ public class FireVisualScript : MonoBehaviour
             StopFluctuation();
     }
 
-    public IEnumerator FireFluctuation()
+    /// <summary>
+    /// Actualiza la intensidad base calculada por el gestor de iluminación.
+    /// El parpadeo conserva su desplazamiento actual sobre esta nueva base.
+    /// </summary>
+    public void SetBaseIntensity(float intensity)
     {
-        if (fireLight == null || fluctuationTime <= 0f)
-            yield break;
+        EnsureLightReference();
+        _baseIntensity = intensity;
+        _baseIntensityInitialized = true;
+        ApplyCurrentIntensity();
+    }
 
-        float targetUp = baseIntensity + fluctuationRate;
-        float targetDown = baseIntensity;
-
+    private IEnumerator FireFluctuation()
+    {
         while (true)
         {
-            while (fireLight.intensity < targetUp)
-            {
-                fireLight.intensity += (fluctuationRate / fluctuationTime) * Time.deltaTime;
-                yield return null;
-            }
+            float targetOffset = _isIncreasing ? fluctuationRate : 0f;
+            float speed = fluctuationRate / fluctuationTime;
 
-            while (fireLight.intensity > targetDown)
-            {
-                fireLight.intensity -= (fluctuationRate / fluctuationTime) * Time.deltaTime;
-                yield return null;
-            }
+            _currentOffset = Mathf.MoveTowards(
+                _currentOffset,
+                targetOffset,
+                speed * Time.deltaTime);
+
+            ApplyCurrentIntensity();
+
+            if (Mathf.Approximately(_currentOffset, targetOffset))
+                _isIncreasing = !_isIncreasing;
+
+            yield return null;
         }
     }
 
     private void StartFluctuation()
     {
-        if (!_animationPlaybackEnabled || !isActiveAndEnabled || fireLight == null || _fluctuationRoutine != null)
+        if (!_animationPlaybackEnabled
+            || !isActiveAndEnabled
+            || _fireLight == null
+            || _fluctuationRoutine != null)
+        {
             return;
+        }
+
+        if (fluctuationTime <= 0f || fluctuationRate <= 0f)
+        {
+            _currentOffset = 0f;
+            ApplyCurrentIntensity();
+            Debug.LogWarning(
+                $"[{nameof(FireVisualScript)}] {name} necesita valores mayores que cero "
+                + $"para {nameof(fluctuationTime)} y {nameof(fluctuationRate)}.",
+                this);
+            return;
+        }
 
         _fluctuationRoutine = StartCoroutine(FireFluctuation());
     }
@@ -86,5 +122,17 @@ public class FireVisualScript : MonoBehaviour
 
         StopCoroutine(_fluctuationRoutine);
         _fluctuationRoutine = null;
+    }
+
+    private void ApplyCurrentIntensity()
+    {
+        if (_fireLight != null)
+            _fireLight.intensity = _baseIntensity + _currentOffset;
+    }
+
+    private void EnsureLightReference()
+    {
+        if (_fireLight == null)
+            _fireLight = GetComponent<Light>();
     }
 }

@@ -97,11 +97,6 @@ public class IntroSequenceManager : MonoBehaviour
 
     public float IntroPlayerZ => introPlayerZ;
 
-    public void SetIntroPlayerZ(float z)
-    {
-        introPlayerZ = z;
-    }
-
 
     private bool isWalking;
     private bool played;

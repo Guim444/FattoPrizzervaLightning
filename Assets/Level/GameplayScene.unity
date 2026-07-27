@@ -209,7 +209,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 2004004907}
   m_Lens:
-    FieldOfView: 45
+    FieldOfView: 35.00884
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 20000
@@ -3089,7 +3089,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 20000
-  field of view: 45
+  field of view: 35.00884
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -4368,8 +4368,9 @@ MonoBehaviour:
   ringManager: {fileID: 2021292069}
   playerTransformFront: {fileID: 1041187257}
   playerAnimator: {fileID: 2004004937}
-  startPositionX: -98
-  startPositionZ: -2
+  startPositionX: 2
+  testPositionX: 0
+  testPositionZ: 0
   freeMoveStartCameraY: 3
   cinemachineZoomController: {fileID: 685871263}
   cinemachineBrain: {fileID: 1613816023}

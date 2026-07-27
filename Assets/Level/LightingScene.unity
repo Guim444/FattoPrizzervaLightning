@@ -6021,8 +6021,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.097
   fluctuationRate: 10
-  fireLight: {fileID: 154995057}
-  baseIntensity: 0
 --- !u!1 &166374248
 GameObject:
   m_ObjectHideFlags: 0
@@ -6209,8 +6207,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 0.898
   fluctuationRate: 0.57
-  fireLight: {fileID: 183820003}
-  baseIntensity: 0
 --- !u!114 &183820001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6395,8 +6391,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.795
   fluctuationRate: 0.44
-  fireLight: {fileID: 196150093}
-  baseIntensity: 0
 --- !u!114 &196150091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8638,10 +8632,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18a164ad345eb2e45845ecb1fbd07a27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fluctuationTime: 2
+  fluctuationTime: 0.5
   fluctuationRate: 100
-  fireLight: {fileID: 368022821}
-  baseIntensity: 0
 --- !u!1 &368500696 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5214613864541813120, guid: 94cb4e52fe14ef04fb5895f4d88665f0, type: 3}
@@ -11349,8 +11341,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.859
   fluctuationRate: 0.57
-  fireLight: {fileID: 689174765}
-  baseIntensity: 0
 --- !u!114 &689174763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11900,10 +11890,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18a164ad345eb2e45845ecb1fbd07a27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fluctuationTime: 2
+  fluctuationTime: 0.2
   fluctuationRate: 100
-  fireLight: {fileID: 710769305}
-  baseIntensity: 150
 --- !u!1 &717461762 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7275415861844085730, guid: 137b3fd3b6938ae458eddbf8b3a5afdf, type: 3}
@@ -12884,8 +12872,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.569
   fluctuationRate: 0.78
-  fireLight: {fileID: 813060175}
-  baseIntensity: 0
 --- !u!114 &813060173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18473,8 +18459,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.097
   fluctuationRate: 10
-  fireLight: {fileID: 914208081}
-  baseIntensity: 30
 --- !u!1 &916779004
 GameObject:
   m_ObjectHideFlags: 0
@@ -18921,8 +18905,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.859
   fluctuationRate: 0.57
-  fireLight: {fileID: 935956613}
-  baseIntensity: 0
 --- !u!114 &935956611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20518,43 +20500,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a1cd23f88e08e3f4aab658d56707326d, type: 3}
---- !u!84 &1102828186
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 256
-  m_Height: 256
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 0
-  m_ColorFormat: 8
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 0
-    m_WrapV: 0
-    m_WrapW: 0
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1 &1104281966
 GameObject:
   m_ObjectHideFlags: 0
@@ -21144,6 +21089,43 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1155530412}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!84 &1176737105
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 6
+  m_Width: 256
+  m_Height: 256
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 0
+  m_ColorFormat: 8
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_UseDynamicScaleExplicit: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 0
+    m_WrapV: 0
+    m_WrapW: 0
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1001 &1185578064
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23155,8 +23137,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.097
   fluctuationRate: 2.72
-  fireLight: {fileID: 1321965284}
-  baseIntensity: 0
 --- !u!114 &1321965282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23674,8 +23654,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.046
   fluctuationRate: 0.67
-  fireLight: {fileID: 1340697781}
-  baseIntensity: 0
 --- !u!114 &1340697779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24681,8 +24659,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 0.75
   fluctuationRate: 1
-  fireLight: {fileID: 1393276730}
-  baseIntensity: 0
 --- !u!114 &1393276728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25156,8 +25132,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 0.869
   fluctuationRate: 0.49
-  fireLight: {fileID: 1422917286}
-  baseIntensity: 0
 --- !u!114 &1422917284
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26630,8 +26604,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.569
   fluctuationRate: 1
-  fireLight: {fileID: 1488175661}
-  baseIntensity: 0
 --- !u!114 &1488175659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27379,8 +27351,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 0.75
   fluctuationRate: 1
-  fireLight: {fileID: 1536564590}
-  baseIntensity: 0
 --- !u!114 &1536564588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28467,8 +28437,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 0.728
   fluctuationRate: 0.44
-  fireLight: {fileID: 1665616941}
-  baseIntensity: 0
 --- !u!114 &1665616939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29172,7 +29140,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
-        m_Texture: {fileID: 1102828186}
+        m_Texture: {fileID: 1176737105}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -29195,7 +29163,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DetailColor: {r: 0.5231373, g: 0.5231373, b: 0.5231373, a: 0}
     - _DetailData: {r: 0.5, g: 4, b: -0.5, a: 0}
-    - _DetailWindDirection: {r: 3.3237085, g: 0, b: 0, a: 0}
+    - _DetailWindDirection: {r: 0.7052304, g: 0, b: 0, a: 0}
     - _DistanceData: {r: 0, g: 1.6399999, b: 0.000004, a: 0.0023384353}
     - _FogOfWarCenter: {r: 0, g: 0, b: 0, a: 1}
     - _FogOfWarCenterAdjusted: {r: 0, g: 0, b: 0, a: 1}
@@ -29208,7 +29176,7 @@ Material:
     - _ShadowData: {r: 0.4, g: 0, b: 250, a: 0}
     - _SpecularColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
     - _SunDir: {r: 0.88837695, g: 0.45570028, b: -0.055891793, a: 0}
-    - _WindDirection: {r: 3.3237085, g: 0, b: 0, a: 0}
+    - _WindDirection: {r: 0.7052304, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!84 &1714280917
@@ -30516,8 +30484,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 0.721
   fluctuationRate: 0.49
-  fireLight: {fileID: 1863566057}
-  baseIntensity: 0
 --- !u!114 &1863566055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30933,8 +30899,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.097
   fluctuationRate: 1.11
-  fireLight: {fileID: 1887948595}
-  baseIntensity: 0
 --- !u!114 &1887948593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31803,8 +31767,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 0.799
   fluctuationRate: 1
-  fireLight: {fileID: 1926480973}
-  baseIntensity: 0
 --- !u!114 &1926480971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32252,8 +32214,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 0.869
   fluctuationRate: 0.49
-  fireLight: {fileID: 1955986774}
-  baseIntensity: 0
 --- !u!114 &1955986772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33039,8 +32999,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.795
   fluctuationRate: 0.44
-  fireLight: {fileID: 2024400287}
-  baseIntensity: 0
 --- !u!114 &2024400285
 MonoBehaviour:
   m_ObjectHideFlags: 0

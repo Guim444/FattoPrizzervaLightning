@@ -13,12 +13,11 @@ public class HUDManager : MonoBehaviour
     [SerializeField] GameObject _canvasMain;
     [SerializeField] GameObject _canvasUIStats;
 
-    [Header("UI")]
-    [SerializeField] private GameObject uiRoot;
+    [Header("UI")] [SerializeField] private GameObject uiRoot;
     [SerializeField] private GameObject selectionPanel;
 
-    [Header("References")]
-    [SerializeField] private GameObject OutsideChurch;
+    [Header("References")] [SerializeField]
+    private GameObject OutsideChurch;
 
     [SerializeField] private Transform playerTransform;
 
@@ -31,9 +30,15 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private GameObject playerTransformFront;
     [SerializeField] private Animator playerAnimator;
 
-    [Header("Configuration — Player")]
-    [SerializeField] private float startPositionX = 0f;
-    [SerializeField] private float startPositionZ = 0f;
+    [Header("Configuration — Player")] [SerializeField]
+    private float startPositionX = 0f;
+
+    private float distanceToStart = 100f; //Esta variable cuando se elimine la seccion de test se debería eliminar
+
+    [Header("Configuration — Test Mode")] [SerializeField]
+    private float testPositionX = 0f;
+
+    [SerializeField] private float testPositionZ = -2f;
 
 // Will be removed
     private float startPositionY = 1.8f;
@@ -41,15 +46,16 @@ public class HUDManager : MonoBehaviour
     private float combatStartPositionY = 1f;
     private float combatStartPositionZ = -2f;
 
-    [Header("Configuration — Camera")]
-    [SerializeField] private float freeMoveStartCameraY = 1.5f;
+    [Header("Configuration — Camera")] [SerializeField]
+    private float freeMoveStartCameraY = 1.5f;
 
     [SerializeField] private CinemachineZoomController cinemachineZoomController;
     [SerializeField] private CinemachineBrain cinemachineBrain;
     [SerializeField] private CameraMovement cameraMovement;
 
-    [Header("Startup Loading")]
-    [SerializeField] private bool requireStartupLoading = true;
+    [Header("Startup Loading")] [SerializeField]
+    private bool requireStartupLoading = true;
+
     [SerializeField, Min(0f)] private float startupLoadingMinimumSeconds = 2f;
     [SerializeField, Min(0f)] private float particlePrewarmSeconds = 0.35f;
     [SerializeField, Min(0f)] private float alembicPrewarmSampleTime = 0.05f;
@@ -148,11 +154,10 @@ public class HUDManager : MonoBehaviour
         enemy.SetActive(false);
         enemyRio.SetActive(false);
         playerTransformFront.SetActive(false);
-        MoveStartPlayerToPosition(startPositionX, startPositionZ);
+        MoveStartPlayerToX(startPositionX - distanceToStart);
         ringManager.enabled = false;
         SetPlayerIdleFrontIfAvailable(true);
         HidePanel();
-        introSequenceManager?.SetIntroPlayerZ(startPositionZ);
         introSequenceManager?.StartIntro();
         playerBoundary.enabled = true;
     }
@@ -183,7 +188,7 @@ public class HUDManager : MonoBehaviour
         enemy.SetActive(true);
         OutsideChurch.SetActive(true);
         enemyRio.SetActive(false);
-        MovePlayerToX(combatStartPositionX);
+        MoveTestPlayerToPosition(testPositionX, testPositionZ);
         HidePanel();
     }
 
@@ -226,7 +231,9 @@ public class HUDManager : MonoBehaviour
 
         if (prewarmShaders)
         {
-            Debug.LogWarning("[HUDManager] Shader warmup global desactivado: Shader.WarmupAllShaders puede generar asserts de keyword space con shaders de partículas URP. Usar ShaderVariantCollection si hace falta un warmup fino.", this);
+            Debug.LogWarning(
+                "[HUDManager] Shader warmup global desactivado: Shader.WarmupAllShaders puede generar asserts de keyword space con shaders de partículas URP. Usar ShaderVariantCollection si hace falta un warmup fino.",
+                this);
             SetLoadingProgress(0.9f, "Shaders omitidos");
             yield return null;
         }
@@ -293,7 +300,8 @@ public class HUDManager : MonoBehaviour
 
             if (processed % 12 == 0)
             {
-                SetLoadingProgress(Mathf.Lerp(0.45f, 0.62f, processed / Mathf.Max(1f, trees.Length)), "Preparando árboles");
+                SetLoadingProgress(Mathf.Lerp(0.45f, 0.62f, processed / Mathf.Max(1f, trees.Length)),
+                    "Preparando árboles");
                 yield return null;
             }
         }
@@ -319,7 +327,8 @@ public class HUDManager : MonoBehaviour
 
             if (processed % 16 == 0)
             {
-                SetLoadingProgress(Mathf.Lerp(0.62f, 0.72f, processed / Mathf.Max(1f, animators.Length)), "Preparando animaciones");
+                SetLoadingProgress(Mathf.Lerp(0.62f, 0.72f, processed / Mathf.Max(1f, animators.Length)),
+                    "Preparando animaciones");
                 yield return null;
             }
         }
@@ -353,7 +362,8 @@ public class HUDManager : MonoBehaviour
 
             if (processed % 12 == 0)
             {
-                SetLoadingProgress(Mathf.Lerp(0.72f, 0.84f, processed / Mathf.Max(1f, particles.Length)), "Preparando partículas");
+                SetLoadingProgress(Mathf.Lerp(0.72f, 0.84f, processed / Mathf.Max(1f, particles.Length)),
+                    "Preparando partículas");
                 yield return null;
             }
         }
@@ -548,7 +558,7 @@ public class HUDManager : MonoBehaviour
         Debug.Log($"[HUDManager] MovePlayerToX — after: {playerTransform.position}");
     }
 
-    private void MoveStartPlayerToPosition(float x, float z)
+    private void MoveStartPlayerToX(float x)
     {
         if (playerTransform == null)
         {
@@ -556,16 +566,33 @@ public class HUDManager : MonoBehaviour
             return;
         }
 
+        float startZ = introSequenceManager != null ? introSequenceManager.IntroPlayerZ : 0f;
+
         Debug.Log(
-            $"[HUDManager] MoveStartPlayerToPosition — before: {playerTransform.position}  →  target X:{x} Y:{startPositionY} Z:{z}");
+            $"[HUDManager] MoveStartPlayerToX — before: {playerTransform.position}  →  target X:{x} Y:{startPositionY} Z:{startZ}");
 
         CharacterController cc = playerTransform.GetComponent<CharacterController>();
         if (cc != null) cc.enabled = false;
-        playerTransform.position = new Vector3(x, startPositionY, z);
+        playerTransform.position = new Vector3(x, startPositionY, startZ);
         Physics.SyncTransforms();
         if (cc != null) cc.enabled = true;
 
-        Debug.Log($"[HUDManager] MoveStartPlayerToPosition — after: {playerTransform.position}");
+        Debug.Log($"[HUDManager] MoveStartPlayerToX — after: {playerTransform.position}");
+    }
+
+    private void MoveTestPlayerToPosition(float x, float z)
+    {
+        if (playerTransform == null)
+        {
+            Debug.LogError("[HUDManager] playerTransform is not assigned in the Inspector.");
+            return;
+        }
+
+        CharacterController cc = playerTransform.GetComponent<CharacterController>();
+        if (cc != null) cc.enabled = false;
+        playerTransform.position = new Vector3(x, combatStartPositionY, z);
+        Physics.SyncTransforms();
+        if (cc != null) cc.enabled = true;
     }
 
     private void HidePanel()

@@ -272,6 +272,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3911012667576976745, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Name
       value: Tree_Thicker
@@ -354,6 +358,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1949257711000670824, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
@@ -669,6 +677,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1949257711000670824, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
@@ -6697,6 +6709,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3911012667576976745, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Name
       value: Tree_Thicker
@@ -7684,6 +7700,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3911012667576976745, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Name
       value: Tree_Thicker
@@ -8420,6 +8440,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1949257711000670824, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
@@ -9868,6 +9892,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3911012667576976745, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Name
       value: Tree_Thicker
@@ -10738,6 +10766,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1949257711000670824, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
@@ -12163,6 +12195,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3911012667576976745, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Name
       value: Tree_Thicker
@@ -12241,6 +12277,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1949257711000670824, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
@@ -13118,6 +13158,43 @@ Transform:
   - {fileID: 517725414}
   m_Father: {fileID: 2019513220}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!84 &882593268
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 6
+  m_Width: 256
+  m_Height: 256
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 0
+  m_ColorFormat: 8
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_UseDynamicScaleExplicit: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 0
+    m_WrapV: 0
+    m_WrapW: 0
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1001 &895035417
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18508,6 +18585,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3911012667576976745, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Name
       value: Tree_Thicker
@@ -18589,6 +18670,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3911012667576976745, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Name
       value: Tree_Thicker
@@ -18667,6 +18752,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1949257711000670824, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
@@ -19721,6 +19810,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3911012667576976745, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Name
       value: Tree_Thicker
@@ -20265,6 +20358,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3911012667576976745, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Name
       value: Tree_Thicker
@@ -20597,6 +20694,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1949257711000670824, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
@@ -21089,43 +21190,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1155530412}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!84 &1176737105
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 256
-  m_Height: 256
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 0
-  m_ColorFormat: 8
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 0
-    m_WrapV: 0
-    m_WrapW: 0
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1001 &1185578064
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21139,6 +21203,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1949257711000670824, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
@@ -21208,6 +21276,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1949257711000670824, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
@@ -23013,6 +23085,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3911012667576976745, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Name
       value: Tree_Thicker
@@ -24029,7 +24105,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2e5b1fdca3fbb424ebfb0e447fa8c4af, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.7
+      value: 6.13
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2e5b1fdca3fbb424ebfb0e447fa8c4af, type: 3}
       propertyPath: m_LocalPosition.z
@@ -24952,6 +25028,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3911012667576976745, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Name
       value: Tree_Thicker
@@ -25751,6 +25831,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1949257711000670824, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
@@ -27246,6 +27330,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1949257711000670824, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
@@ -29140,7 +29228,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
-        m_Texture: {fileID: 1176737105}
+        m_Texture: {fileID: 882593268}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -29163,7 +29251,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DetailColor: {r: 0.5231373, g: 0.5231373, b: 0.5231373, a: 0}
     - _DetailData: {r: 0.5, g: 4, b: -0.5, a: 0}
-    - _DetailWindDirection: {r: 0.7052304, g: 0, b: 0, a: 0}
+    - _DetailWindDirection: {r: 0.81510997, g: 0, b: 0, a: 0}
     - _DistanceData: {r: 0, g: 1.6399999, b: 0.000004, a: 0.0023384353}
     - _FogOfWarCenter: {r: 0, g: 0, b: 0, a: 1}
     - _FogOfWarCenterAdjusted: {r: 0, g: 0, b: 0, a: 1}
@@ -29176,7 +29264,7 @@ Material:
     - _ShadowData: {r: 0.4, g: 0, b: 250, a: 0}
     - _SpecularColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
     - _SunDir: {r: 0.88837695, g: 0.45570028, b: -0.055891793, a: 0}
-    - _WindDirection: {r: 0.7052304, g: 0, b: 0, a: 0}
+    - _WindDirection: {r: 0.81510997, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!84 &1714280917
@@ -29364,6 +29452,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1949257711000670824, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
@@ -29895,6 +29987,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1949257711000670824, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
@@ -31107,6 +31203,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3911012667576976745, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Name
       value: Tree_Thicker
@@ -32100,6 +32200,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3911012667576976745, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Name
       value: Tree_Thicker
@@ -32401,6 +32505,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3911012667576976745, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Name
       value: Tree_Thicker
@@ -32518,6 +32626,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1949257711000670824, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081297023475213796, guid: ae0ac0cac243b9a448d13aea380423f9, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
@@ -42312,6 +42424,10 @@ PrefabInstance:
       propertyPath: blueLightsObject
       value: 
       objectReference: {fileID: 499184186}
+    - target: {fileID: 3396225522924585539, guid: 2d9375674999f234493c06101bc5c824, type: 3}
+      propertyPath: transitionDuration
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 3396225522924585539, guid: 2d9375674999f234493c06101bc5c824, type: 3}
       propertyPath: states.Array.data[0].entries.Array.data[0].light
       value: 

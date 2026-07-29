@@ -78,6 +78,7 @@ public class IntroSequenceManager : MonoBehaviour
     private Color[] _originalRendererColors;
     private bool[] _originalRendererEnabledStates;
     private Coroutine _blinkCoroutine;
+    private Coroutine _churchSequenceCoroutine;
     private CinemachineFramingTransposer _introFramingTransposer;
     private Vector3 _originalIntroTrackedObjectOffset;
     private CameraClearFlags _originalClearFlags;
@@ -776,12 +777,46 @@ public class IntroSequenceManager : MonoBehaviour
         RestoreGameplayAnimatorControl();
     }
 
-    public void OnPlayerEnterChurch(Transform churchPosition)
+    public bool TryStartChurchSequence(
+        Transform firstTarget,
+        float firstDuration,
+        Transform secondTarget,
+        float secondDuration,
+        Transform rioTutteStandard,
+        Transform rioTutteTransformation,
+        float autoMoveCameraY)
     {
-        StartCoroutine(EnterChurchSequence(churchPosition));
+        if (_churchSequenceCoroutine != null)
+            return false;
+
+        if (firstTarget == null || secondTarget == null ||
+            rioTutteStandard == null || rioTutteTransformation == null)
+        {
+            Debug.LogError(
+                $"[{nameof(IntroSequenceManager)}] Asigna los dos puntos de automove y las dos variantes visuales de RioTutte.",
+                this);
+            return false;
+        }
+
+        _churchSequenceCoroutine = StartCoroutine(EnterChurchSequence(
+            firstTarget,
+            firstDuration,
+            secondTarget,
+            secondDuration,
+            rioTutteStandard,
+            rioTutteTransformation,
+            autoMoveCameraY));
+        return true;
     }
 
-    private IEnumerator EnterChurchSequence(Transform target)
+    private IEnumerator EnterChurchSequence(
+        Transform firstTarget,
+        float firstDuration,
+        Transform secondTarget,
+        float secondDuration,
+        Transform rioTutteStandard,
+        Transform rioTutteTransformation,
+        float autoMoveCameraY)
     {
         if (_blinkCoroutine != null)
         {
@@ -790,34 +825,133 @@ public class IntroSequenceManager : MonoBehaviour
         }
 
         RestoreOriginalAnimator();
+        PauseGameplayAnimatorControl();
 
         if (playerAnimator != null) playerAnimator.enabled = true;
         SetSoulForm();
 
-        playerInputHandler.enabled = false;
-        boundaryClamp.enabled = true;
-        yield return StartCoroutine(MovePlayerToPosition(target.position, 2f));
+        if (playerInputHandler != null) playerInputHandler.enabled = false;
+        if (playerController != null) playerController.enabled = false;
+        if (boundaryClamp != null) boundaryClamp.enabled = false;
+
+        Coroutine cameraLowering = StartCoroutine(
+            LowerCameraDuringAutoMove(autoMoveCameraY, firstDuration));
+        yield return StartCoroutine(MovePlayerToPosition(firstTarget.position, firstDuration));
+
+        ShowRioTutteTransformation(rioTutteStandard, rioTutteTransformation);
+        ApplyEnvironmentPhase(3);
+
+        yield return StartCoroutine(MovePlayerToPosition(secondTarget.position, secondDuration));
+
+        if (cameraLowering != null)
+            StopCoroutine(cameraLowering);
+
+        RestoreIntroCameraFraming();
+        hudManager?.CompleteChurchTestCameraTransition();
 
         SetPlayerAnimatorBoolIfAvailable(IdleFrontHash, false);
-        playerInputHandler.enabled = true;
+        RestoreGameplayAnimatorControl();
 
-        hudManager?.OnClickCombatPosition();
+        if (playerInputHandler != null) playerInputHandler.enabled = true;
+        if (playerController != null) playerController.enabled = true;
+
+        _churchSequenceCoroutine = null;
+    }
+
+    private void ShowRioTutteTransformation(
+        Transform rioTutteStandard,
+        Transform rioTutteTransformation)
+    {
+        rioTutteStandard.gameObject.SetActive(false);
+        rioTutteTransformation.gameObject.SetActive(true);
+    }
+
+    private IEnumerator LowerCameraDuringAutoMove(float targetWorldY, float duration)
+    {
+        CacheIntroCameraFraming();
+        if (_introFramingTransposer == null || mainCamera == null)
+            yield break;
+
+        Vector3 startOffset = _introFramingTransposer.m_TrackedObjectOffset;
+        Vector3 targetOffset = startOffset;
+        targetOffset.y += targetWorldY - mainCamera.transform.position.y;
+
+        if (duration <= 0f)
+        {
+            _introFramingTransposer.m_TrackedObjectOffset = targetOffset;
+            yield break;
+        }
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / duration));
+            _introFramingTransposer.m_TrackedObjectOffset =
+                Vector3.LerpUnclamped(startOffset, targetOffset, t);
+            yield return null;
+        }
+
+        _introFramingTransposer.m_TrackedObjectOffset = targetOffset;
     }
 
     private IEnumerator MovePlayerToPosition(Vector3 target, float duration)
     {
+        if (playerTransform == null)
+            yield break;
+
         Vector3 start = playerTransform.position;
         float elapsed = 0f;
 
-        playerCC.enabled = false;
+        if (playerCC != null) playerCC.enabled = false;
+
+        if (duration <= 0f)
+        {
+            playerTransform.position = target;
+            Physics.SyncTransforms();
+            if (playerCC != null) playerCC.enabled = true;
+            yield break;
+        }
+
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            playerTransform.position = Vector3.Lerp(start, target, elapsed / duration);
+            playerTransform.position = Vector3.Lerp(start, target, Mathf.Clamp01(elapsed / duration));
             yield return null;
         }
+
         playerTransform.position = target;
-        playerCC.enabled = true;
+        Physics.SyncTransforms();
+        if (playerCC != null) playerCC.enabled = true;
+    }
+
+    private void ApplyEnvironmentPhase(int phase)
+    {
+        int activatedManagers = WindStateManager.ActivateAllVideoPlayersRoots();
+        if (activatedManagers == 0)
+            Debug.LogWarning(
+                $"[{nameof(IntroSequenceManager)}] No se encontró ningún WindStateManager para activar la ventisca.",
+                this);
+
+        LightingStateManager[] lightingManagers = Object.FindObjectsByType<LightingStateManager>(
+            FindObjectsInactive.Exclude,
+            FindObjectsSortMode.None);
+        EnvironmentStateManager[] environmentManagers = Object.FindObjectsByType<EnvironmentStateManager>(
+            FindObjectsInactive.Exclude,
+            FindObjectsSortMode.None);
+
+        foreach (LightingStateManager manager in lightingManagers)
+            manager.ApplyPhase(phase);
+
+        foreach (EnvironmentStateManager manager in environmentManagers)
+            manager.ApplyPhase(phase);
+
+        if (lightingManagers.Length == 0 || environmentManagers.Length == 0)
+        {
+            Debug.LogWarning(
+                $"[{nameof(IntroSequenceManager)}] La fase {phase} no encontró todos los gestores de iluminación y entorno activos.",
+                this);
+        }
     }
 
     private void CachePlayerAnimations()

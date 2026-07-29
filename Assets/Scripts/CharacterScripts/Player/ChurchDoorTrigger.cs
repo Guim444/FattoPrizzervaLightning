@@ -2,24 +2,44 @@ using UnityEngine;
 
 public class ChurchDoorTrigger : MonoBehaviour
 {
-    [SerializeField] private HUDManager hudManager;
-    [SerializeField] private LayerMask playerLayer;
-    [SerializeField] private Camera playerCamera;
+    [Header("Sequence")]
+    [SerializeField] private IntroSequenceManager introSequenceManager;
+    [SerializeField] private Transform firstAutoMoveTarget;
+    [SerializeField, Min(0f)] private float firstAutoMoveDuration = 2f;
+    [SerializeField] private Transform secondAutoMoveTarget;
+    [SerializeField, Min(0f)] private float secondAutoMoveDuration = 3f;
 
-    private bool triggered = false;
+    [Header("RioTutte Visuals")]
+    [SerializeField] private Transform rioTutteStandard;
+    [SerializeField] private Transform rioTutteTransformation;
+
+    [Header("Camera")]
+    [Tooltip("Altura temporal de cámara durante el segundo automove.")]
+    [SerializeField] private float autoMoveCameraY = 3f;
+
+    [Header("Detection")]
+    [SerializeField] private LayerMask playerLayer;
+
+    private bool triggered;
 
     private void OnTriggerEnter(Collider other)
     {
         if (triggered) return;
         if ((playerLayer.value & (1 << other.gameObject.layer)) == 0) return;
-        triggered = true;
-        if (playerCamera != null)
-            playerCamera.fieldOfView = 60;
 
-        int activatedManagers = WindStateManager.ActivateAllVideoPlayersRoots();
-        if (activatedManagers == 0)
-            Debug.LogWarning("[ChurchDoorTrigger] No se encontró ningún WindStateManager para activar la ventisca.", this);
+        if (introSequenceManager == null)
+        {
+            Debug.LogError("[ChurchDoorTrigger] IntroSequenceManager no está asignado.", this);
+            return;
+        }
 
-        hudManager?.OnEnterCombatFromTrigger();
+        triggered = introSequenceManager.TryStartChurchSequence(
+            firstAutoMoveTarget,
+            firstAutoMoveDuration,
+            secondAutoMoveTarget,
+            secondAutoMoveDuration,
+            rioTutteStandard,
+            rioTutteTransformation,
+            autoMoveCameraY);
     }
 }

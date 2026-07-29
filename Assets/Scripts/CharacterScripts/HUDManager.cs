@@ -140,6 +140,26 @@ public class HUDManager : MonoBehaviour
         OnClickCombatPosition();
     }
 
+    public void CompleteChurchTestCameraTransition()
+    {
+        Time.timeScale = 1f;
+
+        if (cameraMovement == null)
+        {
+            Debug.LogError("[HUDManager] CameraMovement no está asignado.", this);
+            return;
+        }
+
+        Vector3 currentCameraPosition = cameraMovement.transform.position;
+        ActivateCameraMovement();
+        cameraMovement.TeleportTo(currentCameraPosition);
+        cameraMovement.combatY = freeMoveStartCameraY;
+
+        if (ringManager != null) ringManager.enabled = false;
+        if (playerBoundary != null) playerBoundary.enabled = false;
+        HidePanel();
+    }
+
     public void OnClickStartHere()
     {
         if (!CanUseModeSelection()) return;

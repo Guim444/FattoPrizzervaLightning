@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class IntroSequenceManager : MonoBehaviour
 {
@@ -19,6 +20,28 @@ public class IntroSequenceManager : MonoBehaviour
     [SerializeField] private PlayerController playerController;
     [SerializeField] private HUDManager hudManager;
     [SerializeField] private SpriteRenderer playerSpriteRenderer;
+
+    [Header("Dialogue Placement")]
+    [Tooltip("Superficie sobre la que se coloca al jugador al activar la escena de diálogo.")]
+    [SerializeField] private Transform dialoguePlayerPlatform;
+    [SerializeField, Min(0f)] private float dialoguePlayerPlatformClearance = 0.02f;
+
+    [Header("Dialogue Camera")]
+    [Tooltip("Altura mundial fija de la cámara durante el diálogo.")]
+    [SerializeField] private float dialogueCameraWorldHeight = 2.5f;
+    [SerializeField, Range(1f, 179f)] private float dialogueCameraFieldOfView = 15f;
+    [SerializeField] private Vector3 dialogueCameraWorldRotation =
+        new Vector3(-6f, 89.006f, -0.108f);
+    [SerializeField] private int dialogueCameraPriority = 100;
+    [SerializeField, Range(0.1f, 1f)] private float dialogueCameraFramingSize = 0.95f;
+    [SerializeField, Min(0f)] private float dialogueCameraTargetRadius = 0.5f;
+    [SerializeField, Min(0.01f)] private float dialogueCameraInitialDistance = 6f;
+    [SerializeField, Min(0.01f)] private float dialogueCameraMinimumDistance = 1f;
+    [SerializeField, Min(0.01f)] private float dialogueCameraMaximumDistance = 30f;
+    [Tooltip("Valor positivo acerca la cámara al encuadre.")]
+    [SerializeField] private float dialogueCameraDistanceOffset;
+    [SerializeField, Min(0f)] private float dialogueCameraPositionDamping = 0.15f;
+    [SerializeField, Min(0f)] private float dialogueCameraBlendDuration = 2f;
 
     [Header("Camera — Intro FOV")]
     [SerializeField] private CinemachineVirtualCamera introVirtualCamera;
@@ -79,12 +102,14 @@ public class IntroSequenceManager : MonoBehaviour
     private bool[] _originalRendererEnabledStates;
     private Coroutine _blinkCoroutine;
     private Coroutine _churchSequenceCoroutine;
+    private Coroutine _dialogueReturnCoroutine;
     private CinemachineFramingTransposer _introFramingTransposer;
     private Vector3 _originalIntroTrackedObjectOffset;
     private CameraClearFlags _originalClearFlags;
     private float _activePlayerFadeAlpha = -1f;
     private PlayerAnimations _playerAnimations;
     private RuntimeAnimatorController _cachedAnimatorController;
+    private DialogueCameraController dialogueCameraController;
     private bool _originalPauseAnimatorControl;
     private bool _hasOriginalPauseAnimatorControl;
     private bool _playerFadeMaterialRestored;
@@ -784,7 +809,9 @@ public class IntroSequenceManager : MonoBehaviour
         float secondDuration,
         Transform rioTutteStandard,
         Transform rioTutteTransformation,
-        float autoMoveCameraY)
+        float autoMoveCameraY,
+        string dialogueSceneName,
+        string lightingSceneName)
     {
         if (_churchSequenceCoroutine != null)
             return false;
@@ -798,6 +825,32 @@ public class IntroSequenceManager : MonoBehaviour
             return false;
         }
 
+        if (string.IsNullOrWhiteSpace(dialogueSceneName) ||
+            !SceneManager.GetSceneByName(dialogueSceneName).isLoaded)
+        {
+            Debug.LogError(
+                $"[{nameof(IntroSequenceManager)}] La escena de diálogo '{dialogueSceneName}' no está cargada.",
+                this);
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(lightingSceneName) ||
+            !SceneManager.GetSceneByName(lightingSceneName).isLoaded)
+        {
+            Debug.LogError(
+                $"[{nameof(IntroSequenceManager)}] La escena de iluminación '{lightingSceneName}' no está cargada.",
+                this);
+            return false;
+        }
+
+        if (dialogueSceneName == lightingSceneName)
+        {
+            Debug.LogError(
+                $"[{nameof(IntroSequenceManager)}] Las escenas de diálogo e iluminación deben tener nombres distintos.",
+                this);
+            return false;
+        }
+
         _churchSequenceCoroutine = StartCoroutine(EnterChurchSequence(
             firstTarget,
             firstDuration,
@@ -805,7 +858,9 @@ public class IntroSequenceManager : MonoBehaviour
             secondDuration,
             rioTutteStandard,
             rioTutteTransformation,
-            autoMoveCameraY));
+            autoMoveCameraY,
+            dialogueSceneName,
+            lightingSceneName));
         return true;
     }
 
@@ -816,7 +871,9 @@ public class IntroSequenceManager : MonoBehaviour
         float secondDuration,
         Transform rioTutteStandard,
         Transform rioTutteTransformation,
-        float autoMoveCameraY)
+        float autoMoveCameraY,
+        string dialogueSceneName,
+        string lightingSceneName)
     {
         if (_blinkCoroutine != null)
         {
@@ -847,15 +904,143 @@ public class IntroSequenceManager : MonoBehaviour
             StopCoroutine(cameraLowering);
 
         RestoreIntroCameraFraming();
-        hudManager?.CompleteChurchTestCameraTransition();
 
+        if (!SwitchLoadedSceneRoots(lightingSceneName, dialogueSceneName))
+        {
+            hudManager?.CompleteChurchTestCameraTransition();
+            ResumePlayerAfterChurchSequence();
+            _churchSequenceCoroutine = null;
+            yield break;
+        }
+
+        PlacePlayerOnDialoguePlatform();
+
+        bool dialogueCameraActivated = false;
+        EnsureDialogueCameraController();
+        if (dialogueCameraController != null)
+        {
+            hudManager?.PrepareDialogueCameraTransition(
+                dialogueCameraBlendDuration);
+            dialogueCameraActivated = dialogueCameraController.ActivateCamera(
+                playerTransform,
+                rioTutteTransformation);
+
+            if (!dialogueCameraActivated)
+                hudManager?.CompleteChurchTestCameraTransition();
+        }
+        else
+        {
+            Debug.LogWarning(
+                $"[{nameof(IntroSequenceManager)}] DialogueCameraController no está asignado.",
+                this);
+        }
+
+        _churchSequenceCoroutine = null;
+    }
+
+    private bool SwitchLoadedSceneRoots(string sceneToHideName, string sceneToShowName)
+    {
+        Scene sceneToHide = SceneManager.GetSceneByName(sceneToHideName);
+        Scene sceneToShow = SceneManager.GetSceneByName(sceneToShowName);
+
+        if (!sceneToHide.isLoaded || !sceneToShow.isLoaded)
+        {
+            Debug.LogError(
+                $"[{nameof(IntroSequenceManager)}] Para cambiar el entorno deben estar cargadas '{sceneToHideName}' y '{sceneToShowName}'.",
+                this);
+            return false;
+        }
+
+        foreach (GameObject root in sceneToHide.GetRootGameObjects())
+            root.SetActive(false);
+
+        foreach (GameObject root in sceneToShow.GetRootGameObjects())
+            root.SetActive(true);
+
+        return true;
+    }
+
+    public bool ResumeAfterDialogueTest(
+        string lightingSceneName,
+        string dialogueSceneName)
+    {
+        if (_dialogueReturnCoroutine != null)
+            return false;
+
+        if (!SwitchLoadedSceneRoots(dialogueSceneName, lightingSceneName))
+            return false;
+
+        _dialogueReturnCoroutine = StartCoroutine(ReturnFromDialogueCamera());
+        return true;
+    }
+
+    private IEnumerator ReturnFromDialogueCamera()
+    {
+        float blendDuration = 0f;
+        if (dialogueCameraController != null)
+        {
+            blendDuration = dialogueCameraBlendDuration;
+            dialogueCameraController.DeactivateCamera();
+        }
+
+        if (blendDuration > 0f)
+            yield return new WaitForSecondsRealtime(blendDuration);
+
+        hudManager?.CompleteChurchTestCameraTransition();
+        ApplyEnvironmentPhase(3);
+        ResumePlayerAfterChurchSequence();
+        _dialogueReturnCoroutine = null;
+    }
+
+    private void EnsureDialogueCameraController()
+    {
+        if (dialogueCameraController == null)
+        {
+            GameObject cameraObject = new GameObject("CM_DialogueCamera");
+            cameraObject.SetActive(false);
+            cameraObject.transform.SetParent(transform, false);
+            cameraObject.AddComponent<CinemachineVirtualCamera>();
+
+            dialogueCameraController =
+                cameraObject.AddComponent<DialogueCameraController>();
+        }
+
+        ApplyDialogueCameraConfiguration();
+    }
+
+    private void ApplyDialogueCameraConfiguration()
+    {
+        if (dialogueCameraController == null)
+            return;
+
+        dialogueCameraController.Configure(
+            dialogueCameraWorldHeight,
+            dialogueCameraFieldOfView,
+            dialogueCameraWorldRotation,
+            dialogueCameraPriority,
+            dialogueCameraFramingSize,
+            dialogueCameraTargetRadius,
+            dialogueCameraInitialDistance,
+            dialogueCameraMinimumDistance,
+            dialogueCameraMaximumDistance,
+            dialogueCameraDistanceOffset,
+            dialogueCameraPositionDamping,
+            dialogueCameraBlendDuration);
+    }
+
+    private void OnValidate()
+    {
+        if (Application.isPlaying)
+            ApplyDialogueCameraConfiguration();
+    }
+
+    private void ResumePlayerAfterChurchSequence()
+    {
         SetPlayerAnimatorBoolIfAvailable(IdleFrontHash, false);
         RestoreGameplayAnimatorControl();
 
         if (playerInputHandler != null) playerInputHandler.enabled = true;
         if (playerController != null) playerController.enabled = true;
-
-        _churchSequenceCoroutine = null;
     }
 
     private void ShowRioTutteTransformation(
@@ -923,6 +1108,50 @@ public class IntroSequenceManager : MonoBehaviour
         playerTransform.position = target;
         Physics.SyncTransforms();
         if (playerCC != null) playerCC.enabled = true;
+    }
+
+    private void PlacePlayerOnDialoguePlatform()
+    {
+        if (playerTransform == null || dialoguePlayerPlatform == null)
+        {
+            Debug.LogWarning(
+                $"[{nameof(IntroSequenceManager)}] No se puede colocar al jugador: falta Player o Dialogue Player Platform.",
+                this);
+            return;
+        }
+
+        Collider platformCollider =
+            dialoguePlayerPlatform.GetComponentInChildren<Collider>();
+        Vector3 targetPosition = dialoguePlayerPlatform.position;
+
+        if (platformCollider != null)
+        {
+            Bounds platformBounds = platformCollider.bounds;
+            targetPosition.x = platformBounds.center.x;
+            targetPosition.y = platformBounds.max.y;
+            targetPosition.z = platformBounds.center.z;
+        }
+
+        if (playerCC != null)
+        {
+            float playerBottomOffset =
+                (playerCC.center.y - playerCC.height * 0.5f)
+                * Mathf.Abs(playerTransform.lossyScale.y);
+            targetPosition.y -= playerBottomOffset;
+        }
+
+        targetPosition.y += dialoguePlayerPlatformClearance;
+
+        bool characterControllerWasEnabled =
+            playerCC != null && playerCC.enabled;
+        if (characterControllerWasEnabled)
+            playerCC.enabled = false;
+
+        playerTransform.position = targetPosition;
+        Physics.SyncTransforms();
+
+        if (characterControllerWasEnabled)
+            playerCC.enabled = true;
     }
 
     private void ApplyEnvironmentPhase(int phase)

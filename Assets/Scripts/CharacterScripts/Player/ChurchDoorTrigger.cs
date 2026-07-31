@@ -14,8 +14,14 @@ public class ChurchDoorTrigger : MonoBehaviour
     [SerializeField] private Transform rioTutteTransformation;
 
     [Header("Camera")]
-    [Tooltip("Altura temporal de cámara durante el segundo automove.")]
+    [Tooltip("Altura temporal de cámara durante los automoves.")]
     [SerializeField] private float autoMoveCameraY = 3f;
+
+    [Header("Scene Transition")]
+    [Tooltip("Escena que sustituye a la escena de iluminación al terminar el segundo automove.")]
+    [SerializeField] private string dialogueSceneName = "DialogueScene";
+    [Tooltip("Escena de iluminación que se descarga al mostrar el menú.")]
+    [SerializeField] private string lightingSceneName = "LightingScene";
 
     [Header("Detection")]
     [SerializeField] private LayerMask playerLayer;
@@ -40,6 +46,8 @@ public class ChurchDoorTrigger : MonoBehaviour
             secondAutoMoveDuration,
             rioTutteStandard,
             rioTutteTransformation,
-            autoMoveCameraY);
+            autoMoveCameraY,
+            dialogueSceneName,
+            lightingSceneName);
     }
 }

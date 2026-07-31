@@ -73,6 +73,8 @@ public class HUDManager : MonoBehaviour
     private GameObject _loadingRoot;
     private Image _loadingFill;
     private Text _loadingText;
+    private CinemachineBlendDefinition _cameraBlendBeforeDialogue;
+    private bool _hasCameraBlendBeforeDialogue;
     private bool _startupLoadingComplete;
     private Coroutine _startupLoadingCoroutine;
 
@@ -116,6 +118,31 @@ public class HUDManager : MonoBehaviour
         cameraMovement.enabled = true;
     }
 
+    public void PrepareDialogueCameraTransition(float blendDuration)
+    {
+        if (cameraMovement != null)
+            cameraMovement.enabled = false;
+
+        cinemachineZoomController?.gameObject.SetActive(false);
+
+        if (cinemachineBrain == null)
+        {
+            Debug.LogError("[HUDManager] CinemachineBrain no está asignado.", this);
+            return;
+        }
+
+        if (!_hasCameraBlendBeforeDialogue)
+        {
+            _cameraBlendBeforeDialogue = cinemachineBrain.m_DefaultBlend;
+            _hasCameraBlendBeforeDialogue = true;
+        }
+
+        cinemachineBrain.m_DefaultBlend = new CinemachineBlendDefinition(
+            CinemachineBlendDefinition.Style.EaseInOut,
+            Mathf.Max(0f, blendDuration));
+        cinemachineBrain.enabled = true;
+    }
+
     public void OnClickCombatPosition()
     {
         if (!CanUseModeSelection()) return;
@@ -154,6 +181,12 @@ public class HUDManager : MonoBehaviour
         ActivateCameraMovement();
         cameraMovement.TeleportTo(currentCameraPosition);
         cameraMovement.combatY = freeMoveStartCameraY;
+
+        if (_hasCameraBlendBeforeDialogue && cinemachineBrain != null)
+        {
+            cinemachineBrain.m_DefaultBlend = _cameraBlendBeforeDialogue;
+            _hasCameraBlendBeforeDialogue = false;
+        }
 
         if (ringManager != null) ringManager.enabled = false;
         if (playerBoundary != null) playerBoundary.enabled = false;

@@ -13,9 +13,14 @@ public class FireVisualScript : MonoBehaviour
     [SerializeField, Range(MinimumFluctuationValue, 100f)]
     private float fluctuationRate = 1f;
 
+    [Tooltip("Variación máxima añadida al Light.range, sincronizada con la intensidad.")]
+    [SerializeField, Min(0f)]
+    private float rangeFluctuationRate;
+
     private Light _fireLight;
     private Coroutine _fluctuationRoutine;
     private float _baseIntensity;
+    private float _baseRange;
     private float _currentOffset;
     private bool _baseIntensityInitialized;
     private bool _isIncreasing = true;
@@ -30,6 +35,8 @@ public class FireVisualScript : MonoBehaviour
             _baseIntensity = _fireLight.intensity;
             _baseIntensityInitialized = true;
         }
+
+        _baseRange = _fireLight.range;
     }
 
     private void OnEnable()
@@ -46,6 +53,7 @@ public class FireVisualScript : MonoBehaviour
     {
         fluctuationTime = Mathf.Max(MinimumFluctuationValue, fluctuationTime);
         fluctuationRate = Mathf.Max(MinimumFluctuationValue, fluctuationRate);
+        rangeFluctuationRate = Mathf.Max(0f, rangeFluctuationRate);
     }
 
     public void SetAnimationPlaybackEnabled(bool shouldRun)
@@ -67,7 +75,7 @@ public class FireVisualScript : MonoBehaviour
         EnsureLightReference();
         _baseIntensity = intensity;
         _baseIntensityInitialized = true;
-        ApplyCurrentIntensity();
+        ApplyCurrentFluctuation();
     }
 
     private IEnumerator FireFluctuation()
@@ -82,7 +90,7 @@ public class FireVisualScript : MonoBehaviour
                 targetOffset,
                 speed * Time.deltaTime);
 
-            ApplyCurrentIntensity();
+            ApplyCurrentFluctuation();
 
             if (Mathf.Approximately(_currentOffset, targetOffset))
                 _isIncreasing = !_isIncreasing;
@@ -104,7 +112,7 @@ public class FireVisualScript : MonoBehaviour
         if (fluctuationTime <= 0f || fluctuationRate <= 0f)
         {
             _currentOffset = 0f;
-            ApplyCurrentIntensity();
+            ApplyCurrentFluctuation();
             Debug.LogWarning(
                 $"[{nameof(FireVisualScript)}] {name} necesita valores mayores que cero "
                 + $"para {nameof(fluctuationTime)} y {nameof(fluctuationRate)}.",
@@ -124,10 +132,17 @@ public class FireVisualScript : MonoBehaviour
         _fluctuationRoutine = null;
     }
 
-    private void ApplyCurrentIntensity()
+    private void ApplyCurrentFluctuation()
     {
-        if (_fireLight != null)
-            _fireLight.intensity = _baseIntensity + _currentOffset;
+        if (_fireLight == null)
+            return;
+
+        _fireLight.intensity = _baseIntensity + _currentOffset;
+
+        float normalizedOffset = fluctuationRate > 0f
+            ? Mathf.Clamp01(_currentOffset / fluctuationRate)
+            : 0f;
+        _fireLight.range = _baseRange + rangeFluctuationRate * normalizedOffset;
     }
 
     private void EnsureLightReference()

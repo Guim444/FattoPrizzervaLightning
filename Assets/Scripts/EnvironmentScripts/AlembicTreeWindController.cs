@@ -43,6 +43,7 @@ public class AlembicTreeWindController : MonoBehaviour
     private bool _animationPlaybackEnabled = true;
     private Renderer[] _animatedRenderers = new Renderer[0];
     private bool _isVisibleForPlayback = true;
+    private bool _useFastPlayer = true;
     private float _nextVisibilityCheckTime;
 
     public bool HasAvailablePlayers =>
@@ -170,12 +171,12 @@ public class AlembicTreeWindController : MonoBehaviour
     public void SetFast(bool fast)
     {
         bool useFast = fastPlayer != null && (fast || slowPlayer == null);
+        _useFastPlayer = useFast;
 
         if (!advanceInactivePlayersInBackground)
             SyncPlayerBeforeSwitch(useFast);
 
-        if (slowPlayer != null) slowPlayer.gameObject.SetActive(!useFast);
-        if (fastPlayer != null) fastPlayer.gameObject.SetActive(useFast);
+        ApplyPlayerVisibility(!pauseWhenOffCamera || _isVisibleForPlayback);
 
         _nextVisibilityCheckTime = 0f;
     }
@@ -273,14 +274,46 @@ public class AlembicTreeWindController : MonoBehaviour
     private bool IsVisibleForPlayback()
     {
         if (!pauseWhenOffCamera)
+        {
+            if (!_isVisibleForPlayback)
+            {
+                _isVisibleForPlayback = true;
+                ApplyPlayerVisibility(true);
+            }
+
             return true;
+        }
 
         if (Time.unscaledTime < _nextVisibilityCheckTime)
             return _isVisibleForPlayback;
 
         _nextVisibilityCheckTime = Time.unscaledTime + Mathf.Max(0.02f, visibilityCheckInterval);
-        _isVisibleForPlayback = IsInsideVisibilityCamera();
+        bool isVisible = IsInsideVisibilityCamera();
+        if (isVisible != _isVisibleForPlayback)
+        {
+            _isVisibleForPlayback = isVisible;
+            ApplyPlayerVisibility(isVisible);
+        }
+
         return _isVisibleForPlayback;
+    }
+
+    private void ApplyPlayerVisibility(bool isVisible)
+    {
+        bool showSlowPlayer = isVisible && !_useFastPlayer && slowPlayer != null;
+        bool showFastPlayer = isVisible && _useFastPlayer && fastPlayer != null;
+
+        if (slowPlayer != null
+            && slowPlayer.gameObject.activeSelf != showSlowPlayer)
+        {
+            slowPlayer.gameObject.SetActive(showSlowPlayer);
+        }
+
+        if (fastPlayer != null
+            && fastPlayer.gameObject.activeSelf != showFastPlayer)
+        {
+            fastPlayer.gameObject.SetActive(showFastPlayer);
+        }
     }
 
     private bool IsInsideVisibilityCamera()
@@ -296,14 +329,14 @@ public class AlembicTreeWindController : MonoBehaviour
             return true;
 
         Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
-        bool foundActiveRenderer = false;
+        bool foundRenderer = false;
 
         foreach (Renderer renderer in _animatedRenderers)
         {
-            if (renderer == null || !renderer.enabled || !renderer.gameObject.activeInHierarchy)
+            if (renderer == null || !renderer.enabled)
                 continue;
 
-            foundActiveRenderer = true;
+            foundRenderer = true;
             Bounds bounds = renderer.bounds;
             bounds.Expand(visibilityBoundsPadding);
 
@@ -311,7 +344,7 @@ public class AlembicTreeWindController : MonoBehaviour
                 return true;
         }
 
-        return !foundActiveRenderer;
+        return !foundRenderer;
     }
 
     private Camera ResolveVisibilityCamera()

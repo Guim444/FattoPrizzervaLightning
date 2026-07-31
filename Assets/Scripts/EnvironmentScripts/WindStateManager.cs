@@ -341,7 +341,7 @@ public class WindStateManager : MonoBehaviour
     public static int ActivateAllVideoPlayersRoots()
     {
         WindStateManager[] managers = Object.FindObjectsByType<WindStateManager>(
-            FindObjectsInactive.Include,
+            FindObjectsInactive.Exclude,
             FindObjectsSortMode.None);
 
         foreach (WindStateManager manager in managers)
@@ -353,7 +353,7 @@ public class WindStateManager : MonoBehaviour
     public static int PrewarmAllVideoPlayersHidden()
     {
         WindStateManager[] managers = Object.FindObjectsByType<WindStateManager>(
-            FindObjectsInactive.Include,
+            FindObjectsInactive.Exclude,
             FindObjectsSortMode.None);
 
         foreach (WindStateManager manager in managers)

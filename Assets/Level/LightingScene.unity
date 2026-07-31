@@ -6033,6 +6033,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.097
   fluctuationRate: 10
+  rangeFluctuationRate: 0
 --- !u!1 &166374248
 GameObject:
   m_ObjectHideFlags: 0
@@ -6219,6 +6220,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 0.898
   fluctuationRate: 0.57
+  rangeFluctuationRate: 0
 --- !u!114 &183820001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6403,6 +6405,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.795
   fluctuationRate: 0.44
+  rangeFluctuationRate: 0
 --- !u!114 &196150091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8658,6 +8661,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 0.5
   fluctuationRate: 100
+  rangeFluctuationRate: 0
 --- !u!1 &368500696 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5214613864541813120, guid: 94cb4e52fe14ef04fb5895f4d88665f0, type: 3}
@@ -11373,6 +11377,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.859
   fluctuationRate: 0.57
+  rangeFluctuationRate: 0
 --- !u!114 &689174763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11924,6 +11929,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 0.2
   fluctuationRate: 100
+  rangeFluctuationRate: 0
 --- !u!1 &717461762 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7275415861844085730, guid: 137b3fd3b6938ae458eddbf8b3a5afdf, type: 3}
@@ -12912,6 +12918,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.569
   fluctuationRate: 0.78
+  rangeFluctuationRate: 0
 --- !u!114 &813060173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13158,43 +13165,6 @@ Transform:
   - {fileID: 517725414}
   m_Father: {fileID: 2019513220}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!84 &882593268
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 256
-  m_Height: 256
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 0
-  m_ColorFormat: 8
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 0
-    m_WrapV: 0
-    m_WrapW: 0
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1001 &895035417
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18536,6 +18506,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.097
   fluctuationRate: 10
+  rangeFluctuationRate: 0
 --- !u!1 &916779004
 GameObject:
   m_ObjectHideFlags: 0
@@ -18994,6 +18965,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.859
   fluctuationRate: 0.57
+  rangeFluctuationRate: 0
 --- !u!114 &935956611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19280,6 +19252,43 @@ Material:
     - _WindDirection: {r: 0.03012356, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
+--- !u!84 &943603790
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 6
+  m_Width: 256
+  m_Height: 256
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 0
+  m_ColorFormat: 8
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_UseDynamicScaleExplicit: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 0
+    m_WrapV: 0
+    m_WrapW: 0
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1 &967291849
 GameObject:
   m_ObjectHideFlags: 0
@@ -23213,6 +23222,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.097
   fluctuationRate: 2.72
+  rangeFluctuationRate: 0
 --- !u!114 &1321965282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23730,6 +23740,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.046
   fluctuationRate: 0.67
+  rangeFluctuationRate: 0
 --- !u!114 &1340697779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24735,6 +24746,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 0.75
   fluctuationRate: 1
+  rangeFluctuationRate: 0
 --- !u!114 &1393276728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25212,6 +25224,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 0.869
   fluctuationRate: 0.49
+  rangeFluctuationRate: 0
 --- !u!114 &1422917284
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26688,6 +26701,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.569
   fluctuationRate: 1
+  rangeFluctuationRate: 0
 --- !u!114 &1488175659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27439,6 +27453,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 0.75
   fluctuationRate: 1
+  rangeFluctuationRate: 0
 --- !u!114 &1536564588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28525,6 +28540,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 0.728
   fluctuationRate: 0.44
+  rangeFluctuationRate: 0
 --- !u!114 &1665616939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29228,7 +29244,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
-        m_Texture: {fileID: 882593268}
+        m_Texture: {fileID: 943603790}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -29251,7 +29267,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DetailColor: {r: 0.5231373, g: 0.5231373, b: 0.5231373, a: 0}
     - _DetailData: {r: 0.5, g: 4, b: -0.5, a: 0}
-    - _DetailWindDirection: {r: 0.81510997, g: 0, b: 0, a: 0}
+    - _DetailWindDirection: {r: 0.64952344, g: 0, b: 0, a: 0}
     - _DistanceData: {r: 0, g: 1.6399999, b: 0.000004, a: 0.0023384353}
     - _FogOfWarCenter: {r: 0, g: 0, b: 0, a: 1}
     - _FogOfWarCenterAdjusted: {r: 0, g: 0, b: 0, a: 1}
@@ -29264,7 +29280,7 @@ Material:
     - _ShadowData: {r: 0.4, g: 0, b: 250, a: 0}
     - _SpecularColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
     - _SunDir: {r: 0.88837695, g: 0.45570028, b: -0.055891793, a: 0}
-    - _WindDirection: {r: 0.81510997, g: 0, b: 0, a: 0}
+    - _WindDirection: {r: 0.64952344, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!84 &1714280917
@@ -30580,6 +30596,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 0.721
   fluctuationRate: 0.49
+  rangeFluctuationRate: 0
 --- !u!114 &1863566055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30995,6 +31012,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.097
   fluctuationRate: 1.11
+  rangeFluctuationRate: 0
 --- !u!114 &1887948593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31404,15 +31422,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9044222795383007651, guid: 18e3c7bc662375144a69bceb2e0dad74, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.464
+      value: 2.207
       objectReference: {fileID: 0}
     - target: {fileID: 9044222795383007651, guid: 18e3c7bc662375144a69bceb2e0dad74, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.12
+      value: 3.077
       objectReference: {fileID: 0}
     - target: {fileID: 9044222795383007651, guid: 18e3c7bc662375144a69bceb2e0dad74, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.477
+      value: -1.211
       objectReference: {fileID: 0}
     - target: {fileID: 9044222795383007651, guid: 18e3c7bc662375144a69bceb2e0dad74, type: 3}
       propertyPath: m_LocalRotation.w
@@ -31867,6 +31885,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 0.799
   fluctuationRate: 1
+  rangeFluctuationRate: 0
 --- !u!114 &1926480971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32318,6 +32337,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 0.869
   fluctuationRate: 0.49
+  rangeFluctuationRate: 0
 --- !u!114 &1955986772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33111,6 +33131,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fluctuationTime: 1.795
   fluctuationRate: 0.44
+  rangeFluctuationRate: 0
 --- !u!114 &2024400285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40404,15 +40425,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4292824549736306305, guid: 17334b87be3a708458ff5f46ef2b43ba, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.461
+      value: 2.204
       objectReference: {fileID: 0}
     - target: {fileID: 4292824549736306305, guid: 17334b87be3a708458ff5f46ef2b43ba, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.863
+      value: 2.859
       objectReference: {fileID: 0}
     - target: {fileID: 4292824549736306305, guid: 17334b87be3a708458ff5f46ef2b43ba, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.183
+      value: -0.917
       objectReference: {fileID: 0}
     - target: {fileID: 4292824549736306305, guid: 17334b87be3a708458ff5f46ef2b43ba, type: 3}
       propertyPath: m_LocalRotation.w
@@ -42221,15 +42242,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2649881659445319024, guid: 4e3a75c77222dfe4ba28e736d352e47a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.469
+      value: 2.212
       objectReference: {fileID: 0}
     - target: {fileID: 2649881659445319024, guid: 4e3a75c77222dfe4ba28e736d352e47a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.455
+      value: 3.5095
       objectReference: {fileID: 0}
     - target: {fileID: 2649881659445319024, guid: 4e3a75c77222dfe4ba28e736d352e47a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.832
+      value: -1.566
       objectReference: {fileID: 0}
     - target: {fileID: 2649881659445319024, guid: 4e3a75c77222dfe4ba28e736d352e47a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -43660,15 +43681,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5444044876696457428, guid: 1d9d4451fc812044198ef81a8a910ea9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.8
+      value: 2.523
       objectReference: {fileID: 0}
     - target: {fileID: 5444044876696457428, guid: 1d9d4451fc812044198ef81a8a910ea9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.55
+      value: 2.541
       objectReference: {fileID: 0}
     - target: {fileID: 5444044876696457428, guid: 1d9d4451fc812044198ef81a8a910ea9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.523
+      value: -1.229
       objectReference: {fileID: 0}
     - target: {fileID: 5444044876696457428, guid: 1d9d4451fc812044198ef81a8a910ea9, type: 3}
       propertyPath: m_LocalRotation.w
@@ -43757,15 +43778,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5179145155400495965, guid: 21e39da7915513745b3d994e612a19d2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.798
+      value: 2.521
       objectReference: {fileID: 0}
     - target: {fileID: 5179145155400495965, guid: 21e39da7915513745b3d994e612a19d2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.42
+      value: 2.411
       objectReference: {fileID: 0}
     - target: {fileID: 5179145155400495965, guid: 21e39da7915513745b3d994e612a19d2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.052
+      value: -0.758
       objectReference: {fileID: 0}
     - target: {fileID: 5179145155400495965, guid: 21e39da7915513745b3d994e612a19d2, type: 3}
       propertyPath: m_LocalRotation.w

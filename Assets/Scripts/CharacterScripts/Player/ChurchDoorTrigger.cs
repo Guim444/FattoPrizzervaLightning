@@ -13,14 +13,18 @@ public class ChurchDoorTrigger : MonoBehaviour
     [SerializeField] private Transform rioTutteStandard;
     [SerializeField] private Transform rioTutteTransformation;
 
+    [Header("Church Lights")]
+    [Tooltip("Luz CHR_Player_Light_Surroundd que se apaga al activar el trigger.")]
+    [SerializeField] private Transform playerSurroundLight;
+
     [Header("Camera")]
     [Tooltip("Altura temporal de cámara durante los automoves.")]
     [SerializeField] private float autoMoveCameraY = 3f;
 
-    [Header("Scene Transition")]
-    [Tooltip("Escena que sustituye a la escena de iluminación al terminar el segundo automove.")]
+    [Header("Dialogue Layout")]
+    [Tooltip("Escena que contiene únicamente el canvas usado durante el diálogo.")]
     [SerializeField] private string dialogueSceneName = "DialogueScene";
-    [Tooltip("Escena de iluminación que se descarga al mostrar el menú.")]
+    [Tooltip("Escena que permanece activa y contiene DialogueLayoutManager.")]
     [SerializeField] private string lightingSceneName = "LightingScene";
 
     [Header("Detection")]
@@ -46,6 +50,7 @@ public class ChurchDoorTrigger : MonoBehaviour
             secondAutoMoveDuration,
             rioTutteStandard,
             rioTutteTransformation,
+            playerSurroundLight,
             autoMoveCameraY,
             dialogueSceneName,
             lightingSceneName);

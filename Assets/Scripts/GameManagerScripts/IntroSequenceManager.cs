@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class IntroSequenceManager : MonoBehaviour
 {
+    private const string PlayerSurroundLightObjectName =
+        "CHR_Player_Light_Surroundd";
+
     private static readonly int IdleFrontHash = Animator.StringToHash("IdleFront");
     private static readonly int IdleFrontHumanHash = Animator.StringToHash("IdleFrontHuman");
     private static readonly int TransformToGhostHash = Animator.StringToHash("TransformToGhost");
@@ -110,6 +113,11 @@ public class IntroSequenceManager : MonoBehaviour
     private PlayerAnimations _playerAnimations;
     private RuntimeAnimatorController _cachedAnimatorController;
     private DialogueCameraController dialogueCameraController;
+    private DialogueLayoutManager _dialogueLayoutManager;
+    private DialogueSceneMenu _dialogueSceneMenu;
+    private Transform _churchPlayerSurroundLight;
+    private bool _churchPlayerSurroundLightWasActive;
+    private bool _hasCapturedChurchPlayerLightState;
     private bool _originalPauseAnimatorControl;
     private bool _hasOriginalPauseAnimatorControl;
     private bool _playerFadeMaterialRestored;
@@ -809,6 +817,7 @@ public class IntroSequenceManager : MonoBehaviour
         float secondDuration,
         Transform rioTutteStandard,
         Transform rioTutteTransformation,
+        Transform playerSurroundLight,
         float autoMoveCameraY,
         string dialogueSceneName,
         string lightingSceneName)
@@ -858,6 +867,7 @@ public class IntroSequenceManager : MonoBehaviour
             secondDuration,
             rioTutteStandard,
             rioTutteTransformation,
+            playerSurroundLight,
             autoMoveCameraY,
             dialogueSceneName,
             lightingSceneName));
@@ -871,6 +881,7 @@ public class IntroSequenceManager : MonoBehaviour
         float secondDuration,
         Transform rioTutteStandard,
         Transform rioTutteTransformation,
+        Transform playerSurroundLight,
         float autoMoveCameraY,
         string dialogueSceneName,
         string lightingSceneName)
@@ -891,6 +902,8 @@ public class IntroSequenceManager : MonoBehaviour
         if (playerController != null) playerController.enabled = false;
         if (boundaryClamp != null) boundaryClamp.enabled = false;
 
+        EnterChurchLighting(playerSurroundLight, lightingSceneName);
+
         Coroutine cameraLowering = StartCoroutine(
             LowerCameraDuringAutoMove(autoMoveCameraY, firstDuration));
         yield return StartCoroutine(MovePlayerToPosition(firstTarget.position, firstDuration));
@@ -905,8 +918,9 @@ public class IntroSequenceManager : MonoBehaviour
 
         RestoreIntroCameraFraming();
 
-        if (!SwitchLoadedSceneRoots(lightingSceneName, dialogueSceneName))
+        if (!EnterDialogueLayout(lightingSceneName, dialogueSceneName))
         {
+            RestoreChurchLighting();
             hudManager?.CompleteChurchTestCameraTransition();
             ResumePlayerAfterChurchSequence();
             _churchSequenceCoroutine = null;
@@ -938,26 +952,82 @@ public class IntroSequenceManager : MonoBehaviour
         _churchSequenceCoroutine = null;
     }
 
-    private bool SwitchLoadedSceneRoots(string sceneToHideName, string sceneToShowName)
+    private bool EnterDialogueLayout(
+        string lightingSceneName,
+        string dialogueSceneName)
     {
-        Scene sceneToHide = SceneManager.GetSceneByName(sceneToHideName);
-        Scene sceneToShow = SceneManager.GetSceneByName(sceneToShowName);
+        if (!TryResolveDialogueLayout(lightingSceneName, dialogueSceneName))
+            return false;
 
-        if (!sceneToHide.isLoaded || !sceneToShow.isLoaded)
+        _dialogueLayoutManager.ApplyDialogueLayout();
+        _dialogueSceneMenu.gameObject.SetActive(true);
+
+        return true;
+    }
+
+    private bool ExitDialogueLayout(
+        string lightingSceneName,
+        string dialogueSceneName)
+    {
+        if (!TryResolveDialogueLayout(lightingSceneName, dialogueSceneName))
+            return false;
+
+        _dialogueSceneMenu.gameObject.SetActive(false);
+        _dialogueLayoutManager.ApplyGameplayLayout();
+        return true;
+    }
+
+    private bool TryResolveDialogueLayout(
+        string lightingSceneName,
+        string dialogueSceneName)
+    {
+        if (_dialogueLayoutManager == null ||
+            _dialogueLayoutManager.gameObject.scene.name != lightingSceneName)
+        {
+            _dialogueLayoutManager = FindComponentInScene<DialogueLayoutManager>(
+                lightingSceneName);
+        }
+
+        if (_dialogueSceneMenu == null ||
+            _dialogueSceneMenu.gameObject.scene.name != dialogueSceneName)
+        {
+            _dialogueSceneMenu = FindComponentInScene<DialogueSceneMenu>(
+                dialogueSceneName);
+        }
+
+        if (_dialogueLayoutManager == null)
         {
             Debug.LogError(
-                $"[{nameof(IntroSequenceManager)}] Para cambiar el entorno deben estar cargadas '{sceneToHideName}' y '{sceneToShowName}'.",
+                $"[{nameof(IntroSequenceManager)}] No se encontró DialogueLayoutManager en '{lightingSceneName}'.",
                 this);
             return false;
         }
 
-        foreach (GameObject root in sceneToHide.GetRootGameObjects())
-            root.SetActive(false);
-
-        foreach (GameObject root in sceneToShow.GetRootGameObjects())
-            root.SetActive(true);
+        if (_dialogueSceneMenu == null)
+        {
+            Debug.LogError(
+                $"[{nameof(IntroSequenceManager)}] No se encontró DialogueSceneMenu en '{dialogueSceneName}'.",
+                this);
+            return false;
+        }
 
         return true;
+    }
+
+    private static T FindComponentInScene<T>(string sceneName)
+        where T : Component
+    {
+        T[] components = Object.FindObjectsByType<T>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None);
+
+        foreach (T component in components)
+        {
+            if (component.gameObject.scene.name == sceneName)
+                return component;
+        }
+
+        return null;
     }
 
     public bool ResumeAfterDialogueTest(
@@ -967,7 +1037,7 @@ public class IntroSequenceManager : MonoBehaviour
         if (_dialogueReturnCoroutine != null)
             return false;
 
-        if (!SwitchLoadedSceneRoots(dialogueSceneName, lightingSceneName))
+        if (!ExitDialogueLayout(lightingSceneName, dialogueSceneName))
             return false;
 
         _dialogueReturnCoroutine = StartCoroutine(ReturnFromDialogueCamera());
@@ -987,9 +1057,79 @@ public class IntroSequenceManager : MonoBehaviour
             yield return new WaitForSecondsRealtime(blendDuration);
 
         hudManager?.CompleteChurchTestCameraTransition();
+        RestoreChurchLighting();
         ApplyEnvironmentPhase(3);
         ResumePlayerAfterChurchSequence();
         _dialogueReturnCoroutine = null;
+    }
+
+    private void EnterChurchLighting(
+        Transform playerSurroundLight,
+        string lightingSceneName)
+    {
+        if (_dialogueLayoutManager == null ||
+            _dialogueLayoutManager.gameObject.scene.name != lightingSceneName)
+        {
+            _dialogueLayoutManager = FindComponentInScene<DialogueLayoutManager>(
+                lightingSceneName);
+        }
+
+        if (_dialogueLayoutManager != null)
+            _dialogueLayoutManager.EnterChurchLighting();
+        else
+            Debug.LogWarning(
+                $"[{nameof(IntroSequenceManager)}] No se encontró DialogueLayoutManager para encender Auxiliar light.",
+                this);
+
+        _churchPlayerSurroundLight = playerSurroundLight != null
+            ? playerSurroundLight
+            : FindDescendantByName(
+                playerTransform,
+                PlayerSurroundLightObjectName);
+        if (_churchPlayerSurroundLight == null)
+        {
+            Debug.LogWarning(
+                $"[{nameof(IntroSequenceManager)}] CHR_Player_Light_Surroundd no está asignada en ChurchDoorTrigger.",
+                this);
+            return;
+        }
+
+        _churchPlayerSurroundLightWasActive =
+            _churchPlayerSurroundLight.gameObject.activeSelf;
+        _hasCapturedChurchPlayerLightState = true;
+        _churchPlayerSurroundLight.gameObject.SetActive(false);
+    }
+
+    private void RestoreChurchLighting()
+    {
+        _dialogueLayoutManager?.RestoreChurchLighting();
+
+        if (_hasCapturedChurchPlayerLightState &&
+            _churchPlayerSurroundLight != null)
+        {
+            _churchPlayerSurroundLight.gameObject.SetActive(
+                _churchPlayerSurroundLightWasActive);
+        }
+
+        _churchPlayerSurroundLight = null;
+        _hasCapturedChurchPlayerLightState = false;
+    }
+
+    private static Transform FindDescendantByName(
+        Transform root,
+        string objectName)
+    {
+        if (root == null)
+            return null;
+
+        Transform[] descendants = root.GetComponentsInChildren<Transform>(true);
+        foreach (Transform descendant in descendants)
+        {
+            if (descendant.name == objectName)
+                return descendant;
+        }
+
+        return null;
     }
 
     private void EnsureDialogueCameraController()
@@ -1039,6 +1179,7 @@ public class IntroSequenceManager : MonoBehaviour
         SetPlayerAnimatorBoolIfAvailable(IdleFrontHash, false);
         RestoreGameplayAnimatorControl();
 
+        if (boundaryClamp != null) boundaryClamp.enabled = true;
         if (playerInputHandler != null) playerInputHandler.enabled = true;
         if (playerController != null) playerController.enabled = true;
     }

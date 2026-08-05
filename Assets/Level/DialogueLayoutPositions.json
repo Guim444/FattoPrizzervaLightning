@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "capturedOn": "2026-08-04",
+  "sourceScene": "LightingScene",
+  "dialogueScene": "DialogueScene",
+  "coordinateSpace": "local",
+  "notes": "Poses extraidas de las escenas actuales. Los padres se incluyen antes que sus hijos para permitir una futura aplicacion ordenada.",
+  "entries": [
+    {
+      "name": "============ 2D ELEMENTS ============",
+      "kind": "SceneTransform",
+      "sceneTransformFileId": "266818183",
+      "lightingPath": "============ 2D ELEMENTS ============",
+      "dialoguePath": "============ 2D ELEMENTS ============",
+      "gameplayPose": {
+        "position": { "x": 0.0, "y": 0.0, "z": 0.0 },
+        "rotation": { "x": 0.0, "y": 0.0, "z": 0.0, "w": 1.0 },
+        "scale": { "x": 1.0, "y": 1.0, "z": 1.0 }
+      },
+      "dialoguePose": {
+        "position": { "x": 0.0, "y": -1.12, "z": 0.0 },
+        "rotation": { "x": 0.0, "y": 0.0, "z": 0.0, "w": 1.0 },
+        "scale": { "x": 1.0, "y": 1.0, "z": 1.0 }
+      }
+    },
+    {
+      "name": "============ 3D ELEMENTS ============",
+      "kind": "SceneTransform",
+      "sceneTransformFileId": "749623740",
+      "lightingPath": "============ 3D ELEMENTS ============",
+      "dialoguePath": "============ 3D ELEMENTS ============",
+      "gameplayPose": {
+        "position": { "x": 1.0709244, "y": 5.7933955, "z": 0.52682376 },
+        "rotation": { "x": 0.0, "y": 0.0, "z": 0.0, "w": 1.0 },
+        "scale": { "x": 1.0, "y": 1.0, "z": 1.0 }
+      },
+      "dialoguePose": {
+        "position": { "x": 1.0709244, "y": 4.6733956, "z": 0.52682376 },
+        "rotation": { "x": 0.0, "y": 0.0, "z": 0.0, "w": 1.0 },
+        "scale": { "x": 1.0, "y": 1.0, "z": 1.0 }
+      }
+    },
+    {
+      "name": "================ VFX ================",
+      "kind": "SceneTransform",
+      "sceneTransformFileId": "1432079889",
+      "lightingPath": "================ VFX ================",
+      "dialoguePath": "================ VFX ================",
+      "gameplayPose": {
+        "position": { "x": 0.0, "y": 0.0, "z": 0.0 },
+        "rotation": { "x": 0.0, "y": 0.0, "z": 0.0, "w": 1.0 },
+        "scale": { "x": 1.0, "y": 1.0, "z": 1.0 }
+      },
+      "dialoguePose": {
+        "position": { "x": 3.46, "y": -1.12, "z": 0.0 },
+        "rotation": { "x": 0.0, "y": 0.0, "z": 0.0, "w": 1.0 },
+        "scale": { "x": 1.0, "y": 1.0, "z": 1.0 }
+      }
+    },
+    {
+      "name": "Bridging_Bandana",
+      "kind": "SceneTransform",
+      "sceneTransformFileId": "1862101532",
+      "lightingPath": "============ 2D ELEMENTS ============/Bridging/Bridging_Bandana",
+      "dialoguePath": "============ 2D ELEMENTS ============/Bridging/Bridging_Bandana",
+      "gameplayPose": {
+        "position": { "x": 4.699, "y": 3.693, "z": 4.041 },
+        "rotation": { "x": 0.13990352, "y": 0.6931284, "z": 0.13990349, "w": 0.6931284 },
+        "scale": { "x": 0.24904476, "y": 0.30303767, "z": 0.24904476 }
+      },
+      "dialoguePose": {
+        "position": { "x": 7.249, "y": 3.62, "z": 2.241 },
+        "rotation": { "x": 0.0, "y": 0.7071068, "z": 0.0, "w": 0.7071068 },
+        "scale": { "x": 0.24, "y": 0.24, "z": 0.24 }
+      }
+    },
+    {
+      "name": "Bridging_BandanaPhoto",
+      "kind": "SceneTransform",
+      "sceneTransformFileId": "1473173184",
+      "lightingPath": "============ 2D ELEMENTS ============/Bridging/Bridging_BandanaPhoto",
+      "dialoguePath": "============ 2D ELEMENTS ============/Bridging/Bridging_BandanaPhoto",
+      "gameplayPose": {
+        "position": { "x": 4.671, "y": 3.354, "z": 5.166 },
+        "rotation": { "x": 0.10300492, "y": 0.69956416, "z": 0.10300489, "w": 0.6995642 },
+        "scale": { "x": 0.04436745, "y": 0.044367466, "z": 0.04436745 }
+      },
+      "dialoguePose": {
+        "position": { "x": 7.221, "y": 3.7289999, "z": 3.39 },
+        "rotation": { "x": 0.0, "y": 0.7071068, "z": 0.0, "w": 0.7071068 },
+        "scale": { "x": 0.043999985, "y": 0.044, "z": 0.043999985 }
+      }
+    },
+    {
+      "name": "FireShack",
+      "kind": "SceneTransform",
+      "sceneTransformFileId": "1536564586",
+      "lightingPath": "================ VFX ================/Lighting_Didac/WarmLighting/FireShack",
+      "dialoguePath": "================ VFX ================/Lighting_Didac/WarmLighting/FireShack",
+      "gameplayPose": {
+        "position": { "x": 4.27, "y": -3.09, "z": -0.52 },
+        "rotation": { "x": -0.17085469, "y": 0.66547936, "z": -0.16044323, "w": 0.7086635 },
+        "scale": { "x": 1.0, "y": 1.0, "z": 1.0 }
+      },
+      "dialoguePose": {
+        "position": { "x": 2.4800005, "y": -2.8400002, "z": -0.78000045 },
+        "rotation": { "x": -0.17085469, "y": 0.66547936, "z": -0.16044323, "w": 0.7086635 },
+        "scale": { "x": 1.0, "y": 1.0, "z": 1.0 }
+      }
+    },
+    {
+      "name": "FireShack (1)",
+      "kind": "SceneTransform",
+      "sceneTransformFileId": "1393276726",
+      "lightingPath": "================ VFX ================/Lighting_Didac/BlueLighting/FireShack (1)",
+      "dialoguePath": "================ VFX ================/Lighting_Didac/BlueLighting/FireShack (1)",
+      "gameplayPose": {
+        "position": { "x": 4.452, "y": -3.493, "z": -1.316 },
+        "rotation": { "x": -0.17085469, "y": 0.66547936, "z": -0.16044323, "w": 0.7086635 },
+        "scale": { "x": 1.0, "y": 1.0, "z": 1.0 }
+      },
+      "dialoguePose": {
+        "position": { "x": 2.6600008, "y": -3.2499998, "z": -1.5800006 },
+        "rotation": { "x": -0.17085469, "y": 0.66547936, "z": -0.16044323, "w": 0.7086635 },
+        "scale": { "x": 1.0, "y": 1.0, "z": 1.0 }
+      }
+    },
+    {
+      "name": "FireShackBehind",
+      "kind": "SceneTransform",
+      "sceneTransformFileId": "154995055",
+      "lightingPath": "================ VFX ================/Lighting_Didac/WarmLighting/FireShackBehind_Affect2DSprites",
+      "dialoguePath": "================ VFX ================/Lighting_Didac/WarmLighting/FireShackBehind",
+      "gameplayPose": {
+        "position": { "x": 3.2821913, "y": -3.0355494, "z": -4.8102784 },
+        "rotation": { "x": 0.10667112, "y": -0.21156627, "z": -0.97144353, "w": -0.012585947 },
+        "scale": { "x": 1.0, "y": 1.0, "z": 1.0 }
+      },
+      "dialoguePose": {
+        "position": { "x": 1.4900005, "y": -2.7900007, "z": -5.070002 },
+        "rotation": { "x": 0.10667102, "y": -0.2115663, "z": -0.97144353, "w": -0.012585947 },
+        "scale": { "x": 1.0, "y": 1.0, "z": 1.0 }
+      }
+    },
+    {
+      "name": "FireShackBehind (1)",
+      "kind": "SceneTransform",
+      "sceneTransformFileId": "368022819",
+      "lightingPath": "================ VFX ================/Lighting_Didac/BlueLighting/FireShackBehind (1)",
+      "dialoguePath": "================ VFX ================/Lighting_Didac/BlueLighting/FireShackBehind (1)",
+      "gameplayPose": {
+        "position": { "x": 3.9164004, "y": -2.9016016, "z": -4.395024 },
+        "rotation": { "x": 0.21547781, "y": -0.21163678, "z": -0.95323175, "w": 0.011338774 },
+        "scale": { "x": 1.0, "y": 1.0, "z": 1.0 }
+      },
+      "dialoguePose": {
+        "position": { "x": 2.1200008, "y": -2.6500006, "z": -4.6600013 },
+        "rotation": { "x": 0.21547778, "y": -0.21163674, "z": -0.9532317, "w": 0.011338773 },
+        "scale": { "x": 1.0, "y": 1.0, "z": 1.0 }
+      }
+    },
+    {
+      "name": "OutsideChurch_Facade",
+      "kind": "PrefabInstance",
+      "prefabInstanceFileId": "1349522707",
+      "sourcePrefabGuid": "2e5b1fdca3fbb424ebfb0e447fa8c4af",
+      "sourceTransformFileId": "-8679921383154817045",
+      "lightingPath": "============ 3D ELEMENTS ============/OutsideChurch/OutsideChurch_Facade",
+      "dialoguePath": "============ 3D ELEMENTS ============/OutsideChurch/OutsideChurch_Facade",
+      "gameplayPose": {
+        "position": { "x": -39.3, "y": 6.13, "z": 7.54 },
+        "rotation": { "x": 0.0, "y": 0.0, "z": 0.0, "w": 1.0 },
+        "scale": { "x": 1.1, "y": 1.1, "z": 1.1 }
+      },
+      "dialoguePose": {
+        "position": { "x": -39.3, "y": 6.7, "z": 7.54 },
+        "rotation": { "x": 0.0, "y": 0.0, "z": 0.0, "w": 1.0 },
+        "scale": { "x": 1.1, "y": 1.1, "z": 1.1 }
+      }
+    }
+  ]
+}

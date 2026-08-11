@@ -98,3 +98,10 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# Generated static asset audit reports (a new dated folder is created per run)
+/AssetAuditReports/
+
+# Local Python environment for the asset auditor
+/Tools/AssetAudit/.venv/
+/Tools/AssetAudit/__pycache__/

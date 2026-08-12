@@ -1,33 +1,79 @@
-# Telemetria de builds
+# Telemetría de builds
 
-Este sistema adapta la arquitectura del proyecto de referencia: cada ejecución es una sesión independiente, durante el juego se guardan datos crudos y el análisis se realiza después con Python.
+Este sistema registra los datos de rendimiento mientras juegas una build ya creada. Primero se genera la build manualmente desde Unity; después se ejecuta con un parámetro especial para guardar los datos; finalmente se genera un informe.
 
-## Uso habitual
+El flujo documentado está preparado para Windows.
 
-1. Integra en esta rama los cambios de `main` que quieras comprobar y resuelve los conflictos normalmente.
-2. Cierra Unity si tiene abierto este proyecto.
-3. Ejecuta `build_and_run_telemetry.bat`.
-4. Recorre en la build el contenido que quieras medir y cierra el juego de forma normal.
-5. Ejecuta `generate_telemetry_report.bat`.
+## Paso 1: preparar la build en Unity
 
-El primer BAT crea una build Windows Release instrumentada, la abre a 1920x1080 y registra una nueva sesión. El segundo calcula las métricas y genera un informe HTML, Markdown, JSON y CSV. Ni los datos crudos, ni las builds, ni los informes se suben a Git.
+Haz estos pasos una sola vez cada vez que prepares una build nueva:
 
-La primera build de Player puede tardar varios minutos si Unity todavía no tiene compiladas las variantes de URP. La consola muestra el shader y el progreso `x/y`; abrir previamente el proyecto no prepara necesariamente la caché de shaders del Player. Las ejecuciones posteriores reutilizan esa caché.
+1. Abre el proyecto en Unity.
+2. Ve a `File > Build Profiles` y comprueba que las escenas están activadas y en este orden:
+   - `Assets/Level/MainScene.unity`
+   - `Assets/Level/GameplayScene.unity`
+   - `Assets/Level/LightingScene.unity`
+   - `Assets/Level/DialogueScene.unity`
+3. Comprueba que `MainScene` contiene el componente `BuildSceneLoader`. Carga automáticamente las otras tres escenas al iniciar el juego.
+4. Ve a `Edit > Project Settings > Player > Other Settings > Scripting Define Symbols`.
+5. En la plataforma para la que vas a crear la build, añade exactamente:
 
-Para medir otro nivel de calidad, pásalo como primer parámetro:
-
-```bat
-build_and_run_telemetry.bat Bajo
+```text
+BUILD_TELEMETRY
 ```
 
-Ahora mismo el proyecto solo define la calidad `PC`; los nombres adicionales funcionarán cuando se creen en `Quality Settings`.
+Si ya hay otros símbolos, sepáralos con `;`. Sin `BUILD_TELEMETRY`, el juego funcionará, pero no podrá registrar datos.
 
-Variables opcionales:
+6. Pulsa `Build` desde Unity y guarda la build de Windows en una carpeta fácil de encontrar, por ejemplo `Builds/ManualTelemetry/FattoPrizzerva.exe`.
 
-- `TELEMETRY_WIDTH` y `TELEMETRY_HEIGHT`: resolución de ejecución (por defecto 1920x1080).
-- `TELEMETRY_UNITY_EXE`: ruta a otro ejecutable de Unity.
-- `TELEMETRY_DEVELOPMENT=1`: crea una Development Build. Para comparativas finales conviene usar siempre Release.
-- `TELEMETRY_WARMUP_SECONDS`: segundos iniciales excluidos de las cifras principales (por defecto 3). El informe también conserva las cifras de la sesión completa.
+La build debe contener el recolector de telemetría, pero no empezará a registrar nada hasta que se ejecute con `-buildTelemetry`.
+
+## Paso 2: ejecutar la build en Windows
+
+### Abrir la consola
+
+1. Abre el Explorador de archivos y entra en la carpeta raíz del proyecto.
+2. Haz clic en la barra de direcciones, escribe `cmd` y pulsa `Enter`.
+3. Se abrirá una ventana negra ya situada en la carpeta correcta.
+
+### Lanzar el juego con telemetría
+
+Copia este comando y cambia únicamente la ruta del `.exe` si tu build está en otra carpeta:
+
+```bat
+Tools\BuildTelemetry\build_and_run_telemetry.bat "D:\GuimGames\FattoPrizzervaLightning\Builds\ManualTelemetry\FattoPrizzerva.exe" PC
+```
+
+El texto `PC` es la calidad gráfica. Actualmente es la única calidad configurada en el proyecto.
+
+El BAT añade automáticamente estos parámetros:
+
+- `-buildTelemetry`: activa la grabación.
+- `-telemetryOutput`: guarda las sesiones en `BuildTelemetryReports/raw`.
+- `-telemetryQuality`: registra la calidad usada.
+- `-screen-width 1920` y `-screen-height 1080`: fija la resolución.
+- `-logFile`: guarda el log del jugador en `BuildTelemetryReports/player-logs`.
+
+Si la ruta contiene espacios, conserva las comillas. Al terminar la partida, cierra el juego normalmente.
+
+## Paso 3: generar el informe
+
+Desde la carpeta raíz del proyecto, ejecuta:
+
+```bat
+Tools\BuildTelemetry\generate_telemetry_report.bat
+```
+
+Los informes se crearán en `BuildTelemetryReports/reports`. Cada ejecución genera una sesión independiente.
+
+## Solución rápida de problemas
+
+- **No aparece ninguna sesión:** comprueba que la build se creó con `BUILD_TELEMETRY` y que se ejecutó con `-buildTelemetry`.
+- **El juego aparece vacío:** comprueba que las cuatro escenas están incluidas, que `MainScene` está en la posición 0 y que tiene `BuildSceneLoader`.
+- **Windows dice que no encuentra el archivo:** revisa la ruta del `.exe` y mantén las comillas.
+- **El informe no encuentra sesiones:** ejecuta el informe desde la carpeta raíz del proyecto y comprueba que existe `BuildTelemetryReports/raw`.
+
+La calidad disponible actualmente es `PC`. El calentamiento excluido de las cifras principales se puede cambiar con `TELEMETRY_WARMUP_SECONDS` al usar los scripts de Windows; el valor predeterminado es 3 segundos.
 
 ## Qué se recoge durante el juego
 

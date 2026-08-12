@@ -1096,7 +1096,6 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
-  onlyExpandAlembicRange: 0
 --- !u!54 &365929408
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4580,8 +4579,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2100000301}
   - component: {fileID: 2100000302}
-  - component: {fileID: 2100000303}
   - component: {fileID: 2100000304}
+  - component: {fileID: 2100000305}
   m_Layer: 0
   m_Name: ENV_Church_AlembicRange_Trigger
   m_TagString: Untagged
@@ -4625,33 +4624,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.5, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2100000303
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2100000300}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 316b9c83bf959fb4092befedd2e971f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  introSequenceManager: {fileID: 0}
-  firstAutoMoveTarget: {fileID: 0}
-  firstAutoMoveDuration: 2
-  secondAutoMoveTarget: {fileID: 0}
-  secondAutoMoveDuration: 3
-  rioTutteStandard: {fileID: 0}
-  rioTutteTransformation: {fileID: 0}
-  playerSurroundLight: {fileID: 0}
-  autoMoveCameraY: 3
-  dialogueSceneName: DialogueScene
-  lightingSceneName: LightingScene
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  onlyExpandAlembicRange: 1
 --- !u!54 &2100000304
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4679,6 +4651,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2100000305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100000300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d80d6d48c954c57a6d923a4f35e4a11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerEnabled: 1
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1001 &2123647839
 PrefabInstance:
   m_ObjectHideFlags: 0

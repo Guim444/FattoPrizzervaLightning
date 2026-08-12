@@ -27,6 +27,8 @@ public class AlembicTreeWindController : MonoBehaviour
     [Header("Rendimiento")]
     [Tooltip("Activa el comportamiento antiguo: el clip visible y el oculto avanzan cada frame. Útil solo para comparar stutter/jumps.")]
     [SerializeField] private bool advanceInactivePlayersInBackground = false;
+    [Tooltip("Mantiene cargado desde Awake el Alembic seleccionado aunque su renderer quede fuera de rango. Evita picos al ampliar el culling.")]
+    [SerializeField] private bool keepAlembicStreamLoaded = true;
 
     [Header("Culling por cámara")]
     [Tooltip("Pausa el avance Alembic cuando el árbol queda fuera de la cámara principal.")]
@@ -40,13 +42,22 @@ public class AlembicTreeWindController : MonoBehaviour
     [Tooltip("Distancia máxima desde la cámara a los bounds para actualizar el Alembic. 0 = sin límite. WindStateManager la ajusta según la fase.")]
     [SerializeField, Min(0f)] private float maxPlaybackDistance = 30f;
 
+    [Header("Actualizacion por distancia")]
+    [Tooltip("A partir de esta distancia, los Alembic visibles se actualizan cada 2 frames.")]
+    [SerializeField, Min(0f)] private float reducedPlaybackDistance = 40f;
+    [Tooltip("A partir de esta distancia, los Alembic visibles se actualizan cada 3 frames.")]
+    [SerializeField, Min(0f)] private float lowPlaybackDistance = 80f;
+
     private float _slowTime;
     private float _fastTime;
     private bool _animationPlaybackEnabled = true;
     private Renderer[] _animatedRenderers = new Renderer[0];
+    private Renderer[] _slowRenderers = new Renderer[0];
+    private Renderer[] _fastRenderers = new Renderer[0];
     private bool _isVisibleForPlayback = true;
     private bool _useFastPlayer = true;
     private float _nextVisibilityCheckTime;
+    private int _playbackFrameInterval = 1;
 
     public bool HasAvailablePlayers =>
         slowPlayer != null
@@ -76,14 +87,21 @@ public class AlembicTreeWindController : MonoBehaviour
         if (!_animationPlaybackEnabled || !IsVisibleForPlayback())
             return;
 
-        if (advanceInactivePlayersInBackground || IsPlayerActive(slowPlayer))
-            AdvancePlayer(slowPlayer, ref _slowTime, slowPlaybackSpeed);
+        bool shouldUpdatePlayer = _playbackFrameInterval <= 1
+            || Time.frameCount % _playbackFrameInterval == 0;
 
-        if (advanceInactivePlayersInBackground || IsPlayerActive(fastPlayer))
-            AdvancePlayer(fastPlayer, ref _fastTime, fastPlaybackSpeed);
+        if (advanceInactivePlayersInBackground || IsSelectedPlayer(slowPlayer))
+            AdvancePlayer(slowPlayer, ref _slowTime, slowPlaybackSpeed, shouldUpdatePlayer);
+
+        if (advanceInactivePlayersInBackground || IsSelectedPlayer(fastPlayer))
+            AdvancePlayer(fastPlayer, ref _fastTime, fastPlaybackSpeed, shouldUpdatePlayer);
     }
 
-    private void AdvancePlayer(AlembicStreamPlayer player, ref float time, float speed)
+    private void AdvancePlayer(
+        AlembicStreamPlayer player,
+        ref float time,
+        float speed,
+        bool updatePlayer)
     {
         if (player == null) return;
 
@@ -91,7 +109,8 @@ public class AlembicTreeWindController : MonoBehaviour
         if (duration <= 0f) return;
 
         time = WrapAlembicTime(time + Time.deltaTime * speed, duration);
-        player.CurrentTime = time;
+        if (updatePlayer)
+            player.CurrentTime = time;
     }
 
     private void DisableStaticTreeRenderers()
@@ -111,6 +130,13 @@ public class AlembicTreeWindController : MonoBehaviour
 
     private void CacheAnimatedRenderers()
     {
+        _slowRenderers = slowPlayer != null
+            ? slowPlayer.GetComponentsInChildren<Renderer>(true)
+            : new Renderer[0];
+        _fastRenderers = fastPlayer != null
+            ? fastPlayer.GetComponentsInChildren<Renderer>(true)
+            : new Renderer[0];
+
         var renderers = new List<Renderer>();
         AddAnimatedRenderers(slowPlayer, renderers);
         AddAnimatedRenderers(fastPlayer, renderers);
@@ -274,15 +300,27 @@ public class AlembicTreeWindController : MonoBehaviour
             target.gameObject.SetActive(false);
     }
 
-    private static bool IsPlayerActive(AlembicStreamPlayer player)
+    private bool IsSelectedPlayer(AlembicStreamPlayer player)
     {
-        return player != null && player.gameObject.activeInHierarchy;
+        if (player == null)
+            return false;
+
+        return _useFastPlayer
+            ? player == fastPlayer
+            : player == slowPlayer;
     }
 
     private bool IsVisibleForPlayback()
     {
         if (!pauseWhenOffCamera)
         {
+            if (Time.unscaledTime >= _nextVisibilityCheckTime)
+            {
+                _nextVisibilityCheckTime = Time.unscaledTime
+                    + Mathf.Max(0.02f, visibilityCheckInterval);
+                IsInsideVisibilityCamera();
+            }
+
             if (!_isVisibleForPlayback)
             {
                 _isVisibleForPlayback = true;
@@ -311,16 +349,37 @@ public class AlembicTreeWindController : MonoBehaviour
         bool showSlowPlayer = isVisible && !_useFastPlayer && slowPlayer != null;
         bool showFastPlayer = isVisible && _useFastPlayer && fastPlayer != null;
 
-        if (slowPlayer != null
-            && slowPlayer.gameObject.activeSelf != showSlowPlayer)
+        if (keepAlembicStreamLoaded)
         {
-            slowPlayer.gameObject.SetActive(showSlowPlayer);
+            bool keepSlowPlayerLoaded = !_useFastPlayer && slowPlayer != null;
+            bool keepFastPlayerLoaded = _useFastPlayer && fastPlayer != null;
+
+            SetPlayerActive(slowPlayer, keepSlowPlayerLoaded);
+            SetPlayerActive(fastPlayer, keepFastPlayerLoaded);
+            SetRenderersEnabled(_slowRenderers, showSlowPlayer);
+            SetRenderersEnabled(_fastRenderers, showFastPlayer);
+            return;
         }
 
-        if (fastPlayer != null
-            && fastPlayer.gameObject.activeSelf != showFastPlayer)
+        SetPlayerActive(slowPlayer, showSlowPlayer);
+        SetPlayerActive(fastPlayer, showFastPlayer);
+    }
+
+    private static void SetPlayerActive(AlembicStreamPlayer player, bool isActive)
+    {
+        if (player != null && player.gameObject.activeSelf != isActive)
+            player.gameObject.SetActive(isActive);
+    }
+
+    private static void SetRenderersEnabled(Renderer[] renderers, bool isEnabled)
+    {
+        if (renderers == null)
+            return;
+
+        foreach (Renderer renderer in renderers)
         {
-            fastPlayer.gameObject.SetActive(showFastPlayer);
+            if (renderer != null && renderer.enabled != isEnabled)
+                renderer.enabled = isEnabled;
         }
     }
 
@@ -328,23 +387,31 @@ public class AlembicTreeWindController : MonoBehaviour
     {
         Camera camera = ResolveVisibilityCamera();
         if (camera == null)
+        {
+            _playbackFrameInterval = 1;
             return true;
+        }
 
         if (_animatedRenderers == null || _animatedRenderers.Length == 0)
             CacheAnimatedRenderers();
 
         if (_animatedRenderers == null || _animatedRenderers.Length == 0)
+        {
+            _playbackFrameInterval = 1;
             return true;
+        }
 
         Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
         float maxDistanceSqr = maxPlaybackDistance > 0f
             ? maxPlaybackDistance * maxPlaybackDistance
             : float.PositiveInfinity;
         bool foundRenderer = false;
+        float closestRendererDistanceSqr = float.PositiveInfinity;
+        bool intersectsFrustum = false;
 
         foreach (Renderer renderer in _animatedRenderers)
         {
-            if (renderer == null || !renderer.enabled)
+            if (renderer == null)
                 continue;
 
             foundRenderer = true;
@@ -352,18 +419,35 @@ public class AlembicTreeWindController : MonoBehaviour
             bounds.Expand(visibilityBoundsPadding);
 
             Vector3 closestPoint = bounds.ClosestPoint(camera.transform.position);
-            if ((closestPoint - camera.transform.position).sqrMagnitude > maxDistanceSqr)
-                continue;
+            float distanceSqr = (closestPoint - camera.transform.position).sqrMagnitude;
+            closestRendererDistanceSqr = Mathf.Min(closestRendererDistanceSqr, distanceSqr);
 
-            if (GeometryUtility.TestPlanesAABB(planes, bounds))
-                return true;
+            if (distanceSqr <= maxDistanceSqr
+                && GeometryUtility.TestPlanesAABB(planes, bounds))
+            {
+                intersectsFrustum = true;
+            }
         }
 
-        if (foundRenderer)
-            return false;
+        _playbackFrameInterval = GetPlaybackFrameInterval(closestRendererDistanceSqr);
 
-        return maxPlaybackDistance <= 0f
-            || (transform.position - camera.transform.position).sqrMagnitude <= maxDistanceSqr;
+        if (foundRenderer)
+            return intersectsFrustum;
+
+        float rootDistanceSqr = (transform.position - camera.transform.position).sqrMagnitude;
+        _playbackFrameInterval = GetPlaybackFrameInterval(rootDistanceSqr);
+        return maxPlaybackDistance <= 0f || rootDistanceSqr <= maxDistanceSqr;
+    }
+
+    private int GetPlaybackFrameInterval(float distanceSqr)
+    {
+        if (distanceSqr > lowPlaybackDistance * lowPlaybackDistance)
+            return 3;
+
+        if (distanceSqr > reducedPlaybackDistance * reducedPlaybackDistance)
+            return 2;
+
+        return 1;
     }
 
     private Camera ResolveVisibilityCamera()

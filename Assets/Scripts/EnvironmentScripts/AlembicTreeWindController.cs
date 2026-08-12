@@ -33,21 +33,6 @@ public class AlembicTreeWindController : MonoBehaviour
     [Header("Culling por cámara")]
     [Tooltip("Pausa el avance Alembic cuando el árbol queda fuera de la cámara principal.")]
     [SerializeField] private bool pauseWhenOffCamera = true;
-    [Tooltip("Cámara usada para decidir si el árbol está visible. Vacío = busca MainCamera o CAM_Main.")]
-    [SerializeField] private Camera visibilityCamera;
-    [Tooltip("Margen extra de bounds para no pausar justo en el borde de cámara.")]
-    [SerializeField, Min(0f)] private float visibilityBoundsPadding = 1f;
-    [Tooltip("Cada cuántos segundos se comprueba visibilidad. Más alto = menos coste, menos inmediato.")]
-    [SerializeField, Min(0.02f)] private float visibilityCheckInterval = 0.2f;
-    [Tooltip("Distancia máxima desde la cámara a los bounds para actualizar el Alembic. 0 = sin límite. WindStateManager la ajusta según la fase.")]
-    [SerializeField, Min(0f)] private float maxPlaybackDistance = 30f;
-
-    [Header("Actualizacion por distancia")]
-    [Tooltip("A partir de esta distancia, los Alembic visibles se actualizan cada 2 frames.")]
-    [SerializeField, Min(0f)] private float reducedPlaybackDistance = 40f;
-    [Tooltip("A partir de esta distancia, los Alembic visibles se actualizan cada 3 frames.")]
-    [SerializeField, Min(0f)] private float lowPlaybackDistance = 80f;
-
     private float _slowTime;
     private float _fastTime;
     private bool _animationPlaybackEnabled = true;
@@ -56,7 +41,6 @@ public class AlembicTreeWindController : MonoBehaviour
     private Renderer[] _fastRenderers = new Renderer[0];
     private bool _isVisibleForPlayback = true;
     private bool _useFastPlayer = true;
-    private float _nextVisibilityCheckTime;
     private int _playbackFrameInterval = 1;
 
     public bool HasAvailablePlayers =>
@@ -84,7 +68,7 @@ public class AlembicTreeWindController : MonoBehaviour
 
     private void Update()
     {
-        if (!_animationPlaybackEnabled || !IsVisibleForPlayback())
+        if (!_animationPlaybackEnabled || (pauseWhenOffCamera && !_isVisibleForPlayback))
             return;
 
         bool shouldUpdatePlayer = _playbackFrameInterval <= 1
@@ -206,7 +190,6 @@ public class AlembicTreeWindController : MonoBehaviour
 
         ApplyPlayerVisibility(!pauseWhenOffCamera || _isVisibleForPlayback);
 
-        _nextVisibilityCheckTime = 0f;
     }
 
     public void SetPlaybackOffset(float offsetSeconds)
@@ -221,14 +204,6 @@ public class AlembicTreeWindController : MonoBehaviour
     {
         _animationPlaybackEnabled = shouldRun;
 
-        if (shouldRun)
-            _nextVisibilityCheckTime = 0f;
-    }
-
-    public void SetMaxPlaybackDistance(float distance)
-    {
-        maxPlaybackDistance = Mathf.Max(0f, distance);
-        _nextVisibilityCheckTime = 0f;
     }
 
     public void PrewarmPlayers(float sampleTime)
@@ -310,38 +285,77 @@ public class AlembicTreeWindController : MonoBehaviour
             : player == slowPlayer;
     }
 
-    private bool IsVisibleForPlayback()
+    public void RefreshVisibilityAndPlayback(
+        Camera camera,
+        float maxDistance,
+        float everyTwoFramesDistance,
+        float everyThreeFramesDistance,
+        float boundsPadding)
     {
+        if (_animatedRenderers == null || _animatedRenderers.Length == 0)
+            CacheAnimatedRenderers();
+
+        bool visibleForPlayback = true;
+        float closestDistanceSqr = float.PositiveInfinity;
+
+        if (camera != null && _animatedRenderers != null && _animatedRenderers.Length > 0)
+        {
+            Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
+            float maxDistanceSqr = maxDistance > 0f
+                ? maxDistance * maxDistance
+                : float.PositiveInfinity;
+            bool foundRenderer = false;
+            bool intersectsFrustum = false;
+
+            foreach (Renderer renderer in _animatedRenderers)
+            {
+                if (renderer == null)
+                    continue;
+
+                foundRenderer = true;
+                Bounds bounds = renderer.bounds;
+                bounds.Expand(Mathf.Max(0f, boundsPadding));
+
+                Vector3 closestPoint = bounds.ClosestPoint(camera.transform.position);
+                float distanceSqr = (closestPoint - camera.transform.position).sqrMagnitude;
+                closestDistanceSqr = Mathf.Min(closestDistanceSqr, distanceSqr);
+
+                if (distanceSqr <= maxDistanceSqr
+                    && GeometryUtility.TestPlanesAABB(planes, bounds))
+                {
+                    intersectsFrustum = true;
+                }
+            }
+
+            if (foundRenderer)
+                visibleForPlayback = intersectsFrustum;
+            else
+                closestDistanceSqr = (transform.position - camera.transform.position).sqrMagnitude;
+        }
+        else if (camera != null)
+        {
+            closestDistanceSqr = (transform.position - camera.transform.position).sqrMagnitude;
+            float maxDistanceSqr = maxDistance > 0f
+                ? maxDistance * maxDistance
+                : float.PositiveInfinity;
+            visibleForPlayback = closestDistanceSqr <= maxDistanceSqr;
+        }
+
+        int playbackFrameInterval = GetPlaybackFrameInterval(
+            closestDistanceSqr,
+            everyTwoFramesDistance,
+            everyThreeFramesDistance);
+        if (_playbackFrameInterval != playbackFrameInterval)
+            _playbackFrameInterval = playbackFrameInterval;
+
         if (!pauseWhenOffCamera)
+            visibleForPlayback = true;
+
+        if (_isVisibleForPlayback != visibleForPlayback)
         {
-            if (Time.unscaledTime >= _nextVisibilityCheckTime)
-            {
-                _nextVisibilityCheckTime = Time.unscaledTime
-                    + Mathf.Max(0.02f, visibilityCheckInterval);
-                IsInsideVisibilityCamera();
-            }
-
-            if (!_isVisibleForPlayback)
-            {
-                _isVisibleForPlayback = true;
-                ApplyPlayerVisibility(true);
-            }
-
-            return true;
+            _isVisibleForPlayback = visibleForPlayback;
+            ApplyPlayerVisibility(visibleForPlayback);
         }
-
-        if (Time.unscaledTime < _nextVisibilityCheckTime)
-            return _isVisibleForPlayback;
-
-        _nextVisibilityCheckTime = Time.unscaledTime + Mathf.Max(0.02f, visibilityCheckInterval);
-        bool isVisible = IsInsideVisibilityCamera();
-        if (isVisible != _isVisibleForPlayback)
-        {
-            _isVisibleForPlayback = isVisible;
-            ApplyPlayerVisibility(isVisible);
-        }
-
-        return _isVisibleForPlayback;
     }
 
     private void ApplyPlayerVisibility(bool isVisible)
@@ -351,8 +365,8 @@ public class AlembicTreeWindController : MonoBehaviour
 
         if (keepAlembicStreamLoaded)
         {
-            bool keepSlowPlayerLoaded = !_useFastPlayer && slowPlayer != null;
-            bool keepFastPlayerLoaded = _useFastPlayer && fastPlayer != null;
+            bool keepSlowPlayerLoaded = slowPlayer != null;
+            bool keepFastPlayerLoaded = fastPlayer != null;
 
             SetPlayerActive(slowPlayer, keepSlowPlayerLoaded);
             SetPlayerActive(fastPlayer, keepFastPlayerLoaded);
@@ -383,91 +397,26 @@ public class AlembicTreeWindController : MonoBehaviour
         }
     }
 
-    private bool IsInsideVisibilityCamera()
+    private static int GetPlaybackFrameInterval(
+        float distanceSqr,
+        float everyTwoFramesDistance,
+        float everyThreeFramesDistance)
     {
-        Camera camera = ResolveVisibilityCamera();
-        if (camera == null)
-        {
-            _playbackFrameInterval = 1;
-            return true;
-        }
+        if (float.IsPositiveInfinity(distanceSqr))
+            return 1;
 
-        if (_animatedRenderers == null || _animatedRenderers.Length == 0)
-            CacheAnimatedRenderers();
+        float twoFramesSqr = Mathf.Max(0f, everyTwoFramesDistance);
+        float threeFramesSqr = Mathf.Max(twoFramesSqr, everyThreeFramesDistance);
+        twoFramesSqr *= twoFramesSqr;
+        threeFramesSqr *= threeFramesSqr;
 
-        if (_animatedRenderers == null || _animatedRenderers.Length == 0)
-        {
-            _playbackFrameInterval = 1;
-            return true;
-        }
-
-        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
-        float maxDistanceSqr = maxPlaybackDistance > 0f
-            ? maxPlaybackDistance * maxPlaybackDistance
-            : float.PositiveInfinity;
-        bool foundRenderer = false;
-        float closestRendererDistanceSqr = float.PositiveInfinity;
-        bool intersectsFrustum = false;
-
-        foreach (Renderer renderer in _animatedRenderers)
-        {
-            if (renderer == null)
-                continue;
-
-            foundRenderer = true;
-            Bounds bounds = renderer.bounds;
-            bounds.Expand(visibilityBoundsPadding);
-
-            Vector3 closestPoint = bounds.ClosestPoint(camera.transform.position);
-            float distanceSqr = (closestPoint - camera.transform.position).sqrMagnitude;
-            closestRendererDistanceSqr = Mathf.Min(closestRendererDistanceSqr, distanceSqr);
-
-            if (distanceSqr <= maxDistanceSqr
-                && GeometryUtility.TestPlanesAABB(planes, bounds))
-            {
-                intersectsFrustum = true;
-            }
-        }
-
-        _playbackFrameInterval = GetPlaybackFrameInterval(closestRendererDistanceSqr);
-
-        if (foundRenderer)
-            return intersectsFrustum;
-
-        float rootDistanceSqr = (transform.position - camera.transform.position).sqrMagnitude;
-        _playbackFrameInterval = GetPlaybackFrameInterval(rootDistanceSqr);
-        return maxPlaybackDistance <= 0f || rootDistanceSqr <= maxDistanceSqr;
-    }
-
-    private int GetPlaybackFrameInterval(float distanceSqr)
-    {
-        if (distanceSqr > lowPlaybackDistance * lowPlaybackDistance)
+        if (distanceSqr > threeFramesSqr)
             return 3;
 
-        if (distanceSqr > reducedPlaybackDistance * reducedPlaybackDistance)
+        if (distanceSqr > twoFramesSqr)
             return 2;
 
         return 1;
-    }
-
-    private Camera ResolveVisibilityCamera()
-    {
-        if (visibilityCamera != null)
-            return visibilityCamera;
-
-        visibilityCamera = Camera.main;
-        if (visibilityCamera != null)
-            return visibilityCamera;
-
-        GameObject namedCamera = GameObject.Find("CAM_Main");
-        if (namedCamera == null)
-            namedCamera = GameObject.Find("MainCamera");
-
-        visibilityCamera = namedCamera != null
-            ? namedCamera.GetComponent<Camera>()
-            : null;
-
-        return visibilityCamera;
     }
 
     private static float WrapAlembicTime(float time, float duration)

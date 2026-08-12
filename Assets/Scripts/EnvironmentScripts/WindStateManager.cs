@@ -78,6 +78,14 @@ public class WindStateManager : MonoBehaviour
     [Tooltip("Desfase en segundos entre cada TreeController del array. 0.3 = cada árbol empieza 0.3s más adelante que el anterior.")]
     [SerializeField, Min(0f)] private float treePlaybackOffsetStep = 0.3f;
 
+    [Header("Alembic Distance Culling")]
+    [Tooltip("Distancia de animación durante la caminata inicial. 0 = sin límite.")]
+    [SerializeField, Min(0f)] private float initialWalkAlembicDistance = 30f;
+    [Tooltip("Distancia de animación al aproximarse y entrar en la iglesia. 0 = sin límite.")]
+    [SerializeField, Min(0f)] private float churchAlembicDistance = 100f;
+    [Tooltip("Cada cuántos segundos se comprueba el culling de los Alembic standalone.")]
+    [SerializeField, Min(0.02f)] private float standaloneAlembicVisibilityCheckInterval = 0.2f;
+
     [Header("Alembic standalone")]
     [Tooltip("Reproduce en loop el Alembic de la planta colocado en escena como Planta_MJ.")]
     [SerializeField] private bool playPlantaMjAlembic = true;
@@ -170,9 +178,13 @@ public class WindStateManager : MonoBehaviour
     private Camera _blizzardSurfaceWorldZAnchorCamera;
     private readonly List<AlembicStreamPlayer> _plantaMjPlayers = new List<AlembicStreamPlayer>();
     private readonly List<float> _plantaMjTimes = new List<float>();
+    private readonly List<Renderer[]> _plantaMjRenderers = new List<Renderer[]>();
     private bool _plantaMjAutoPlaybackReported;
     private bool _treeAnimationPlaybackEnabled = true;
     private bool _blizzardVideoPlaybackEnabled = true;
+    private float _currentAlembicMaxDistance = 30f;
+    private float _nextStandaloneAlembicVisibilityCheck;
+    private bool _usesChurchAlembicDistance;
 
     private sealed class VideoSurface
     {
@@ -209,6 +221,7 @@ public class WindStateManager : MonoBehaviour
         ResolveMissingReferences();
         ApplyTreePlaybackOffsets();
         ResolvePlantaMjAlembicPlayers();
+        UseInitialWalkAlembicDistance();
 
         if (preloadPlayersOnAwake)
             BuildAndPrepareFixedPlayers();
@@ -403,6 +416,30 @@ public class WindStateManager : MonoBehaviour
         ApplyCurrentVideoAlphas();
     }
 
+    public void UseInitialWalkAlembicDistance()
+    {
+        _usesChurchAlembicDistance = false;
+        ApplyAlembicCullingDistance(initialWalkAlembicDistance);
+    }
+
+    public void UseChurchAlembicDistance()
+    {
+        _usesChurchAlembicDistance = true;
+        ApplyAlembicCullingDistance(churchAlembicDistance);
+    }
+
+    private void ApplyAlembicCullingDistance(float distance)
+    {
+        _currentAlembicMaxDistance = Mathf.Max(0f, distance);
+        _nextStandaloneAlembicVisibilityCheck = 0f;
+
+        if (treeControllers == null)
+            return;
+
+        foreach (AlembicTreeWindController tree in treeControllers)
+            if (tree != null) tree.SetMaxPlaybackDistance(_currentAlembicMaxDistance);
+    }
+
     public void PrewarmVideoPlayersHidden()
     {
         bool wasVisible = _videoPlayersVisible;
@@ -454,11 +491,21 @@ public class WindStateManager : MonoBehaviour
     {
         _treeAnimationPlaybackEnabled = shouldRun;
 
-        if (treeControllers == null)
-            return;
+        if (treeControllers != null)
+        {
+            foreach (var tree in treeControllers)
+                if (tree != null) tree.SetAnimationPlaybackEnabled(shouldRun);
+        }
 
-        foreach (var tree in treeControllers)
-            if (tree != null) tree.SetAnimationPlaybackEnabled(shouldRun);
+        if (!shouldRun)
+        {
+            foreach (AlembicStreamPlayer player in _plantaMjPlayers)
+                if (player != null) player.enabled = false;
+        }
+        else
+        {
+            _nextStandaloneAlembicVisibilityCheck = 0f;
+        }
     }
 
     public void SetBlizzardVideoPlaybackEnabled(bool shouldRun)
@@ -991,6 +1038,10 @@ public class WindStateManager : MonoBehaviour
         ResolveMissingReferences();
         ApplyTreePlaybackOffsets();
         ResolvePlantaMjAlembicPlayers();
+        ApplyAlembicCullingDistance(
+            _usesChurchAlembicDistance
+                ? churchAlembicDistance
+                : initialWalkAlembicDistance);
         AssignCameraToAllPlayers();
         ResetBlizzardSurfaceWorldZAnchor();
         ResetWorldBackgroundAnchors();
@@ -1531,6 +1582,7 @@ public class WindStateManager : MonoBehaviour
     private void SetTreeWindSpeed(WindPreset preset)
     {
         bool fast = preset == WindPreset.W1_MaxIdle || preset == WindPreset.W4_MinToMedium;
+
         if (treeControllers == null) return;
 
         foreach (var tree in treeControllers)
@@ -1564,6 +1616,7 @@ public class WindStateManager : MonoBehaviour
     {
         _plantaMjPlayers.Clear();
         _plantaMjTimes.Clear();
+        _plantaMjRenderers.Clear();
 
         if (!playPlantaMjAlembic)
             return;
@@ -1576,6 +1629,7 @@ public class WindStateManager : MonoBehaviour
 
             _plantaMjPlayers.Add(player);
             _plantaMjTimes.Add(GetClampedAlembicTime(player));
+            _plantaMjRenderers.Add(player.GetComponentsInChildren<Renderer>(true));
         }
 
         if (_plantaMjPlayers.Count > 0 && !_plantaMjAutoPlaybackReported)
@@ -1587,8 +1641,18 @@ public class WindStateManager : MonoBehaviour
 
     private void AdvancePlantaMjAlembicPlayers()
     {
-        if (!_treeAnimationPlaybackEnabled || !playPlantaMjAlembic || _plantaMjPlayers.Count == 0)
+        if (!playPlantaMjAlembic || _plantaMjPlayers.Count == 0)
             return;
+
+        if (!_treeAnimationPlaybackEnabled)
+            return;
+
+        if (Time.unscaledTime >= _nextStandaloneAlembicVisibilityCheck)
+        {
+            _nextStandaloneAlembicVisibilityCheck = Time.unscaledTime
+                + Mathf.Max(0.02f, standaloneAlembicVisibilityCheckInterval);
+            UpdatePlantaMjVisibility();
+        }
 
         float speed = Mathf.Max(0f, plantaMjPlaybackSpeed);
         if (speed <= 0f)
@@ -1601,8 +1665,12 @@ public class WindStateManager : MonoBehaviour
             {
                 _plantaMjPlayers.RemoveAt(i);
                 _plantaMjTimes.RemoveAt(i);
+                _plantaMjRenderers.RemoveAt(i);
                 continue;
             }
+
+            if (!player.enabled)
+                continue;
 
             float duration = player.Duration;
             if (duration <= 0f) continue;
@@ -1614,6 +1682,62 @@ public class WindStateManager : MonoBehaviour
             _plantaMjTimes[i] = time;
             player.CurrentTime = time;
         }
+    }
+
+    private void UpdatePlantaMjVisibility()
+    {
+        Camera camera = blizzardVideoCamera != null ? blizzardVideoCamera : Camera.main;
+
+        for (int i = 0; i < _plantaMjPlayers.Count; i++)
+        {
+            AlembicStreamPlayer player = _plantaMjPlayers[i];
+            if (player == null)
+                continue;
+
+            bool visible = camera == null || IsAlembicVisible(
+                player.transform,
+                _plantaMjRenderers[i],
+                camera,
+                _currentAlembicMaxDistance);
+            player.enabled = visible;
+        }
+    }
+
+    private static bool IsAlembicVisible(
+        Transform root,
+        Renderer[] renderers,
+        Camera camera,
+        float maxDistance)
+    {
+        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
+        float maxDistanceSqr = maxDistance > 0f
+            ? maxDistance * maxDistance
+            : float.PositiveInfinity;
+        bool foundRenderer = false;
+
+        if (renderers != null)
+        {
+            foreach (Renderer renderer in renderers)
+            {
+                if (renderer == null || !renderer.enabled)
+                    continue;
+
+                foundRenderer = true;
+                Bounds bounds = renderer.bounds;
+                Vector3 closestPoint = bounds.ClosestPoint(camera.transform.position);
+                if ((closestPoint - camera.transform.position).sqrMagnitude > maxDistanceSqr)
+                    continue;
+
+                if (GeometryUtility.TestPlanesAABB(planes, bounds))
+                    return true;
+            }
+        }
+
+        if (foundRenderer)
+            return false;
+
+        return maxDistance <= 0f
+            || (root.position - camera.transform.position).sqrMagnitude <= maxDistanceSqr;
     }
 
     private void PrewarmPlantaMjAlembicPlayers(float sampleTime)

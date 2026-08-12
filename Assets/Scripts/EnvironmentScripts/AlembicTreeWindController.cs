@@ -37,6 +37,8 @@ public class AlembicTreeWindController : MonoBehaviour
     [SerializeField, Min(0f)] private float visibilityBoundsPadding = 1f;
     [Tooltip("Cada cuántos segundos se comprueba visibilidad. Más alto = menos coste, menos inmediato.")]
     [SerializeField, Min(0.02f)] private float visibilityCheckInterval = 0.2f;
+    [Tooltip("Distancia máxima desde la cámara a los bounds para actualizar el Alembic. 0 = sin límite. WindStateManager la ajusta según la fase.")]
+    [SerializeField, Min(0f)] private float maxPlaybackDistance = 30f;
 
     private float _slowTime;
     private float _fastTime;
@@ -197,6 +199,12 @@ public class AlembicTreeWindController : MonoBehaviour
             _nextVisibilityCheckTime = 0f;
     }
 
+    public void SetMaxPlaybackDistance(float distance)
+    {
+        maxPlaybackDistance = Mathf.Max(0f, distance);
+        _nextVisibilityCheckTime = 0f;
+    }
+
     public void PrewarmPlayers(float sampleTime)
     {
         ResolveMissingPlayers();
@@ -329,6 +337,9 @@ public class AlembicTreeWindController : MonoBehaviour
             return true;
 
         Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
+        float maxDistanceSqr = maxPlaybackDistance > 0f
+            ? maxPlaybackDistance * maxPlaybackDistance
+            : float.PositiveInfinity;
         bool foundRenderer = false;
 
         foreach (Renderer renderer in _animatedRenderers)
@@ -340,11 +351,19 @@ public class AlembicTreeWindController : MonoBehaviour
             Bounds bounds = renderer.bounds;
             bounds.Expand(visibilityBoundsPadding);
 
+            Vector3 closestPoint = bounds.ClosestPoint(camera.transform.position);
+            if ((closestPoint - camera.transform.position).sqrMagnitude > maxDistanceSqr)
+                continue;
+
             if (GeometryUtility.TestPlanesAABB(planes, bounds))
                 return true;
         }
 
-        return !foundRenderer;
+        if (foundRenderer)
+            return false;
+
+        return maxPlaybackDistance <= 0f
+            || (transform.position - camera.transform.position).sqrMagnitude <= maxDistanceSqr;
     }
 
     private Camera ResolveVisibilityCamera()

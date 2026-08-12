@@ -1685,7 +1685,10 @@ public class WindStateManager : MonoBehaviour
         {
             AlembicTreeWindController tree = treeControllers[i];
             if (tree != null)
+            {
                 tree.SetPlaybackOffset(i * offsetStep);
+                tree.AssignRandomPlaybackPhase();
+            }
         }
     }
 

@@ -42,6 +42,7 @@ public class AlembicTreeWindController : MonoBehaviour
     private bool _isVisibleForPlayback = true;
     private bool _useFastPlayer = true;
     private int _playbackFrameInterval = 1;
+    private int _playbackPhaseSeed = -1;
 
     public bool HasAvailablePlayers =>
         slowPlayer != null
@@ -61,6 +62,7 @@ public class AlembicTreeWindController : MonoBehaviour
 
         DisableStaticTreeRenderers();
         CacheAnimatedRenderers();
+        AssignRandomPlaybackPhase();
 
         // El estado inicial es W1_MaxIdle (ventisca máxima) → fast
         SetFast(true);
@@ -71,8 +73,7 @@ public class AlembicTreeWindController : MonoBehaviour
         if (!_animationPlaybackEnabled || (pauseWhenOffCamera && !_isVisibleForPlayback))
             return;
 
-        bool shouldUpdatePlayer = _playbackFrameInterval <= 1
-            || Time.frameCount % _playbackFrameInterval == 0;
+        bool shouldUpdatePlayer = ShouldUpdateThisFrame();
 
         if (advanceInactivePlayersInBackground || IsSelectedPlayer(slowPlayer))
             AdvancePlayer(slowPlayer, ref _slowTime, slowPlaybackSpeed, shouldUpdatePlayer);
@@ -204,6 +205,14 @@ public class AlembicTreeWindController : MonoBehaviour
     {
         _animationPlaybackEnabled = shouldRun;
 
+    }
+
+    public void AssignRandomPlaybackPhase()
+    {
+        if (_playbackPhaseSeed >= 0)
+            return;
+
+        _playbackPhaseSeed = Random.Range(0, 1000000);
     }
 
     public void PrewarmPlayers(float sampleTime)
@@ -417,6 +426,17 @@ public class AlembicTreeWindController : MonoBehaviour
             return 2;
 
         return 1;
+    }
+
+    private bool ShouldUpdateThisFrame()
+    {
+        if (_playbackFrameInterval <= 1)
+            return true;
+
+        if (_playbackPhaseSeed < 0)
+            AssignRandomPlaybackPhase();
+
+        return (Time.frameCount + _playbackPhaseSeed) % _playbackFrameInterval == 0;
     }
 
     private static float WrapAlembicTime(float time, float duration)

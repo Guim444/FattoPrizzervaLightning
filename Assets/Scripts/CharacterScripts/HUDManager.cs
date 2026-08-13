@@ -147,7 +147,7 @@ public class HUDManager : MonoBehaviour
     {
         if (!CanUseModeSelection()) return;
 
-        ActivateGameplayBlizzard();
+        PrepareDirectGameplayEntry();
         introSequenceManager?.RestoreOriginalAnimator();
         Time.timeScale = 1f;
         ActivateCinemachine();
@@ -230,7 +230,7 @@ public class HUDManager : MonoBehaviour
     {
         if (!CanUseModeSelection()) return;
 
-        ActivateGameplayBlizzard();
+        PrepareDirectGameplayEntry();
         introSequenceManager?.RestoreOriginalAnimator();
         Time.timeScale = 1f;
         cameraMovement.combatY = freeMoveStartCameraY;
@@ -250,6 +250,15 @@ public class HUDManager : MonoBehaviour
         int activatedManagers = WindStateManager.ActivateAllVideoPlayersRoots();
         if (activatedManagers == 0)
             Debug.LogWarning("[HUDManager] No se encontró ningún WindStateManager para activar la ventisca.", this);
+    }
+
+    private void PrepareDirectGameplayEntry()
+    {
+        ActivateGameplayBlizzard();
+
+        int updatedManagers = WindStateManager.UseChurchAlembicDistanceOnAll();
+        if (updatedManagers == 0)
+            Debug.LogWarning("[HUDManager] No se encontro ningun WindStateManager para ampliar la distancia de los Alembic.", this);
     }
 
     private IEnumerator StartupLoadingCoroutine()

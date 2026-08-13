@@ -380,6 +380,23 @@ public class WindStateManager : MonoBehaviour
         return managers.Length;
     }
 
+    /// <summary>
+    /// Amplia la distancia de actualizacion de los Alembic en todos los managers activos.
+    /// Permite que entradas sin desplazamiento fisico, como un teletransporte, produzcan
+    /// el mismo cambio de estado que el trigger del recorrido inicial.
+    /// </summary>
+    public static int UseChurchAlembicDistanceOnAll()
+    {
+        WindStateManager[] managers = Object.FindObjectsByType<WindStateManager>(
+            FindObjectsInactive.Exclude,
+            FindObjectsSortMode.None);
+
+        foreach (WindStateManager manager in managers)
+            manager.UseChurchAlembicDistance();
+
+        return managers.Length;
+    }
+
     public static int PrewarmAllVideoPlayersHidden()
     {
         WindStateManager[] managers = Object.FindObjectsByType<WindStateManager>(

@@ -20,13 +20,6 @@ public class AlembicCullDistanceTrigger : MonoBehaviour
         if (!triggerEnabled || triggered) return;
         if ((playerLayer.value & (1 << other.gameObject.layer)) == 0) return;
 
-        WindStateManager[] managers = Object.FindObjectsByType<WindStateManager>(
-            FindObjectsInactive.Exclude,
-            FindObjectsSortMode.None);
-
-        foreach (WindStateManager manager in managers)
-            manager.UseChurchAlembicDistance();
-
-        triggered = managers.Length > 0;
+        triggered = WindStateManager.UseChurchAlembicDistanceOnAll() > 0;
     }
 }

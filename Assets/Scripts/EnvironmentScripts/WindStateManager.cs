@@ -12,10 +12,10 @@ using UnityEngine.Video;
 /// Idea clave:
 /// - Cada clip tiene su propio VideoPlayer.
 /// - Los clips se asignan al crear el root, en Awake o al entrar en la iglesia.
-/// - Después, los players quedan corriendo.
+/// - Todos los players se preparan una vez y los que no están visibles quedan pausados.
 /// - Al cambiar de estado NO se cambia clip, NO se llama Prepare, NO se llama Stop.
 /// - Tampoco se hace seek/time=0/frame=0 en runtime.
-/// - Solo se cambia el alpha del material del quad para decidir qué vídeo se ve.
+/// - Al cambiar de estado se pausa el anterior, se reproduce el activo y se actualiza el alpha.
 ///
 /// Estructura por tecla:
 ///   Tecla 1 → IdleLoop_Fast              (snap inmediato, sin transición)
@@ -111,7 +111,7 @@ public class WindStateManager : MonoBehaviour
     [Tooltip("Si está desactivado, los vídeos permanecen inactivos hasta entrar en la iglesia.")]
     [SerializeField] private bool videoPlayersRootStartsActive = false;
 
-    [Tooltip("Mantiene los VideoPlayers activos con alpha 0 para evitar tirones al mostrarlos.")]
+    [Tooltip("Prepara los VideoPlayers ocultos para evitar tirones al mostrarlos. Solo el video visible se reproduce.")]
     [SerializeField] private bool prewarmPlayersWhileHidden = true;
 
     [Header("Video Surface")]
@@ -170,6 +170,7 @@ public class WindStateManager : MonoBehaviour
     private VideoPlayer[] _idlePlayers;
     private VideoPlayer[] _transitionPlayers;
     private readonly List<VideoPlayer> _allPlayers = new List<VideoPlayer>();
+    private readonly HashSet<VideoPlayer> _prepareRequestedPlayers = new HashSet<VideoPlayer>();
     private readonly Dictionary<VideoPlayer, VideoSurface> _videoSurfaces = new Dictionary<VideoPlayer, VideoSurface>();
     private readonly Dictionary<VideoPlayer, VideoSurface> _cameraBackgroundSurfaces = new Dictionary<VideoPlayer, VideoSurface>();
     private readonly Dictionary<VideoPlayer, VideoSurface> _idleBackgroundSurfaces = new Dictionary<VideoPlayer, VideoSurface>();
@@ -356,10 +357,9 @@ public class WindStateManager : MonoBehaviour
         _pendingIdleAfterTransitionIndex = idx;
 
         // No hacemos seek/restart aquí. time=0/frame=0 también puede congelar el decoder.
-        // El player ya está corriendo en loop desde Awake; solo cambiamos alpha.
-        // Aseguramos que esté corriendo sin preparar ni reasignar clip.
-        if (CanRunVideoPlayers && !transition.isPlaying)
-            transition.Play();
+        // El player ya fue preparado al cargar. Pausamos el anterior y reanudamos
+        // únicamente esta transición, sin preparar ni reasignar clips.
+        PlayOnlyActiveFixedPlayer(requestPrepareIfNeeded: true);
 
         float opacity = _crossFadeOverride >= 0f ? _crossFadeOverride : GetTransitionOpacity(idx);
         _activeTransitionOpacity = opacity;
@@ -417,17 +417,8 @@ public class WindStateManager : MonoBehaviour
             return;
         }
 
-        foreach (VideoPlayer player in _allPlayers)
-        {
-            if (player == null) continue;
-
-            AssignCameraToPlayer(player);
-
-            if (player.isPrepared)
-                player.Play();
-            else
-                player.Prepare();
-        }
+        PrepareAllFixedPlayers();
+        PlayOnlyActiveFixedPlayer(requestPrepareIfNeeded: true);
 
         ActivateLegacyVideoPlayer();
         ApplyCurrentVideoAlphas();
@@ -542,25 +533,12 @@ public class WindStateManager : MonoBehaviour
             return;
         }
 
-        foreach (VideoPlayer player in _allPlayers)
-        {
-            if (player == null) continue;
-
-            AssignCameraToPlayer(player);
-
-            if (player.isPrepared)
-            {
-                if (!player.isPlaying)
-                    player.Play();
-            }
-            else
-            {
-                player.Prepare();
-            }
-        }
+        PrepareAllFixedPlayers();
+        PlayOnlyActiveFixedPlayer(requestPrepareIfNeeded: false);
 
         _videoPlayersVisible = wasVisible;
         ApplyCurrentVideoAlphas();
+        PlayOnlyActiveFixedPlayer(requestPrepareIfNeeded: true);
         PrewarmPlantaMjAlembicPlayers(0.05f);
     }
 
@@ -604,7 +582,8 @@ public class WindStateManager : MonoBehaviour
         }
 
         _playersRoot.gameObject.SetActive(true);
-        PlayAllVideoPlayers();
+        PrepareAllFixedPlayers();
+        PlayOnlyActiveFixedPlayer(requestPrepareIfNeeded: true);
         ActivateLegacyVideoPlayer();
         ApplyCurrentVideoAlphas();
     }
@@ -619,6 +598,7 @@ public class WindStateManager : MonoBehaviour
             return;
         }
 
+        UnsubscribeAll();
         ClearRuntimePlayers();
 
         _idlePlayers = new VideoPlayer[windStates.Length];
@@ -648,7 +628,7 @@ public class WindStateManager : MonoBehaviour
 
             if (data.transitionClip != null)
             {
-                // Lo dejamos en loop y corriendo también cuando está oculto.
+                // Se prepara al cargar y solo se reproduce mientras esta transición es visible.
                 // Visualmente se muestra una sola pasada gracias al timer.
                 _transitionPlayers[i] = CreateFixedPlayer(
                     $"VP_Transition_{i}_{SanitizeName(data.transitionClip.name)}",
@@ -679,7 +659,7 @@ public class WindStateManager : MonoBehaviour
         AssignCameraToPlayer(vp);
 
         if (CanRunVideoPlayers)
-            vp.Prepare();
+            RequestPrepare(vp);
 
         _allPlayers.Add(vp);
         return vp;
@@ -712,19 +692,10 @@ public class WindStateManager : MonoBehaviour
     private void OnFixedPlayerPrepared(VideoPlayer source)
     {
         source.prepareCompleted -= OnFixedPlayerPrepared;
+        _prepareRequestedPlayers.Remove(source);
 
-        if (!CanRunVideoPlayers)
-            return;
-
-        // Todos quedan corriendo siempre. El visible se decide solo por alpha.
-        if (!source.isPlaying)
-            source.Play();
-
-        // IMPORTANTE:
-        // No poner el alpha del material a 0 aquí.
-        // Si Start() o un manager ya mostró el idle inicial antes de que termine Prepare(),
-        // este callback llegaría después y apagaría el vídeo activo.
         ApplyCurrentVideoAlphas();
+        PlayOnlyActiveFixedPlayer(requestPrepareIfNeeded: false);
     }
 
     // ── Cambio visual por opacidad ────────────────────────────────────────────
@@ -733,8 +704,6 @@ public class WindStateManager : MonoBehaviour
     {
         if (!IsValidStateIndex(stateIdx)) return;
 
-        HideAllVideos();
-
         VideoPlayer idle = GetIdlePlayer(stateIdx);
         if (idle == null)
         {
@@ -742,16 +711,15 @@ public class WindStateManager : MonoBehaviour
             return;
         }
 
-        if (CanRunVideoPlayers && !idle.isPlaying)
-            idle.Play();
-
-        SetVideoOpacity(idle, ShouldShowVideos ? GetIdleOpacity(stateIdx) : 0f);
-
         _activeIdleIndex = stateIdx;
         _activeTransitionIndex = -1;
         _pendingIdleAfterTransitionIndex = -1;
         _transitionEndsAtUnscaled = -1f;
         _activeTransitionOpacity = 0f;
+
+        HideAllVideos();
+        SetVideoOpacity(idle, ShouldShowVideos ? GetIdleOpacity(stateIdx) : 0f);
+        PlayOnlyActiveFixedPlayer(requestPrepareIfNeeded: true);
     }
 
     private void HideAllVideos()
@@ -764,7 +732,7 @@ public class WindStateManager : MonoBehaviour
         }
     }
 
-    private void PlayAllVideoPlayers()
+    private void PrepareAllFixedPlayers()
     {
         for (int i = 0; i < _allPlayers.Count; i++)
         {
@@ -772,11 +740,58 @@ public class WindStateManager : MonoBehaviour
             if (player == null) continue;
 
             AssignCameraToPlayer(player);
+            RequestPrepare(player);
+        }
+    }
+
+    private void RequestPrepare(VideoPlayer player)
+    {
+        if (player == null || player.isPrepared || _prepareRequestedPlayers.Contains(player))
+            return;
+
+        _prepareRequestedPlayers.Add(player);
+        player.Prepare();
+    }
+
+    private VideoPlayer GetActiveFixedPlayer()
+    {
+        if (_activeTransitionIndex >= 0)
+            return GetTransitionPlayer(_activeTransitionIndex);
+
+        if (_activeIdleIndex >= 0)
+            return GetIdlePlayer(_activeIdleIndex);
+
+        return null;
+    }
+
+    private void PlayOnlyActiveFixedPlayer(bool requestPrepareIfNeeded)
+    {
+        VideoPlayer activePlayer = ShouldShowVideos ? GetActiveFixedPlayer() : null;
+
+        for (int i = 0; i < _allPlayers.Count; i++)
+        {
+            VideoPlayer player = _allPlayers[i];
+            if (player == null) continue;
+
+            if (player != activePlayer)
+            {
+                if (player.isPlaying)
+                    player.Pause();
+
+                continue;
+            }
+
+            AssignCameraToPlayer(player);
 
             if (player.isPrepared)
-                player.Play();
-            else
-                player.Prepare();
+            {
+                if (!player.isPlaying)
+                    player.Play();
+            }
+            else if (requestPrepareIfNeeded)
+            {
+                RequestPrepare(player);
+            }
         }
     }
 
@@ -846,8 +861,15 @@ public class WindStateManager : MonoBehaviour
 
                 SetVideoOpacity(player, ShouldShowVideos && player == activeTransition ? _activeTransitionOpacity : 0f);
 
-                if (player == activeTransition && !player.isPlaying)
-                    player.Play();
+                if (ShouldShowVideos && player == activeTransition)
+                {
+                    if (player.isPrepared && !player.isPlaying)
+                        player.Play();
+                }
+                else if (player.isPlaying)
+                {
+                    player.Pause();
+                }
             }
 
             return;
@@ -865,15 +887,22 @@ public class WindStateManager : MonoBehaviour
 
                 SetVideoOpacity(player, ShouldShowVideos && player == activeIdle ? idleOpacity : 0f);
 
-                if (player == activeIdle && !player.isPlaying)
-                    player.Play();
+                if (ShouldShowVideos && player == activeIdle)
+                {
+                    if (player.isPrepared && !player.isPlaying)
+                        player.Play();
+                }
+                else if (player.isPlaying)
+                {
+                    player.Pause();
+                }
             }
         }
     }
 
     private void ActivateLegacyVideoPlayer()
     {
-        if (blizzardVideoPlayer == null) return;
+        if (blizzardVideoPlayer == null || _allPlayers.Count > 0) return;
 
         ConfigureBasePlayer(blizzardVideoPlayer);
 
@@ -994,6 +1023,7 @@ public class WindStateManager : MonoBehaviour
 
     private void OnVideoError(VideoPlayer source, string message)
     {
+        _prepareRequestedPlayers.Remove(source);
         Debug.LogWarning($"[{nameof(WindStateManager)}] Error en VideoPlayer '{source.name}': {message}", this);
     }
 
@@ -1007,6 +1037,8 @@ public class WindStateManager : MonoBehaviour
             player.prepareCompleted -= OnFixedPlayerPrepared;
             player.errorReceived -= OnVideoError;
         }
+
+        _prepareRequestedPlayers.Clear();
     }
 
     // ── Configuración de VideoPlayer ──────────────────────────────────────────

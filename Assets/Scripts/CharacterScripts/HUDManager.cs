@@ -254,6 +254,8 @@ public class HUDManager : MonoBehaviour
 
     private void PrepareDirectGameplayEntry()
     {
+        introSequenceManager?.HideSceneFadeScreen();
+        introSequenceManager?.SwitchPlayerRenderingToMainCamera();
         ActivateGameplayBlizzard();
 
         int updatedManagers = WindStateManager.UseChurchAlembicDistanceOnAll();

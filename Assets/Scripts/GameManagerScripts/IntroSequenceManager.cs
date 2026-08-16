@@ -15,6 +15,7 @@ public class IntroSequenceManager : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Camera mainCamera;
+    [SerializeField] private Camera playerOverlayCamera;
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private Transform playerTransform;
     [SerializeField] private CharacterController playerCC;
@@ -220,6 +221,12 @@ public class IntroSequenceManager : MonoBehaviour
         if (playerAnimator != null)     playerAnimator.enabled = false;
         if (playerInputHandler != null) playerInputHandler.enabled = false;
         if (playerTransform != null)    playerTransform.gameObject.SetActive(false);
+    }
+
+    public void HideSceneFadeScreen()
+    {
+        if (sceneFadeScreen != null)
+            sceneFadeScreen.SetAlphaInstantly(0f);
     }
 
     public void StartIntro()
@@ -458,7 +465,31 @@ public class IntroSequenceManager : MonoBehaviour
             yield return new WaitForSecondsRealtime(sceneFadeDelay);
 
         if (sceneFadeScreen != null)
-            sceneFadeScreen.StartFadeIn(sceneFadeDuration);
+            sceneFadeScreen.StartFadeIn(sceneFadeDuration, OnSceneFadeCompleted);
+    }
+
+    private void OnSceneFadeCompleted()
+    {
+        SwitchPlayerRenderingToMainCamera();
+    }
+
+    public void SwitchPlayerRenderingToMainCamera()
+    {
+        if (playerOverlayCamera != null)
+            playerOverlayCamera.enabled = false;
+
+        if (mainCamera == null)
+            return;
+
+        int playerLayer = LayerMask.NameToLayer("Player");
+        if (playerLayer < 0)
+        {
+            Debug.LogWarning(
+                $"[{nameof(IntroSequenceManager)}] No existe la capa 'Player'.", this);
+            return;
+        }
+
+        mainCamera.cullingMask |= 1 << playerLayer;
     }
 
     private float GetIntroPlayerFadeAlpha(float elapsed)

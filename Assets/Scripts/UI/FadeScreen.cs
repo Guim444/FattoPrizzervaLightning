@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ public class FadeScreen : MonoBehaviour
     [SerializeField, Min(0f)] private float _fadeInStartDuration = 1f;
 
     private Coroutine _fadeCoroutine;
+    private Action _fadeCompletion;
 
     private void Start()
     {
@@ -18,7 +20,12 @@ public class FadeScreen : MonoBehaviour
 
     public void StartFadeIn(float duration)
     {
-        StartFade(1f, 0f, duration);
+        StartFadeIn(duration, null);
+    }
+
+    public void StartFadeIn(float duration, Action onComplete)
+    {
+        StartFade(1f, 0f, duration, onComplete);
     }
 
     public void SetAlphaInstantly(float alpha)
@@ -35,10 +42,10 @@ public class FadeScreen : MonoBehaviour
 
     public void StartFadeOut(float duration)
     {
-        StartFade(0f, 1f, duration);
+        StartFade(0f, 1f, duration, null);
     }
 
-    private void StartFade(float initialAlpha, float targetAlpha, float duration)
+    private void StartFade(float initialAlpha, float targetAlpha, float duration, Action onComplete)
     {
         if (_fadeImage == null)
         {
@@ -47,6 +54,7 @@ public class FadeScreen : MonoBehaviour
         }
 
         StopFading();
+        _fadeCompletion = onComplete;
         _fadeCoroutine = StartCoroutine(Fade(initialAlpha, targetAlpha, duration));
     }
 
@@ -57,6 +65,8 @@ public class FadeScreen : MonoBehaviour
             StopCoroutine(_fadeCoroutine);
             _fadeCoroutine = null;
         }
+
+        _fadeCompletion = null;
     }
 
     private IEnumerator Fade(float initialAlpha, float targetAlpha, float duration)
@@ -66,7 +76,7 @@ public class FadeScreen : MonoBehaviour
         if (duration == 0f)
         {
             SetAlpha(targetAlpha);
-            _fadeCoroutine = null;
+            CompleteFade();
             yield break;
         }
 
@@ -84,7 +94,16 @@ public class FadeScreen : MonoBehaviour
         }
 
         SetAlpha(targetAlpha);
+        CompleteFade();
+    }
+
+    private void CompleteFade()
+    {
         _fadeCoroutine = null;
+
+        Action completion = _fadeCompletion;
+        _fadeCompletion = null;
+        completion?.Invoke();
     }
 
     private void SetAlpha(float alpha)

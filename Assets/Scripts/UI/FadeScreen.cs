@@ -21,6 +21,18 @@ public class FadeScreen : MonoBehaviour
         StartFade(1f, 0f, duration);
     }
 
+    public void SetAlphaInstantly(float alpha)
+    {
+        if (_fadeImage == null)
+        {
+            Debug.LogError("FadeScreen: falta asignar Fade Image.", this);
+            return;
+        }
+
+        StopFading();
+        SetAlpha(Mathf.Clamp01(alpha));
+    }
+
     public void StartFadeOut(float duration)
     {
         StartFade(0f, 1f, duration);

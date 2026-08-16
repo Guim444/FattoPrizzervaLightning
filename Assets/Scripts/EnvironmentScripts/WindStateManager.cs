@@ -181,6 +181,10 @@ public class WindStateManager : MonoBehaviour
     private float _transitionEndsAtUnscaled = -1f;
     private float _activeTransitionOpacity = 0f;
     private bool  _videoPlayersVisible;
+    private float _videoOpacityMultiplier = 1f;
+    private bool _videoOpacityFadeActive;
+    private float _videoOpacityFadeStartedAt;
+    private float _videoOpacityFadeDuration;
     private bool  _hasHorizontalMotionReference;
     private float _horizontalMotionReferenceX;
     private Camera _horizontalMotionReferenceCamera;
@@ -268,6 +272,7 @@ public class WindStateManager : MonoBehaviour
         UpdateTransitionTimer();
         UpdateAlembicDistanceTransition();
         UpdateAlembicCulling();
+        UpdateVideoOpacityFade();
 
         // Mantiene el alpha correcto aunque algún prepareCompleted tardío,
         // recarga de escena o llamada repetida apague el player activo.
@@ -378,6 +383,28 @@ public class WindStateManager : MonoBehaviour
             manager.ActivateVideoPlayersRoot();
 
         return managers.Length;
+    }
+
+    public static int FadeInAllVideoPlayers(float duration)
+    {
+        WindStateManager[] managers = Object.FindObjectsByType<WindStateManager>(
+            FindObjectsInactive.Exclude,
+            FindObjectsSortMode.None);
+
+        foreach (WindStateManager manager in managers)
+            manager.FadeInVideos(duration);
+
+        return managers.Length;
+    }
+
+    public void FadeInVideos(float duration)
+    {
+        _videoOpacityFadeDuration = Mathf.Max(0f, duration);
+        _videoOpacityFadeStartedAt = Time.unscaledTime;
+        _videoOpacityFadeActive = _videoOpacityFadeDuration > 0f;
+        _videoOpacityMultiplier = _videoOpacityFadeActive ? 0f : 1f;
+
+        ApplyCurrentVideoAlphas();
     }
 
     /// <summary>
@@ -917,6 +944,23 @@ public class WindStateManager : MonoBehaviour
         }
     }
 
+    private void UpdateVideoOpacityFade()
+    {
+        if (!_videoOpacityFadeActive)
+            return;
+
+        float progress = Mathf.Clamp01(
+            (Time.unscaledTime - _videoOpacityFadeStartedAt) / _videoOpacityFadeDuration);
+
+        _videoOpacityMultiplier = Mathf.SmoothStep(0f, 1f, progress);
+
+        if (progress >= 1f)
+        {
+            _videoOpacityMultiplier = 1f;
+            _videoOpacityFadeActive = false;
+        }
+    }
+
     private void ActivateLegacyVideoPlayer()
     {
         if (blizzardVideoPlayer == null || _allPlayers.Count > 0) return;
@@ -941,7 +985,9 @@ public class WindStateManager : MonoBehaviour
         if (blizzardVideoPlayer == null || _allPlayers.Count > 0) return;
 
         int stateIdx = _activeIdleIndex >= 0 ? _activeIdleIndex : 0;
-        blizzardVideoPlayer.targetCameraAlpha = ShouldShowVideos ? GetIdleOpacity(stateIdx) : 0f;
+        blizzardVideoPlayer.targetCameraAlpha = ShouldShowVideos
+            ? GetIdleOpacity(stateIdx) * _videoOpacityMultiplier
+            : 0f;
 
         if (CanRunVideoPlayers && blizzardVideoPlayer.clip != null && blizzardVideoPlayer.isPrepared && !blizzardVideoPlayer.isPlaying)
             blizzardVideoPlayer.Play();
@@ -1368,7 +1414,7 @@ public class WindStateManager : MonoBehaviour
     {
         if (player == null) return;
 
-        float alpha = Mathf.Clamp01(opacity);
+        float alpha = Mathf.Clamp01(opacity * _videoOpacityMultiplier);
         player.targetCameraAlpha = 0f;
 
         if (!_videoSurfaces.TryGetValue(player, out VideoSurface surface) || surface == null)

@@ -53,6 +53,11 @@ public class IntroSequenceManager : MonoBehaviour
     [SerializeField] private float introCameraTargetYOffset = 2.2f;
     [SerializeField] private Color fadeEndBgColor = Color.black;
 
+    [Header("Scene Fade")]
+    [SerializeField] private FadeScreen sceneFadeScreen;
+    [SerializeField, Min(0f)] private float sceneFadeDelay = 10f;
+    [SerializeField, Min(0f)] private float sceneFadeDuration = 2f;
+
     [Header("Phase 1 — Black Screen")]
     [SerializeField] private float holdBlackDuration = 1f;
 
@@ -68,6 +73,7 @@ public class IntroSequenceManager : MonoBehaviour
     [SerializeField] private float introBlizzardCameraDistance = 15f;
     [SerializeField] private Vector3 introBlizzardCameraOffset = Vector3.zero;
     [SerializeField] private Vector3 introBlizzardShapeScale = new Vector3(95f, 55f, 25f);
+    [SerializeField, Min(0f)] private float introBlizzardFadeDuration = 2f;
 
     [Header("Phase 2 — Fade + auto movement")]
     [SerializeField] private float fadeInDuration = 4f;
@@ -147,6 +153,16 @@ public class IntroSequenceManager : MonoBehaviour
         if (playerController == null && playerTransform != null)
             playerController = playerTransform.GetComponent<PlayerController>();
 
+        if (sceneFadeScreen == null)
+        {
+            FadeScreen[] fadeScreens = Object.FindObjectsByType<FadeScreen>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+
+            if (fadeScreens.Length > 0)
+                sceneFadeScreen = fadeScreens[0];
+        }
+
         CachePlayerSpriteRenderers();
         CacheOriginalMaterials();
         CacheOriginalColors();
@@ -185,6 +201,9 @@ public class IntroSequenceManager : MonoBehaviour
     {
         PauseGameplayAnimatorControl();
 
+        if (sceneFadeScreen != null)
+            sceneFadeScreen.SetAlphaInstantly(1f);
+
         if (playerController != null)
         {
             playerController.ResetToIdle();
@@ -206,7 +225,10 @@ public class IntroSequenceManager : MonoBehaviour
     public void StartIntro()
     {
         if (activateBlizzardOnIntro)
+        {
             ActivateIntroBlizzard();
+            WindStateManager.FadeInAllVideoPlayers(introBlizzardFadeDuration);
+        }
 
         StartCoroutine(PlayIntroSequence());
     }
@@ -376,6 +398,9 @@ public class IntroSequenceManager : MonoBehaviour
             SetHumanForm();
         }
 
+        if (sceneFadeScreen != null)
+            StartCoroutine(FadeSceneAfterDelay());
+
         yield return null;
         SetPlayerFadeAlpha(0f);
 
@@ -425,6 +450,15 @@ public class IntroSequenceManager : MonoBehaviour
         }
         played = false;
         isWalking = true;
+    }
+
+    private IEnumerator FadeSceneAfterDelay()
+    {
+        if (sceneFadeDelay > 0f)
+            yield return new WaitForSecondsRealtime(sceneFadeDelay);
+
+        if (sceneFadeScreen != null)
+            sceneFadeScreen.StartFadeIn(sceneFadeDuration);
     }
 
     private float GetIntroPlayerFadeAlpha(float elapsed)

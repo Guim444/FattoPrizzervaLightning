@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering.Universal;
 
 public class IntroSequenceManager : MonoBehaviour
 {
@@ -346,7 +347,7 @@ public class IntroSequenceManager : MonoBehaviour
             target = target.parent;
         }
     }
-
+    
     private IEnumerator PlayIntroSequence()
     {
         PauseGameplayAnimatorControl();
@@ -421,7 +422,12 @@ public class IntroSequenceManager : MonoBehaviour
             if (mainCamera != null)
             {
                 mainCamera.backgroundColor = Color.Lerp(Color.black, fadeEndBgColor, reveal);
-                introVirtualCamera.m_Lens.FieldOfView = Mathf.Lerp(introStartFOV, introEndFOV, reveal);
+
+                float ActualFieldOfView = Mathf.Lerp(introStartFOV, introEndFOV, reveal);
+                introVirtualCamera.m_Lens.FieldOfView = ActualFieldOfView;
+
+                if(playerOverlayCamera != null)
+                    playerOverlayCamera.fieldOfView = ActualFieldOfView;
             }
 
             if (!_playerFadeMaterialRestored)
@@ -475,17 +481,19 @@ public class IntroSequenceManager : MonoBehaviour
 
     public void SwitchPlayerRenderingToMainCamera()
     {
-        if (playerOverlayCamera != null)
-            playerOverlayCamera.enabled = false;
 
         if (mainCamera == null)
             return;
 
+        if (playerOverlayCamera != null)
+        {
+            playerOverlayCamera.enabled = false;
+        }
+
         int playerLayer = LayerMask.NameToLayer("Player");
         if (playerLayer < 0)
         {
-            Debug.LogWarning(
-                $"[{nameof(IntroSequenceManager)}] No existe la capa 'Player'.", this);
+            Debug.LogWarning($"[{nameof(IntroSequenceManager)}] No existe la capa 'Player'.", this);
             return;
         }
 

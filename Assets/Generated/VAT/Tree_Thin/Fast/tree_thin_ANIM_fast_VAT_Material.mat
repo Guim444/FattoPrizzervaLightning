@@ -13,6 +13,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords:
+  - _VAT_FASTHASNORMALS_ON
   - _VAT_HASNORMALS_ON
   - _VAT_INTERPOLATE_ON
   m_LightmapFlags: 4
@@ -29,6 +30,14 @@ Material:
         m_Texture: {fileID: 2800000, guid: 4ee6073aedeaf17439b3d3afa981df61, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _VAT_FastNormalTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _VAT_FastPositionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _VAT_NormalTex:
         m_Texture: {fileID: 2800000, guid: eb0f80698ac60ee4492eb2d0165e7b2f, type: 2}
         m_Scale: {x: 1, y: 1}
@@ -42,15 +51,22 @@ Material:
     - _AlphaClip: 1
     - _Cull: 0
     - _Cutoff: 0.5
-    - _VAT_FPS: 15
-    - _VAT_FrameCount: 90
+    - _VAT_DualMode: 0
+    - _VAT_FPS: 30
+    - _VAT_FastFPS: 15
+    - _VAT_FastFrameCount: 1
+    - _VAT_FastHasNormals: 1
+    - _VAT_FastRowsPerFrame: 1
+    - _VAT_FastTextureHeight: 1
+    - _VAT_FastTextureWidth: 1
+    - _VAT_FrameCount: 179
     - _VAT_HasNormals: 1
     - _VAT_Interpolate: 1
     - _VAT_PlaybackSpeed: 1
     - _VAT_RandomPhase: 1
-    - _VAT_RowsPerFrame: 1
-    - _VAT_TextureHeight: 90
-    - _VAT_TextureWidth: 4096
+    - _VAT_RowsPerFrame: 3
+    - _VAT_TextureHeight: 537
+    - _VAT_TextureWidth: 1024
     - _VAT_TimeOffset: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}

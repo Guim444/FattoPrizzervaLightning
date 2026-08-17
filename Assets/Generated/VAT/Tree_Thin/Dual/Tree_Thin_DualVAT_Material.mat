@@ -32,19 +32,19 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _VAT_FastNormalTex:
-        m_Texture: {fileID: 2800000, guid: eb0f80698ac60ee4492eb2d0165e7b2f, type: 2}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _VAT_FastPositionTex:
-        m_Texture: {fileID: 2800000, guid: 2df383d1f5282d8438ff58b12e225180, type: 2}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _VAT_NormalTex:
         m_Texture: {fileID: 2800000, guid: 41765ef5e64032841b6a4953b2fda183, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _VAT_PositionTex:
+    - _VAT_FastPositionTex:
         m_Texture: {fileID: 2800000, guid: ab3290e137b1c33469473efd9bb20fc5, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _VAT_NormalTex:
+        m_Texture: {fileID: 2800000, guid: eb0f80698ac60ee4492eb2d0165e7b2f, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _VAT_PositionTex:
+        m_Texture: {fileID: 2800000, guid: 2df383d1f5282d8438ff58b12e225180, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -53,21 +53,21 @@ Material:
     - _Cull: 0
     - _Cutoff: 0.5
     - _VAT_DualMode: 1
-    - _VAT_FPS: 15
-    - _VAT_FastFPS: 15
-    - _VAT_FastFrameCount: 90
+    - _VAT_FPS: 30
+    - _VAT_FastFPS: 30
+    - _VAT_FastFrameCount: 179
     - _VAT_FastHasNormals: 1
-    - _VAT_FastRowsPerFrame: 1
-    - _VAT_FastTextureHeight: 90
-    - _VAT_FastTextureWidth: 4096
-    - _VAT_FrameCount: 90
+    - _VAT_FastRowsPerFrame: 3
+    - _VAT_FastTextureHeight: 537
+    - _VAT_FastTextureWidth: 1024
+    - _VAT_FrameCount: 179
     - _VAT_HasNormals: 1
     - _VAT_Interpolate: 1
     - _VAT_PlaybackSpeed: 1
     - _VAT_RandomPhase: 1
-    - _VAT_RowsPerFrame: 1
-    - _VAT_TextureHeight: 90
-    - _VAT_TextureWidth: 4096
+    - _VAT_RowsPerFrame: 3
+    - _VAT_TextureHeight: 537
+    - _VAT_TextureWidth: 1024
     - _VAT_TimeOffset: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}

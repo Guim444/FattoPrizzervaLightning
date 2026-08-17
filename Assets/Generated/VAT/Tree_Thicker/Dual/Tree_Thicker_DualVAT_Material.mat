@@ -7,12 +7,13 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: tree_thickest_ANIM_fast_VAT_Material
+  m_Name: Tree_Thicker_DualVAT_Material
   m_Shader: {fileID: 4800000, guid: 61ce00afc08db764380c43c6da6f000c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords:
+  - _ALPHACLIP_ON
   - _VAT_FASTHASNORMALS_ON
   - _VAT_HASNORMALS_ON
   - _VAT_INTERPOLATE_ON
@@ -27,23 +28,23 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: b197c5a88a2ba124ab4ee377838c7db6, type: 3}
+        m_Texture: {fileID: 2800000, guid: 2933808dec90924429e290e811756f79, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _VAT_FastNormalTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: c8c1063268f25d4499bc245032f6df7f, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _VAT_FastPositionTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 1a5685490cb66f4499409461b36e5993, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _VAT_NormalTex:
-        m_Texture: {fileID: 2800000, guid: cc7c0998c92e1ab4da39ca0c96d1b7e4, type: 2}
+        m_Texture: {fileID: 2800000, guid: b2049ee6cbd464244ad9a964aaf6230b, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _VAT_PositionTex:
-        m_Texture: {fileID: 2800000, guid: 2670a065be9f2334aa528f4940794f35, type: 2}
+        m_Texture: {fileID: 2800000, guid: 3cda0044f1dad6e40800cacfad548323, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -51,21 +52,21 @@ Material:
     - _AlphaClip: 1
     - _Cull: 0
     - _Cutoff: 0.5
-    - _VAT_DualMode: 0
+    - _VAT_DualMode: 1
     - _VAT_FPS: 30
-    - _VAT_FastFPS: 15
-    - _VAT_FastFrameCount: 1
+    - _VAT_FastFPS: 30
+    - _VAT_FastFrameCount: 178
     - _VAT_FastHasNormals: 1
-    - _VAT_FastRowsPerFrame: 1
-    - _VAT_FastTextureHeight: 1
-    - _VAT_FastTextureWidth: 1
-    - _VAT_FrameCount: 179
+    - _VAT_FastRowsPerFrame: 5
+    - _VAT_FastTextureHeight: 890
+    - _VAT_FastTextureWidth: 1024
+    - _VAT_FrameCount: 178
     - _VAT_HasNormals: 1
     - _VAT_Interpolate: 1
     - _VAT_PlaybackSpeed: 1
     - _VAT_RandomPhase: 1
-    - _VAT_RowsPerFrame: 4
-    - _VAT_TextureHeight: 716
+    - _VAT_RowsPerFrame: 5
+    - _VAT_TextureHeight: 890
     - _VAT_TextureWidth: 1024
     - _VAT_TimeOffset: 0
     m_Colors:

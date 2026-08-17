@@ -132,7 +132,10 @@ Shader "FattoPrizzerva/VAT/URP Lit"
             float cycle = frac(((_Time.y * _VAT_PlaybackSpeed) + _VAT_TimeOffset) / slowDuration + phase);
 
             float slowFrameValue = cycle * slowFrameCount;
-            float slowFrame0 = floor(slowFrameValue);
+            // frac() is always below 1 mathematically, but the multiplication can
+            // round up to frameCount on the GPU. Clamp the index so multi-row VATs
+            // never sample the padded row beyond the texture at the loop boundary.
+            float slowFrame0 = min(floor(slowFrameValue), slowFrameCount - 1.0);
             float slowFrame1 = fmod(slowFrame0 + 1.0, slowFrameCount);
             float slowBlend = frac(slowFrameValue) * _VAT_Interpolate;
             float vertexIndex = round(input.vatVertex.x);
@@ -149,7 +152,7 @@ Shader "FattoPrizzerva/VAT/URP Lit"
 
             float fastFrameCount = max(_VAT_FastFrameCount, 1.0);
             float fastFrameValue = cycle * fastFrameCount;
-            float fastFrame0 = floor(fastFrameValue);
+            float fastFrame0 = min(floor(fastFrameValue), fastFrameCount - 1.0);
             float fastFrame1 = fmod(fastFrame0 + 1.0, fastFrameCount);
             float fastBlend = frac(fastFrameValue) * _VAT_Interpolate;
             float2 fastUv0 = VatTextureUv(

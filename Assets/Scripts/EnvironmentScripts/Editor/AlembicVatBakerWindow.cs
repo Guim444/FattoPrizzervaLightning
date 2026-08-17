@@ -276,8 +276,10 @@ public sealed class AlembicVatBakerWindow : EditorWindow
                 }
             }
 
-            string folder = EnsureAssetFolder(outputFolder);
             string safeName = MakeSafeFileName(sourceAlembic.name);
+            string treeFolderName = GetTreeFolderName(sourceAlembic.name);
+            string clipFolderName = GetClipFolderName(sourceAlembic.name);
+            string folder = EnsureAssetFolder($"{outputFolder.TrimEnd('/', '\\')}/{treeFolderName}/{clipFolderName}");
             string positionPath = AssetDatabase.GenerateUniqueAssetPath($"{folder}/{safeName}_VAT_Positions.asset");
             string normalPath = bakeNormals
                 ? AssetDatabase.GenerateUniqueAssetPath($"{folder}/{safeName}_VAT_Normals.asset")
@@ -627,5 +629,35 @@ public sealed class AlembicVatBakerWindow : EditorWindow
         string invalidCharacters = Regex.Escape(new string(Path.GetInvalidFileNameChars()));
         string safe = Regex.Replace(value, $"[{invalidCharacters}]", "_");
         return string.IsNullOrWhiteSpace(safe) ? "Alembic" : safe;
+    }
+
+    private static string GetTreeFolderName(string sourceName)
+    {
+        string withoutClip = Regex.Replace(
+            sourceName,
+            @"[\s_\-]*ANIM[\s_\-]*(slow|fast|weak|strong)([\s_\-]*V\d+)?$",
+            string.Empty,
+            RegexOptions.IgnoreCase);
+        withoutClip = Regex.Replace(withoutClip, @"[\s_\-]+$", string.Empty);
+        if (string.IsNullOrWhiteSpace(withoutClip))
+            withoutClip = sourceName;
+
+        string safe = MakeSafeFileName(withoutClip).Replace(' ', '_').Replace('-', '_');
+        string[] words = safe.Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
+        for (int i = 0; i < words.Length; i++)
+        {
+            string word = words[i].ToLowerInvariant();
+            words[i] = char.ToUpperInvariant(word[0]) + word.Substring(1);
+        }
+        return words.Length > 0 ? string.Join("_", words) : "Tree";
+    }
+
+    private static string GetClipFolderName(string sourceName)
+    {
+        if (Regex.IsMatch(sourceName, @"(^|[\s_\-])(fast|strong)([\s_\-]|$)", RegexOptions.IgnoreCase))
+            return "Fast";
+        if (Regex.IsMatch(sourceName, @"(^|[\s_\-])(slow|weak)([\s_\-]|$)", RegexOptions.IgnoreCase))
+            return "Slow";
+        return "Clip";
     }
 }

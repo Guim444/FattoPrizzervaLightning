@@ -10,16 +10,25 @@ Shader "FattoPrizzerva/VAT/URP Lit"
 
         [NoScaleOffset] _VAT_PositionTex("VAT Positions", 2D) = "black" {}
         [NoScaleOffset] _VAT_NormalTex("VAT Normals", 2D) = "gray" {}
+        [NoScaleOffset] _VAT_FastPositionTex("VAT Fast Positions", 2D) = "black" {}
+        [NoScaleOffset] _VAT_FastNormalTex("VAT Fast Normals", 2D) = "gray" {}
         _VAT_TextureWidth("VAT Texture Width", Float) = 1
         _VAT_TextureHeight("VAT Texture Height", Float) = 1
         _VAT_RowsPerFrame("VAT Rows Per Frame", Float) = 1
         _VAT_FrameCount("VAT Frame Count", Float) = 1
         _VAT_FPS("VAT FPS", Float) = 15
+        _VAT_FastTextureWidth("VAT Fast Texture Width", Float) = 1
+        _VAT_FastTextureHeight("VAT Fast Texture Height", Float) = 1
+        _VAT_FastRowsPerFrame("VAT Fast Rows Per Frame", Float) = 1
+        _VAT_FastFrameCount("VAT Fast Frame Count", Float) = 1
+        _VAT_FastFPS("VAT Fast FPS", Float) = 15
         _VAT_PlaybackSpeed("VAT Playback Speed", Float) = 1
         _VAT_TimeOffset("VAT Time Offset", Float) = 0
         _VAT_RandomPhase("VAT Random Phase", Range(0,1)) = 1
         [Toggle] _VAT_Interpolate("VAT Interpolate", Float) = 1
         [Toggle] _VAT_HasNormals("VAT Has Normals", Float) = 1
+        [Toggle] _VAT_FastHasNormals("VAT Fast Has Normals", Float) = 1
+        [Toggle] _VAT_DualMode("VAT Dual Mode", Float) = 0
     }
 
     SubShader
@@ -44,6 +53,13 @@ Shader "FattoPrizzerva/VAT/URP Lit"
         SAMPLER(sampler_VAT_PositionTex);
         TEXTURE2D(_VAT_NormalTex);
         SAMPLER(sampler_VAT_NormalTex);
+        TEXTURE2D(_VAT_FastPositionTex);
+        SAMPLER(sampler_VAT_FastPositionTex);
+        TEXTURE2D(_VAT_FastNormalTex);
+        SAMPLER(sampler_VAT_FastNormalTex);
+
+        // Global: WindStateManager la actualiza una sola vez para todos los árboles.
+        float _VAT_WindBlend;
 
         CBUFFER_START(UnityPerMaterial)
             float4 _BaseMap_ST;
@@ -56,11 +72,18 @@ Shader "FattoPrizzerva/VAT/URP Lit"
             float _VAT_RowsPerFrame;
             float _VAT_FrameCount;
             float _VAT_FPS;
+            float _VAT_FastTextureWidth;
+            float _VAT_FastTextureHeight;
+            float _VAT_FastRowsPerFrame;
+            float _VAT_FastFrameCount;
+            float _VAT_FastFPS;
             float _VAT_PlaybackSpeed;
             float _VAT_TimeOffset;
             float _VAT_RandomPhase;
             float _VAT_Interpolate;
             float _VAT_HasNormals;
+            float _VAT_FastHasNormals;
+            float _VAT_DualMode;
         CBUFFER_END
 
         struct Attributes
@@ -83,14 +106,19 @@ Shader "FattoPrizzerva/VAT/URP Lit"
             return frac(sin(dot(value, float2(12.9898, 78.233))) * 43758.5453);
         }
 
-        float2 VatTextureUv(float vertexIndex, float frame)
+        float2 VatTextureUv(
+            float vertexIndex,
+            float frame,
+            float textureWidth,
+            float textureHeight,
+            float rowsPerFrame)
         {
-            float column = fmod(vertexIndex, _VAT_TextureWidth);
-            float rowInFrame = floor(vertexIndex / _VAT_TextureWidth);
-            float row = rowInFrame + frame * _VAT_RowsPerFrame;
+            float column = fmod(vertexIndex, textureWidth);
+            float rowInFrame = floor(vertexIndex / textureWidth);
+            float row = rowInFrame + frame * rowsPerFrame;
             return float2(
-                (column + 0.5) / _VAT_TextureWidth,
-                (row + 0.5) / _VAT_TextureHeight);
+                (column + 0.5) / textureWidth,
+                (row + 0.5) / textureHeight);
         }
 
         VatSample SampleVat(Attributes input)
@@ -98,28 +126,69 @@ Shader "FattoPrizzerva/VAT/URP Lit"
             UNITY_SETUP_INSTANCE_ID(input);
 
             float3 objectOriginWS = GetObjectToWorldMatrix()._m03_m13_m23;
-            float phaseFrames = VatHash(objectOriginWS.xz) * _VAT_RandomPhase * _VAT_FrameCount;
-            float animationFrames = _Time.y * _VAT_PlaybackSpeed * _VAT_FPS
-                                  + _VAT_TimeOffset * _VAT_FPS
-                                  + phaseFrames;
-            float frameValue = frac(animationFrames / max(_VAT_FrameCount, 1.0)) * _VAT_FrameCount;
-            float frame0 = floor(frameValue);
-            float frame1 = fmod(frame0 + 1.0, max(_VAT_FrameCount, 1.0));
-            float blend = frac(frameValue) * _VAT_Interpolate;
+            float slowFrameCount = max(_VAT_FrameCount, 1.0);
+            float slowDuration = slowFrameCount / max(_VAT_FPS, 0.0001);
+            float phase = VatHash(objectOriginWS.xz) * _VAT_RandomPhase;
+            float cycle = frac(((_Time.y * _VAT_PlaybackSpeed) + _VAT_TimeOffset) / slowDuration + phase);
+
+            float slowFrameValue = cycle * slowFrameCount;
+            float slowFrame0 = floor(slowFrameValue);
+            float slowFrame1 = fmod(slowFrame0 + 1.0, slowFrameCount);
+            float slowBlend = frac(slowFrameValue) * _VAT_Interpolate;
             float vertexIndex = round(input.vatVertex.x);
 
-            float2 uv0 = VatTextureUv(vertexIndex, frame0);
-            float2 uv1 = VatTextureUv(vertexIndex, frame1);
-            float3 position0 = SAMPLE_TEXTURE2D_LOD(_VAT_PositionTex, sampler_VAT_PositionTex, uv0, 0).xyz;
-            float3 position1 = SAMPLE_TEXTURE2D_LOD(_VAT_PositionTex, sampler_VAT_PositionTex, uv1, 0).xyz;
+            float2 slowUv0 = VatTextureUv(
+                vertexIndex, slowFrame0, _VAT_TextureWidth, _VAT_TextureHeight, _VAT_RowsPerFrame);
+            float2 slowUv1 = VatTextureUv(
+                vertexIndex, slowFrame1, _VAT_TextureWidth, _VAT_TextureHeight, _VAT_RowsPerFrame);
+            float3 slowPosition0 = SAMPLE_TEXTURE2D_LOD(
+                _VAT_PositionTex, sampler_VAT_PositionTex, slowUv0, 0).xyz;
+            float3 slowPosition1 = SAMPLE_TEXTURE2D_LOD(
+                _VAT_PositionTex, sampler_VAT_PositionTex, slowUv1, 0).xyz;
+            float3 slowPosition = lerp(slowPosition0, slowPosition1, slowBlend);
+
+            float fastFrameCount = max(_VAT_FastFrameCount, 1.0);
+            float fastFrameValue = cycle * fastFrameCount;
+            float fastFrame0 = floor(fastFrameValue);
+            float fastFrame1 = fmod(fastFrame0 + 1.0, fastFrameCount);
+            float fastBlend = frac(fastFrameValue) * _VAT_Interpolate;
+            float2 fastUv0 = VatTextureUv(
+                vertexIndex,
+                fastFrame0,
+                _VAT_FastTextureWidth,
+                _VAT_FastTextureHeight,
+                _VAT_FastRowsPerFrame);
+            float2 fastUv1 = VatTextureUv(
+                vertexIndex,
+                fastFrame1,
+                _VAT_FastTextureWidth,
+                _VAT_FastTextureHeight,
+                _VAT_FastRowsPerFrame);
+            float3 fastPosition0 = SAMPLE_TEXTURE2D_LOD(
+                _VAT_FastPositionTex, sampler_VAT_FastPositionTex, fastUv0, 0).xyz;
+            float3 fastPosition1 = SAMPLE_TEXTURE2D_LOD(
+                _VAT_FastPositionTex, sampler_VAT_FastPositionTex, fastUv1, 0).xyz;
+            float3 fastPosition = lerp(fastPosition0, fastPosition1, fastBlend);
+
+            float windBlend = saturate(_VAT_WindBlend) * _VAT_DualMode;
 
             VatSample output;
-            output.positionOS = lerp(position0, position1, blend);
+            output.positionOS = lerp(slowPosition, fastPosition, windBlend);
 
-            float3 normal0 = SAMPLE_TEXTURE2D_LOD(_VAT_NormalTex, sampler_VAT_NormalTex, uv0, 0).xyz * 2.0 - 1.0;
-            float3 normal1 = SAMPLE_TEXTURE2D_LOD(_VAT_NormalTex, sampler_VAT_NormalTex, uv1, 0).xyz * 2.0 - 1.0;
-            float3 animatedNormal = normalize(lerp(normal0, normal1, blend));
-            output.normalOS = normalize(lerp(input.normalOS, animatedNormal, _VAT_HasNormals));
+            float3 slowNormal0 = SAMPLE_TEXTURE2D_LOD(
+                _VAT_NormalTex, sampler_VAT_NormalTex, slowUv0, 0).xyz * 2.0 - 1.0;
+            float3 slowNormal1 = SAMPLE_TEXTURE2D_LOD(
+                _VAT_NormalTex, sampler_VAT_NormalTex, slowUv1, 0).xyz * 2.0 - 1.0;
+            float3 slowNormal = normalize(lerp(slowNormal0, slowNormal1, slowBlend));
+            slowNormal = normalize(lerp(input.normalOS, slowNormal, _VAT_HasNormals));
+
+            float3 fastNormal0 = SAMPLE_TEXTURE2D_LOD(
+                _VAT_FastNormalTex, sampler_VAT_FastNormalTex, fastUv0, 0).xyz * 2.0 - 1.0;
+            float3 fastNormal1 = SAMPLE_TEXTURE2D_LOD(
+                _VAT_FastNormalTex, sampler_VAT_FastNormalTex, fastUv1, 0).xyz * 2.0 - 1.0;
+            float3 fastNormal = normalize(lerp(fastNormal0, fastNormal1, fastBlend));
+            fastNormal = normalize(lerp(input.normalOS, fastNormal, _VAT_FastHasNormals));
+            output.normalOS = normalize(lerp(slowNormal, fastNormal, windBlend));
             return output;
         }
 

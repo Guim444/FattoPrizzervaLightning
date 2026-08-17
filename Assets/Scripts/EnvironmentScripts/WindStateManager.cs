@@ -79,6 +79,10 @@ public class WindStateManager : MonoBehaviour
     [Tooltip("Desfase en segundos entre cada TreeController del array. 0.3 = cada árbol empieza 0.3s más adelante que el anterior.")]
     [SerializeField, Min(0f)] private float treePlaybackOffsetStep = 0.3f;
 
+    [Header("Árboles VAT")]
+    [Tooltip("Duración de la mezcla entre las animaciones VAT de viento débil y fuerte.")]
+    [SerializeField, Min(0f)] private float vatWindBlendDuration = 1.5f;
+
     [Header("Alembic Distance Culling")]
     [Tooltip("Distancia de animación durante la caminata inicial. 0 = sin límite.")]
     [SerializeField, Min(0f)] private float initialWalkAlembicDistance = 30f;
@@ -205,6 +209,9 @@ public class WindStateManager : MonoBehaviour
     private float _alembicDistanceTransitionStartedAt;
     private float _alembicDistanceTransitionFrom;
     private float _alembicDistanceTransitionTo;
+    private static readonly int VatWindBlendId = Shader.PropertyToID("_VAT_WindBlend");
+    private float _vatWindBlend = 1f;
+    private float _vatWindBlendTarget = 1f;
 
     private sealed class VideoSurface
     {
@@ -237,6 +244,7 @@ public class WindStateManager : MonoBehaviour
     private void Awake()
     {
         _cameraWasAssigned = blizzardVideoCamera != null;
+        Shader.SetGlobalFloat(VatWindBlendId, _vatWindBlend);
 
         ResolveMissingReferences();
         ApplyTreePlaybackOffsets();
@@ -273,6 +281,7 @@ public class WindStateManager : MonoBehaviour
         UpdateAlembicDistanceTransition();
         UpdateAlembicCulling();
         UpdateVideoOpacityFade();
+        UpdateVatWindBlend();
 
         // Mantiene el alpha correcto aunque algún prepareCompleted tardío,
         // recarga de escena o llamada repetida apague el player activo.
@@ -1757,6 +1766,8 @@ public class WindStateManager : MonoBehaviour
     {
         bool fast = preset == WindPreset.W1_MaxIdle || preset == WindPreset.W4_MinToMedium;
 
+        _vatWindBlendTarget = fast ? 1f : 0f;
+
         if (treeControllers == null) return;
 
         foreach (var tree in treeControllers)
@@ -1768,6 +1779,26 @@ public class WindStateManager : MonoBehaviour
             if (_treeAnimationPlaybackEnabled)
                 tree.SetFast(fast);
         }
+    }
+
+    private void UpdateVatWindBlend()
+    {
+        if (Mathf.Approximately(_vatWindBlend, _vatWindBlendTarget))
+            return;
+
+        if (vatWindBlendDuration <= 0f)
+        {
+            _vatWindBlend = _vatWindBlendTarget;
+        }
+        else
+        {
+            _vatWindBlend = Mathf.MoveTowards(
+                _vatWindBlend,
+                _vatWindBlendTarget,
+                Time.deltaTime / vatWindBlendDuration);
+        }
+
+        Shader.SetGlobalFloat(VatWindBlendId, _vatWindBlend);
     }
 
     private void ApplyTreePlaybackOffsets()

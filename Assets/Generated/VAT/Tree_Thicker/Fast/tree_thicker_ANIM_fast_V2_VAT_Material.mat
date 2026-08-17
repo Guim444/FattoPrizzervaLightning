@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: tree_thin_ANIM_slow_VAT_Material
+  m_Name: tree_thicker_ANIM_fast_V2_VAT_Material
   m_Shader: {fileID: 4800000, guid: 61ce00afc08db764380c43c6da6f000c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -27,7 +27,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: 4ee6073aedeaf17439b3d3afa981df61, type: 3}
+        m_Texture: {fileID: 2800000, guid: 2933808dec90924429e290e811756f79, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _VAT_FastNormalTex:
@@ -39,11 +39,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _VAT_NormalTex:
-        m_Texture: {fileID: 2800000, guid: 41765ef5e64032841b6a4953b2fda183, type: 2}
+        m_Texture: {fileID: 2800000, guid: c8c1063268f25d4499bc245032f6df7f, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _VAT_PositionTex:
-        m_Texture: {fileID: 2800000, guid: ab3290e137b1c33469473efd9bb20fc5, type: 2}
+        m_Texture: {fileID: 2800000, guid: 1a5685490cb66f4499409461b36e5993, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -64,8 +64,8 @@ Material:
     - _VAT_Interpolate: 1
     - _VAT_PlaybackSpeed: 1
     - _VAT_RandomPhase: 1
-    - _VAT_RowsPerFrame: 1
-    - _VAT_TextureHeight: 90
+    - _VAT_RowsPerFrame: 2
+    - _VAT_TextureHeight: 180
     - _VAT_TextureWidth: 4096
     - _VAT_TimeOffset: 0
     m_Colors:

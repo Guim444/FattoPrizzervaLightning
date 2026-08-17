@@ -7,12 +7,13 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: tree_thin_ANIM_slow_VAT_Material
+  m_Name: Tree_Thin_DualVAT_Material
   m_Shader: {fileID: 4800000, guid: 61ce00afc08db764380c43c6da6f000c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords:
+  - _ALPHACLIP_ON
   - _VAT_FASTHASNORMALS_ON
   - _VAT_HASNORMALS_ON
   - _VAT_INTERPOLATE_ON
@@ -31,11 +32,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _VAT_FastNormalTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: eb0f80698ac60ee4492eb2d0165e7b2f, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _VAT_FastPositionTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 2df383d1f5282d8438ff58b12e225180, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _VAT_NormalTex:
@@ -51,14 +52,14 @@ Material:
     - _AlphaClip: 1
     - _Cull: 0
     - _Cutoff: 0.5
-    - _VAT_DualMode: 0
+    - _VAT_DualMode: 1
     - _VAT_FPS: 15
     - _VAT_FastFPS: 15
-    - _VAT_FastFrameCount: 1
+    - _VAT_FastFrameCount: 90
     - _VAT_FastHasNormals: 1
     - _VAT_FastRowsPerFrame: 1
-    - _VAT_FastTextureHeight: 1
-    - _VAT_FastTextureWidth: 1
+    - _VAT_FastTextureHeight: 90
+    - _VAT_FastTextureWidth: 4096
     - _VAT_FrameCount: 90
     - _VAT_HasNormals: 1
     - _VAT_Interpolate: 1

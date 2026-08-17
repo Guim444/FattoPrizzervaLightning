@@ -7,12 +7,13 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: tree_thin_ANIM_slow_VAT_Material
+  m_Name: Tree_Thick_DualVAT_Material
   m_Shader: {fileID: 4800000, guid: 61ce00afc08db764380c43c6da6f000c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords:
+  - _ALPHACLIP_ON
   - _VAT_FASTHASNORMALS_ON
   - _VAT_HASNORMALS_ON
   - _VAT_INTERPOLATE_ON
@@ -27,23 +28,23 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: 4ee6073aedeaf17439b3d3afa981df61, type: 3}
+        m_Texture: {fileID: 2800000, guid: 45192de1cfa06574cb96183be063df59, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _VAT_FastNormalTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: d8595dcb04b04294ab6f409c75b93b6e, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _VAT_FastPositionTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 63c4acb01dfc38b4e9992a5ff1704db1, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _VAT_NormalTex:
-        m_Texture: {fileID: 2800000, guid: 41765ef5e64032841b6a4953b2fda183, type: 2}
+        m_Texture: {fileID: 2800000, guid: 5924e5f02292b5f438b19a74d6475038, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _VAT_PositionTex:
-        m_Texture: {fileID: 2800000, guid: ab3290e137b1c33469473efd9bb20fc5, type: 2}
+        m_Texture: {fileID: 2800000, guid: e4cbf6e1035aff64eb28d7c0c80ad5ca, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -51,14 +52,14 @@ Material:
     - _AlphaClip: 1
     - _Cull: 0
     - _Cutoff: 0.5
-    - _VAT_DualMode: 0
+    - _VAT_DualMode: 1
     - _VAT_FPS: 15
     - _VAT_FastFPS: 15
-    - _VAT_FastFrameCount: 1
+    - _VAT_FastFrameCount: 90
     - _VAT_FastHasNormals: 1
     - _VAT_FastRowsPerFrame: 1
-    - _VAT_FastTextureHeight: 1
-    - _VAT_FastTextureWidth: 1
+    - _VAT_FastTextureHeight: 90
+    - _VAT_FastTextureWidth: 4096
     - _VAT_FrameCount: 90
     - _VAT_HasNormals: 1
     - _VAT_Interpolate: 1

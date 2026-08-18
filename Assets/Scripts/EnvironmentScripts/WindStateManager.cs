@@ -23,7 +23,7 @@ using UnityEngine.Video;
 ///   Tecla 3 → Transition_3 → IdleLoop_3
 ///   Tecla 4 → Transition_4 → IdleLoop_4
 ///
-/// Mapeo wind → árboles:
+/// Mapeo wind → vegetación VAT:
 ///   W1 / W4 → fast
 ///   W2 / W3 → slow
 /// </summary>
@@ -74,33 +74,21 @@ public class WindStateManager : MonoBehaviour
     [Tooltip("Cámara sobre la que se dibuja el vídeo. Si queda vacía se busca CAM_Main o MainCamera.")]
     [SerializeField] private Camera blizzardVideoCamera;
 
-    [Header("Árboles Alembic")]
-    [SerializeField] private AlembicTreeWindController[] treeControllers;
-    [Tooltip("Desfase en segundos entre cada TreeController del array. 0.3 = cada árbol empieza 0.3s más adelante que el anterior.")]
-    [SerializeField, Min(0f)] private float treePlaybackOffsetStep = 0.3f;
-
-    [Header("Árboles VAT")]
-    [Tooltip("Duración de la mezcla entre las animaciones VAT de viento débil y fuerte.")]
+    [Header("Vegetación VAT - Viento dual")]
+    [Tooltip("Duración global de la mezcla entre viento débil y fuerte de la vegetación VAT.")]
     [SerializeField, Min(0f)] private float vatWindBlendDuration = 1.5f;
 
-    [Header("Alembic Distance Culling")]
-    [Tooltip("Distancia de animación durante la caminata inicial. 0 = sin límite.")]
+    [Header("Planta_MJ Alembic - Distance Culling")]
+    [Tooltip("Distancia de animación de Planta_MJ durante la caminata inicial. 0 = sin límite.")]
     [SerializeField, Min(0f)] private float initialWalkAlembicDistance = 30f;
     [Tooltip("Distancia de animación al aproximarse y entrar en la iglesia. 0 = sin límite.")]
     [SerializeField, Min(0f)] private float churchAlembicDistance = 100f;
     [Tooltip("Tiempo que tarda en crecer desde la distancia inicial hasta la distancia de iglesia. 0 = instantaneo.")]
     [SerializeField, Min(0f)] private float churchAlembicDistanceTransitionDuration = 2f;
-    [Tooltip("Distancia a partir de la que los Alembic se actualizan cada 2 frames.")]
-    [SerializeField, Min(0f)] private float alembicUpdateEveryTwoFramesDistance = 40f;
-    [Tooltip("Distancia a partir de la que los Alembic se actualizan cada 3 frames.")]
-    [SerializeField, Min(0f)] private float alembicUpdateEveryThreeFramesDistance = 80f;
-    [Tooltip("Cada cuantos segundos se recalcula la visibilidad y el intervalo de actualizacion de los Alembic.")]
+    [Tooltip("Cada cuantos segundos se recalcula la visibilidad de Planta_MJ.")]
     [FormerlySerializedAs("standaloneAlembicVisibilityCheckInterval")]
     [SerializeField, Min(0.02f)] private float alembicVisibilityCheckInterval = 0.2f;
-    [Tooltip("Margen extra de bounds usado para el culling de los Alembic.")]
-    [SerializeField, Min(0f)] private float alembicVisibilityBoundsPadding = 1f;
-
-    [Header("Alembic standalone")]
+    [Header("Planta_MJ Alembic - Playback")]
     [Tooltip("Reproduce en loop el Alembic de la planta colocado en escena como Planta_MJ.")]
     [SerializeField] private bool playPlantaMjAlembic = true;
     [SerializeField, Min(0f)] private float plantaMjPlaybackSpeed = 1f;
@@ -200,7 +188,7 @@ public class WindStateManager : MonoBehaviour
     private readonly List<Renderer[]> _plantaMjRenderers = new List<Renderer[]>();
     private readonly List<bool> _plantaMjVisible = new List<bool>();
     private bool _plantaMjAutoPlaybackReported;
-    private bool _treeAnimationPlaybackEnabled = true;
+    private bool _standaloneVegetationPlaybackEnabled = true;
     private bool _blizzardVideoPlaybackEnabled = true;
     private float _currentAlembicMaxDistance = 30f;
     private float _nextAlembicVisibilityCheck;
@@ -246,8 +234,6 @@ public class WindStateManager : MonoBehaviour
         _cameraWasAssigned = blizzardVideoCamera != null;
         Shader.SetGlobalFloat(VatWindBlendId, _vatWindBlend);
 
-        ResolveMissingReferences();
-        ApplyTreePlaybackOffsets();
         ResolvePlantaMjAlembicPlayers();
         UseInitialWalkAlembicDistance();
 
@@ -322,7 +308,7 @@ public class WindStateManager : MonoBehaviour
         _transitionEndsAtUnscaled = -1f;
         _activeTransitionOpacity = 0f;
 
-        SetTreeWindSpeed(preset);
+        SetVegetationWindState(preset);
         ResetHorizontalMotionReference();
 
         ShowIdle(idx);
@@ -347,7 +333,7 @@ public class WindStateManager : MonoBehaviour
 
         _currentStateIndex = idx;
 
-        SetTreeWindSpeed(preset);
+        SetVegetationWindState(preset);
         ResetHorizontalMotionReference();
 
         WindStateData data = windStates[idx];
@@ -536,27 +522,6 @@ public class WindStateManager : MonoBehaviour
             ? blizzardVideoCamera
             : ResolveCamera();
 
-        float everyTwoFramesDistance = Mathf.Max(0f, alembicUpdateEveryTwoFramesDistance);
-        float everyThreeFramesDistance = Mathf.Max(
-            everyTwoFramesDistance,
-            alembicUpdateEveryThreeFramesDistance);
-
-        if (treeControllers != null)
-        {
-            foreach (AlembicTreeWindController tree in treeControllers)
-            {
-                if (tree != null)
-                {
-                    tree.RefreshVisibilityAndPlayback(
-                        camera,
-                        _currentAlembicMaxDistance,
-                        everyTwoFramesDistance,
-                        everyThreeFramesDistance,
-                        alembicVisibilityBoundsPadding);
-                }
-            }
-        }
-
         UpdatePlantaMjVisibility(camera);
 
     }
@@ -595,15 +560,9 @@ public class WindStateManager : MonoBehaviour
         PrewarmPlantaMjAlembicPlayers(0.05f);
     }
 
-    public void SetTreeAnimationPlaybackEnabled(bool shouldRun)
+    public void SetStandaloneVegetationPlaybackEnabled(bool shouldRun)
     {
-        _treeAnimationPlaybackEnabled = shouldRun;
-
-        if (treeControllers != null)
-        {
-            foreach (var tree in treeControllers)
-                if (tree != null) tree.SetAnimationPlaybackEnabled(shouldRun);
-        }
+        _standaloneVegetationPlaybackEnabled = shouldRun;
 
         if (shouldRun)
         {
@@ -1214,8 +1173,6 @@ public class WindStateManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        ResolveMissingReferences();
-        ApplyTreePlaybackOffsets();
         ResolvePlantaMjAlembicPlayers();
         if (!_alembicDistanceTransitionActive)
         {
@@ -1760,25 +1717,13 @@ public class WindStateManager : MonoBehaviour
     private int GetClipHeightSafe(VideoClip clip)
         => clip != null && clip.height > 0 ? (int)clip.height : 1080;
 
-    // ── Árboles ───────────────────────────────────────────────────────────────
+    // ── Vegetación VAT ────────────────────────────────────────────────────────
 
-    private void SetTreeWindSpeed(WindPreset preset)
+    private void SetVegetationWindState(WindPreset preset)
     {
         bool fast = preset == WindPreset.W1_MaxIdle || preset == WindPreset.W4_MinToMedium;
 
         _vatWindBlendTarget = fast ? 1f : 0f;
-
-        if (treeControllers == null) return;
-
-        foreach (var tree in treeControllers)
-        {
-            if (tree == null) continue;
-
-            tree.SetAnimationPlaybackEnabled(_treeAnimationPlaybackEnabled);
-
-            if (_treeAnimationPlaybackEnabled)
-                tree.SetFast(fast);
-        }
     }
 
     private void UpdateVatWindBlend()
@@ -1801,23 +1746,6 @@ public class WindStateManager : MonoBehaviour
         Shader.SetGlobalFloat(VatWindBlendId, _vatWindBlend);
     }
 
-    private void ApplyTreePlaybackOffsets()
-    {
-        if (treeControllers == null)
-            return;
-
-        float offsetStep = Mathf.Max(0f, treePlaybackOffsetStep);
-        for (int i = 0; i < treeControllers.Length; i++)
-        {
-            AlembicTreeWindController tree = treeControllers[i];
-            if (tree != null)
-            {
-                tree.SetPlaybackOffset(i * offsetStep);
-                tree.AssignRandomPlaybackPhase();
-            }
-        }
-    }
-
     // ── Alembic standalone ───────────────────────────────────────────────────
 
     private void ResolvePlantaMjAlembicPlayers()
@@ -1833,7 +1761,6 @@ public class WindStateManager : MonoBehaviour
         foreach (var player in Object.FindObjectsByType<AlembicStreamPlayer>(FindObjectsInactive.Include, FindObjectsSortMode.None))
         {
             if (player == null) continue;
-            if (player.GetComponentInParent<AlembicTreeWindController>(true) != null) continue;
             if (!IsInsideNamedHierarchy(player.transform, "planta_mj")) continue;
 
             _plantaMjPlayers.Add(player);
@@ -1854,7 +1781,7 @@ public class WindStateManager : MonoBehaviour
         if (!playPlantaMjAlembic || _plantaMjPlayers.Count == 0)
             return;
 
-        if (!_treeAnimationPlaybackEnabled)
+        if (!_standaloneVegetationPlaybackEnabled)
             return;
 
         float speed = Mathf.Max(0f, plantaMjPlaybackSpeed);
@@ -2000,26 +1927,6 @@ public class WindStateManager : MonoBehaviour
         return false;
     }
 
-    // ── Auto-reparación de referencias ───────────────────────────────────────
-
-    private void ResolveMissingReferences()
-    {
-        bool repaired = false;
-
-        if (HasMissingReferences(treeControllers))
-        {
-            var matches = new List<AlembicTreeWindController>();
-            foreach (var tree in Object.FindObjectsByType<AlembicTreeWindController>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-                if (tree != null && tree.HasAvailablePlayers) matches.Add(tree);
-
-            treeControllers = matches.ToArray();
-            repaired |= treeControllers.Length > 0;
-        }
-
-        if (repaired)
-            Debug.LogWarning($"[{nameof(WindStateManager)}] Se repararon referencias perdidas. Revisa el Inspector para asignarlas de forma permanente.", this);
-    }
-
     private bool IsValidStateIndex(int idx)
     {
         if (windStates == null || idx < 0 || idx >= windStates.Length)
@@ -2029,13 +1936,6 @@ public class WindStateManager : MonoBehaviour
         }
 
         return true;
-    }
-
-    private static bool HasMissingReferences<T>(T[] arr) where T : Object
-    {
-        if (arr == null || arr.Length == 0) return true;
-        foreach (var item in arr) if (item == null) return true;
-        return false;
     }
 
     private static string SanitizeName(string value)

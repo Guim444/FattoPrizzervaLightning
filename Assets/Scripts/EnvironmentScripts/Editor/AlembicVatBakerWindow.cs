@@ -9,7 +9,7 @@ using UnityEngine.Formats.Alembic.Importer;
 
 public sealed class AlembicVatBakerWindow : EditorWindow
 {
-    private const string VatShaderName = "FattoPrizzerva/VAT/URP Lit";
+    private const string VatShaderName = "FattoPrizzerva/Vegetation VAT/Dual Wind URP Lit";
 
     [SerializeField] private GameObject sourceAlembic;
     [SerializeField] private Material visualMaterialOverride;
@@ -26,10 +26,10 @@ public sealed class AlembicVatBakerWindow : EditorWindow
 
     private Vector2 scroll;
 
-    [MenuItem("Tools/Fatto Prizzerva/Alembic VAT Baker")]
+    [MenuItem("Tools/Fatto Prizzerva/Vegetation VAT/1. Bake Alembic Wind")]
     private static void Open()
     {
-        var window = GetWindow<AlembicVatBakerWindow>("Alembic VAT Baker");
+        var window = GetWindow<AlembicVatBakerWindow>("Vegetation VAT Baker");
         window.minSize = new Vector2(430f, 540f);
         window.TryUseCurrentSelection();
     }
@@ -44,10 +44,11 @@ public sealed class AlembicVatBakerWindow : EditorWindow
     {
         scroll = EditorGUILayout.BeginScrollView(scroll);
 
-        EditorGUILayout.LabelField("Alembic → Vertex Animation Texture", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Vegetación Alembic → VAT de viento", EditorStyles.boldLabel);
         EditorGUILayout.HelpBox(
-            "Arrastra el GameObject importado desde un único archivo .abc. Para esta primera versión, " +
-            "el Alembic debe contener una sola malla y mantener la misma topología durante toda la animación.",
+            "Herramienta específica para vegetación con viento de este proyecto. Arrastra un GameObject " +
+            "importado desde un único .abc. Debe contener una sola malla y mantener la misma topología " +
+            "durante toda la animación.",
             MessageType.Info);
 
         EditorGUI.BeginChangeCheck();
@@ -172,7 +173,7 @@ public sealed class AlembicVatBakerWindow : EditorWindow
     {
         if (!ValidateBeforeBake(out string validationError))
         {
-            EditorUtility.DisplayDialog("Alembic VAT Baker", validationError, "Cerrar");
+            EditorUtility.DisplayDialog("Vegetation VAT Baker", validationError, "Cerrar");
             return;
         }
 
@@ -474,7 +475,7 @@ public sealed class AlembicVatBakerWindow : EditorWindow
         if (mesh.vertexCount != vertexCount || mesh.subMeshCount != subMeshCount)
         {
             throw new InvalidOperationException(
-                $"La topología cambia en el frame {frame}. VAT Soft requiere el mismo número de vértices y submeshes en todos los frames.");
+                $"La topología cambia en el frame {frame}. Vegetation VAT requiere el mismo número de vértices y submeshes en todos los frames.");
         }
 
         for (int subMesh = 0; subMesh < subMeshCount; subMesh++)
@@ -588,6 +589,14 @@ public sealed class AlembicVatBakerWindow : EditorWindow
         if (colorProperty != null)
             destination.SetColor("_BaseColor", source.GetColor(colorProperty));
 
+        CopyTextureProperty(source, destination, "_BumpMap");
+        CopyTextureProperty(source, destination, "_MetallicGlossMap");
+        CopyTextureProperty(source, destination, "_OcclusionMap");
+        CopyFloatProperty(source, destination, "_BumpScale");
+        CopyFloatProperty(source, destination, "_Metallic");
+        CopyFloatProperty(source, destination, "_Smoothness");
+        CopyFloatProperty(source, destination, "_OcclusionStrength");
+
         float cutoff = source.HasProperty("_Cutoff") ? source.GetFloat("_Cutoff") : 0.5f;
         bool alphaClip = source.HasProperty("_AlphaClip") && source.GetFloat("_AlphaClip") > 0.5f;
         destination.SetFloat("_Cutoff", cutoff);
@@ -595,6 +604,22 @@ public sealed class AlembicVatBakerWindow : EditorWindow
         if (source.HasProperty("_Cull"))
             destination.SetFloat("_Cull", source.GetFloat("_Cull"));
         destination.renderQueue = alphaClip ? (int)UnityEngine.Rendering.RenderQueue.AlphaTest : -1;
+    }
+
+    private static void CopyTextureProperty(Material source, Material destination, string property)
+    {
+        if (!source.HasProperty(property) || !destination.HasProperty(property))
+            return;
+
+        destination.SetTexture(property, source.GetTexture(property));
+        destination.SetTextureScale(property, source.GetTextureScale(property));
+        destination.SetTextureOffset(property, source.GetTextureOffset(property));
+    }
+
+    private static void CopyFloatProperty(Material source, Material destination, string property)
+    {
+        if (source.HasProperty(property) && destination.HasProperty(property))
+            destination.SetFloat(property, source.GetFloat(property));
     }
 
     private static Color32 EncodeNormal(Vector3 normal)

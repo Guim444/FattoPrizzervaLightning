@@ -179,7 +179,7 @@ public class EnvironmentStateManager : MonoBehaviour
 
     private void ApplyTreeAnimationToggle(bool shouldRun)
     {
-        windManager?.SetTreeAnimationPlaybackEnabled(shouldRun);
+        windManager?.SetStandaloneVegetationPlaybackEnabled(shouldRun);
         plantManager?.SetAnimationPlaybackEnabled(shouldRun);
 
         if (_treeControllers != null)

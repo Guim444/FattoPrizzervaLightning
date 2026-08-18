@@ -1,9 +1,16 @@
-Shader "FattoPrizzerva/VAT/URP Lit"
+Shader "FattoPrizzerva/Vegetation VAT/Dual Wind URP Lit"
 {
     Properties
     {
         [MainTexture] _BaseMap("Base Map", 2D) = "white" {}
         [MainColor] _BaseColor("Base Color", Color) = (1,1,1,1)
+        [Normal] _BumpMap("Normal Map", 2D) = "bump" {}
+        _BumpScale("Normal Scale", Float) = 1
+        _MetallicGlossMap("Metallic Map", 2D) = "white" {}
+        _Metallic("Metallic", Range(0,1)) = 0
+        _Smoothness("Smoothness", Range(0,1)) = 0.5
+        _OcclusionMap("Occlusion Map", 2D) = "white" {}
+        _OcclusionStrength("Occlusion Strength", Range(0,1)) = 1
         [Toggle] _AlphaClip("Alpha Clipping", Float) = 0
         _Cutoff("Alpha Cutoff", Range(0,1)) = 0.5
         [Enum(UnityEngine.Rendering.CullMode)] _Cull("Cull", Float) = 2
@@ -49,6 +56,12 @@ Shader "FattoPrizzerva/VAT/URP Lit"
 
         TEXTURE2D(_BaseMap);
         SAMPLER(sampler_BaseMap);
+        TEXTURE2D(_BumpMap);
+        SAMPLER(sampler_BumpMap);
+        TEXTURE2D(_MetallicGlossMap);
+        SAMPLER(sampler_MetallicGlossMap);
+        TEXTURE2D(_OcclusionMap);
+        SAMPLER(sampler_OcclusionMap);
         TEXTURE2D(_VAT_PositionTex);
         SAMPLER(sampler_VAT_PositionTex);
         TEXTURE2D(_VAT_NormalTex);
@@ -58,12 +71,16 @@ Shader "FattoPrizzerva/VAT/URP Lit"
         TEXTURE2D(_VAT_FastNormalTex);
         SAMPLER(sampler_VAT_FastNormalTex);
 
-        // Global: WindStateManager la actualiza una sola vez para todos los árboles.
+        // Global: WindStateManager la actualiza una sola vez para toda la vegetación VAT.
         float _VAT_WindBlend;
 
         CBUFFER_START(UnityPerMaterial)
             float4 _BaseMap_ST;
             half4 _BaseColor;
+            half _BumpScale;
+            half _Metallic;
+            half _Smoothness;
+            half _OcclusionStrength;
             float _AlphaClip;
             float _Cutoff;
             float _Cull;
@@ -90,6 +107,7 @@ Shader "FattoPrizzerva/VAT/URP Lit"
         {
             float4 positionOS : POSITION;
             float3 normalOS : NORMAL;
+            float4 tangentOS : TANGENT;
             float2 uv : TEXCOORD0;
             float2 vatVertex : TEXCOORD2;
             UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -214,6 +232,14 @@ Shader "FattoPrizzerva/VAT/URP Lit"
             #pragma multi_compile_instancing
             #pragma multi_compile_fog
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
+            #pragma multi_compile_fragment _ _SHADOWS_SOFT
+            #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
+            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING
+            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BOX_PROJECTION
+            #pragma multi_compile_fragment _ _LIGHT_COOKIES
+            #pragma multi_compile _ _FORWARD_PLUS
 
             struct ForwardVaryings
             {
@@ -222,7 +248,9 @@ Shader "FattoPrizzerva/VAT/URP Lit"
                 half3 normalWS : TEXCOORD1;
                 float2 uv : TEXCOORD2;
                 float4 shadowCoord : TEXCOORD3;
-                half fogFactor : TEXCOORD4;
+                half4 tangentWS : TEXCOORD4;
+                half4 fogFactorAndVertexLight : TEXCOORD5;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
@@ -230,29 +258,75 @@ Shader "FattoPrizzerva/VAT/URP Lit"
             {
                 ForwardVaryings output;
                 UNITY_SETUP_INSTANCE_ID(input);
+                UNITY_TRANSFER_INSTANCE_ID(input, output);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
                 VatSample vat = SampleVat(input);
                 VertexPositionInputs positionInputs = GetVertexPositionInputs(vat.positionOS);
                 output.positionCS = positionInputs.positionCS;
                 output.positionWS = positionInputs.positionWS;
-                output.normalWS = TransformObjectToWorldNormal(vat.normalOS);
+                output.normalWS = NormalizeNormalPerVertex(TransformObjectToWorldNormal(vat.normalOS));
+                half3 tangentWS = TransformObjectToWorldDir(input.tangentOS.xyz);
+                output.tangentWS = half4(
+                    NormalizeNormalPerVertex(tangentWS),
+                    input.tangentOS.w * GetOddNegativeScale());
                 output.uv = TRANSFORM_TEX(input.uv, _BaseMap);
                 output.shadowCoord = TransformWorldToShadowCoord(positionInputs.positionWS);
-                output.fogFactor = ComputeFogFactor(positionInputs.positionCS.z);
+                half fogFactor = ComputeFogFactor(positionInputs.positionCS.z);
+                half3 vertexLight = VertexLighting(positionInputs.positionWS, output.normalWS);
+                output.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
                 return output;
             }
 
             half4 VatForwardFragment(ForwardVaryings input) : SV_Target
             {
+                UNITY_SETUP_INSTANCE_ID(input);
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
                 VatAlphaClip(input.uv);
                 half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * _BaseColor;
-                half3 normalWS = normalize(input.normalWS);
-                Light mainLight = GetMainLight(input.shadowCoord);
-                half direct = saturate(dot(normalWS, mainLight.direction));
-                half3 lighting = SampleSH(normalWS)
-                               + mainLight.color * direct * mainLight.distanceAttenuation * mainLight.shadowAttenuation;
-                half3 color = MixFog(albedo.rgb * lighting, input.fogFactor);
-                return half4(color, albedo.a);
+                half3 baseNormalWS = NormalizeNormalPerPixel(input.normalWS);
+                half3 tangentWS = normalize(input.tangentWS.xyz);
+                tangentWS = normalize(tangentWS - baseNormalWS * dot(baseNormalWS, tangentWS));
+                half3 bitangentWS = input.tangentWS.w * cross(baseNormalWS, tangentWS);
+                half3 normalTS = UnpackNormalScale(
+                    SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, input.uv),
+                    _BumpScale);
+                half3 normalWS = NormalizeNormalPerPixel(
+                    TransformTangentToWorld(normalTS, half3x3(tangentWS, bitangentWS, baseNormalWS)));
+
+                half4 metallicGloss = SAMPLE_TEXTURE2D(
+                    _MetallicGlossMap, sampler_MetallicGlossMap, input.uv);
+                half occlusionSample = SAMPLE_TEXTURE2D(
+                    _OcclusionMap, sampler_OcclusionMap, input.uv).g;
+
+                SurfaceData surfaceData = (SurfaceData)0;
+                surfaceData.albedo = albedo.rgb;
+                surfaceData.alpha = albedo.a;
+                surfaceData.metallic = metallicGloss.r * _Metallic;
+                surfaceData.specular = half3(0, 0, 0);
+                surfaceData.smoothness = metallicGloss.a * _Smoothness;
+                surfaceData.normalTS = normalTS;
+                surfaceData.occlusion = lerp(1.0h, occlusionSample, _OcclusionStrength);
+                surfaceData.emission = half3(0, 0, 0);
+                surfaceData.clearCoatMask = 0;
+                surfaceData.clearCoatSmoothness = 0;
+
+                InputData inputData = (InputData)0;
+                inputData.positionWS = input.positionWS;
+                inputData.positionCS = input.positionCS;
+                inputData.normalWS = normalWS;
+                inputData.viewDirectionWS = GetWorldSpaceNormalizeViewDir(input.positionWS);
+                inputData.shadowCoord = input.shadowCoord;
+                inputData.fogCoord = input.fogFactorAndVertexLight.x;
+                inputData.vertexLighting = input.fogFactorAndVertexLight.yzw;
+                inputData.bakedGI = SampleSH(normalWS);
+                inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
+                inputData.shadowMask = unity_ProbesOcclusion;
+                inputData.tangentToWorld = half3x3(tangentWS, bitangentWS, baseNormalWS);
+
+                half4 color = UniversalFragmentPBR(inputData, surfaceData);
+                color.rgb = MixFog(color.rgb, inputData.fogCoord);
+                color.a = albedo.a;
+                return color;
             }
             ENDHLSL
         }

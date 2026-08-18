@@ -6,26 +6,26 @@ using UnityEngine;
 
 public sealed class DualVatAssemblerWindow : EditorWindow
 {
-    private const string VatShaderName = "FattoPrizzerva/VAT/URP Lit";
+    private const string VatShaderName = "FattoPrizzerva/Vegetation VAT/Dual Wind URP Lit";
 
     [SerializeField] private GameObject weakWindVatPrefab;
     [SerializeField] private GameObject strongWindVatPrefab;
     [SerializeField] private string outputFolder = "Assets/Generated/VAT";
     [SerializeField] private bool enableDepthNormalsPass = true;
 
-    [MenuItem("Tools/Fatto Prizzerva/Dual VAT Assembler")]
+    [MenuItem("Tools/Fatto Prizzerva/Vegetation VAT/2. Assemble Dual Wind")]
     private static void Open()
     {
-        var window = GetWindow<DualVatAssemblerWindow>("Dual VAT Assembler");
+        var window = GetWindow<DualVatAssemblerWindow>("Vegetation Dual Wind VAT");
         window.minSize = new Vector2(440f, 300f);
     }
 
     private void OnGUI()
     {
-        EditorGUILayout.LabelField("Combinar VAT débil + fuerte", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Combinar viento débil + fuerte de vegetación", EditorStyles.boldLabel);
         EditorGUILayout.HelpBox(
-            "Primero genera las VAT slow y fast por separado con Alembic VAT Baker. " +
-            "Después asigna aquí los dos prefabs generados. Deben proceder del mismo modelo y compartir topología.",
+            "Primero genera las VAT slow y fast con Vegetation VAT Baker. Después asigna aquí los dos prefabs. " +
+            "Deben pertenecer a la misma vegetación y compartir exactamente topología, UV y submeshes.",
             MessageType.Info);
 
         weakWindVatPrefab = (GameObject)EditorGUILayout.ObjectField(
@@ -156,7 +156,7 @@ public sealed class DualVatAssemblerWindow : EditorWindow
         if (filters.Length != 1 || renderers.Length != 1 || filters[0].sharedMesh == null)
         {
             EditorUtility.DisplayDialog(
-                "Dual VAT Assembler",
+                "Vegetation Dual Wind VAT",
                 $"El prefab {label} debe contener exactamente una MeshFilter y un MeshRenderer.",
                 "Cerrar");
             return false;
@@ -167,7 +167,7 @@ public sealed class DualVatAssemblerWindow : EditorWindow
         material = renderer.sharedMaterial;
         if (material == null)
         {
-            EditorUtility.DisplayDialog("Dual VAT Assembler", $"El prefab {label} no tiene material.", "Cerrar");
+            EditorUtility.DisplayDialog("Vegetation Dual Wind VAT", $"El prefab {label} no tiene material.", "Cerrar");
             return false;
         }
 

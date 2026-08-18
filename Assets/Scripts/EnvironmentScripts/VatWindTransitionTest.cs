@@ -1,8 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// Controlador independiente para probar la transición global entre las VAT
-/// de viento débil (0) y fuerte (1).
+/// Controlador independiente para probar la transición global de la vegetación VAT
+/// entre viento débil (0) y fuerte (1).
 ///
 /// No debe estar activo al mismo tiempo que WindStateManager, ya que ambos
 /// escriben la propiedad global _VAT_WindBlend.
@@ -90,19 +90,19 @@ public sealed class VatWindTransitionTest : MonoBehaviour
         }
     }
 
-    [ContextMenu("VAT Wind/Set Weak")]
+    [ContextMenu("Vegetation VAT Wind/Set Weak")]
     public void SetWeakWind()
     {
         SetStrongWind(false);
     }
 
-    [ContextMenu("VAT Wind/Set Strong")]
+    [ContextMenu("Vegetation VAT Wind/Set Strong")]
     public void SetStrongWind()
     {
         SetStrongWind(true);
     }
 
-    [ContextMenu("VAT Wind/Toggle")]
+    [ContextMenu("Vegetation VAT Wind/Toggle")]
     public void ToggleWind()
     {
         SetStrongWind(!strongWind);

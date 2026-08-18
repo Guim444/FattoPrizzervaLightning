@@ -31,6 +31,18 @@ Material:
         m_Texture: {fileID: 2800000, guid: 2933808dec90924429e290e811756f79, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: a795e278abedd8d47bd6f5e38eaa8434, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 2800000, guid: 59e1547948dcbd64182989372350bece, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 2800000, guid: 44ae769768effbb48a2c0ad10fd43617, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _VAT_FastNormalTex:
         m_Texture: {fileID: 2800000, guid: c8c1063268f25d4499bc245032f6df7f, type: 2}
         m_Scale: {x: 1, y: 1}
@@ -50,8 +62,12 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaClip: 1
+    - _BumpScale: 1
     - _Cull: 0
     - _Cutoff: 0.5
+    - _Metallic: 0
+    - _OcclusionStrength: 1
+    - _Smoothness: 0.5
     - _VAT_DualMode: 1
     - _VAT_FPS: 30
     - _VAT_FastFPS: 30

@@ -11,6 +11,7 @@ public sealed class DualVatAssemblerWindow : EditorWindow
     [SerializeField] private GameObject weakWindVatPrefab;
     [SerializeField] private GameObject strongWindVatPrefab;
     [SerializeField] private string outputFolder = "Assets/Generated/VAT";
+    [SerializeField] private bool enableDepthNormalsPass = true;
 
     [MenuItem("Tools/Fatto Prizzerva/Dual VAT Assembler")]
     private static void Open()
@@ -37,6 +38,11 @@ public sealed class DualVatAssemblerWindow : EditorWindow
             strongWindVatPrefab,
             typeof(GameObject),
             false);
+        enableDepthNormalsPass = EditorGUILayout.Toggle(
+            new GUIContent(
+                "Depth Normals (SSAO/Fog)",
+                "Hace que el VAT escriba la profundidad y normales que utilizan SSAO y la niebla volumétrica."),
+            enableDepthNormalsPass);
         outputFolder = EditorGUILayout.TextField("Carpeta de salida", outputFolder);
 
         EditorGUILayout.Space(12f);
@@ -95,6 +101,7 @@ public sealed class DualVatAssemblerWindow : EditorWindow
             CopyFloat(strongMaterial, dualMaterial, "_VAT_FPS", "_VAT_FastFPS");
             CopyFloat(strongMaterial, dualMaterial, "_VAT_HasNormals", "_VAT_FastHasNormals");
             dualMaterial.SetFloat("_VAT_DualMode", 1f);
+            dualMaterial.SetShaderPassEnabled("DepthNormals", enableDepthNormalsPass);
             string materialPath = AssetDatabase.GenerateUniqueAssetPath($"{folder}/{dualMaterial.name}.mat");
             AssetDatabase.CreateAsset(dualMaterial, materialPath);
 

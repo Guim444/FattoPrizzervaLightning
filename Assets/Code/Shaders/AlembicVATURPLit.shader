@@ -333,6 +333,70 @@ Shader "FattoPrizzerva/VAT/URP Lit"
             }
             ENDHLSL
         }
+
+        // SSAO configured from DepthNormals makes URP build the camera depth
+        // texture with this pass. Volumetric fog also consumes that texture, so
+        // the VAT deformation and alpha clipping must be represented here.
+        Pass
+        {
+            Name "DepthNormals"
+            Tags { "LightMode" = "DepthNormals" }
+            ZWrite On
+
+            HLSLPROGRAM
+            #pragma vertex VatDepthNormalsVertex
+            #pragma fragment VatDepthNormalsFragment
+            #pragma multi_compile_instancing
+            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RenderingLayers.hlsl"
+
+            struct DepthNormalsVaryings
+            {
+                float4 positionCS : SV_POSITION;
+                float2 uv : TEXCOORD0;
+                half3 normalWS : TEXCOORD1;
+                UNITY_VERTEX_OUTPUT_STEREO
+            };
+
+            DepthNormalsVaryings VatDepthNormalsVertex(Attributes input)
+            {
+                DepthNormalsVaryings output = (DepthNormalsVaryings)0;
+                UNITY_SETUP_INSTANCE_ID(input);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
+
+                VatSample vat = SampleVat(input);
+                output.positionCS = TransformObjectToHClip(vat.positionOS);
+                output.uv = TRANSFORM_TEX(input.uv, _BaseMap);
+                output.normalWS = NormalizeNormalPerVertex(TransformObjectToWorldNormal(vat.normalOS));
+                return output;
+            }
+
+            void VatDepthNormalsFragment(
+                DepthNormalsVaryings input,
+                out half4 outNormalWS : SV_Target0
+                #ifdef _WRITE_RENDERING_LAYERS
+                    , out float4 outRenderingLayers : SV_Target1
+                #endif
+            )
+            {
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
+                VatAlphaClip(input.uv);
+
+                #if defined(_GBUFFER_NORMALS_OCT)
+                    float2 octNormalWS = PackNormalOctQuadEncode(normalize(input.normalWS));
+                    float2 remappedOctNormalWS = saturate(octNormalWS * 0.5 + 0.5);
+                    half3 packedNormalWS = PackFloat2To888(remappedOctNormalWS);
+                    outNormalWS = half4(packedNormalWS, 0.0);
+                #else
+                    outNormalWS = half4(NormalizeNormalPerPixel(input.normalWS), 0.0);
+                #endif
+
+                #ifdef _WRITE_RENDERING_LAYERS
+                    uint renderingLayers = GetMeshRenderingLayer();
+                    outRenderingLayers = float4(EncodeMeshRenderingLayer(renderingLayers), 0, 0, 0);
+                #endif
+            }
+            ENDHLSL
+        }
     }
 
     FallBack Off

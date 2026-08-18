@@ -19,6 +19,7 @@ public sealed class AlembicVatBakerWindow : EditorWindow
     [SerializeField, Min(0.01f)] private float sampleEnd = 2f;
     [SerializeField] private int maximumTextureWidth = 4096;
     [SerializeField] private bool bakeNormals = true;
+    [SerializeField] private bool enableDepthNormalsPass = true;
     [SerializeField] private bool interpolateFrames = true;
     [SerializeField] private float playbackSpeed = 1f;
     [SerializeField, Range(0f, 1f)] private float randomPhase = 1f;
@@ -87,6 +88,11 @@ public sealed class AlembicVatBakerWindow : EditorWindow
         bakeNormals = EditorGUILayout.Toggle(
             new GUIContent("Hornear normales", "Mejora la iluminación. Desactívalo para una prueba rápida Unlit."),
             bakeNormals);
+        enableDepthNormalsPass = EditorGUILayout.Toggle(
+            new GUIContent(
+                "Depth Normals (SSAO/Fog)",
+                "Incluye los árboles VAT en la textura de profundidad y normales usada por SSAO y niebla volumétrica."),
+            enableDepthNormalsPass);
 
         EditorGUILayout.Space(8f);
         EditorGUILayout.LabelField("Reproducción generada", EditorStyles.boldLabel);
@@ -554,6 +560,7 @@ public sealed class AlembicVatBakerWindow : EditorWindow
         material.SetFloat("_VAT_RandomPhase", randomPhase);
         material.SetFloat("_VAT_Interpolate", interpolateFrames ? 1f : 0f);
         material.SetFloat("_VAT_HasNormals", normalTexture != null ? 1f : 0f);
+        material.SetShaderPassEnabled("DepthNormals", enableDepthNormalsPass);
 
         string path = AssetDatabase.GenerateUniqueAssetPath($"{folder}/{material.name}.mat");
         AssetDatabase.CreateAsset(material, path);

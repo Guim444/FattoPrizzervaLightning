@@ -7,10 +7,12 @@ using UnityEngine;
 public sealed class DualVatAssemblerWindow : EditorWindow
 {
     private const string VatShaderName = "FattoPrizzerva/Vegetation VAT/Dual Wind URP Lit";
+    private const string DefaultOutputFolder = "Assets/Prefabs/Generated/VAT";
+    private const string LegacyOutputFolder = "Assets/Generated/VAT";
 
     [SerializeField] private GameObject weakWindVatPrefab;
     [SerializeField] private GameObject strongWindVatPrefab;
-    [SerializeField] private string outputFolder = "Assets/Generated/VAT";
+    [SerializeField] private string outputFolder = DefaultOutputFolder;
     [SerializeField] private bool enableDepthNormalsPass = true;
 
     [MenuItem("Tools/Fatto Prizzerva/Vegetation VAT/2. Assemble Dual Wind")]
@@ -18,6 +20,15 @@ public sealed class DualVatAssemblerWindow : EditorWindow
     {
         var window = GetWindow<DualVatAssemblerWindow>("Vegetation Dual Wind VAT");
         window.minSize = new Vector2(440f, 300f);
+    }
+
+    private void OnEnable()
+    {
+        if (string.IsNullOrWhiteSpace(outputFolder)
+            || string.Equals(outputFolder, LegacyOutputFolder, StringComparison.Ordinal))
+        {
+            outputFolder = DefaultOutputFolder;
+        }
     }
 
     private void OnGUI()

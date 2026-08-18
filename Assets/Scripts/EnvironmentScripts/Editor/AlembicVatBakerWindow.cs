@@ -10,10 +10,12 @@ using UnityEngine.Formats.Alembic.Importer;
 public sealed class AlembicVatBakerWindow : EditorWindow
 {
     private const string VatShaderName = "FattoPrizzerva/Vegetation VAT/Dual Wind URP Lit";
+    private const string DefaultOutputFolder = "Assets/Prefabs/Generated/VAT";
+    private const string LegacyOutputFolder = "Assets/Generated/VAT";
 
     [SerializeField] private GameObject sourceAlembic;
     [SerializeField] private Material visualMaterialOverride;
-    [SerializeField] private string outputFolder = "Assets/Generated/VAT";
+    [SerializeField] private string outputFolder = DefaultOutputFolder;
     [SerializeField, Min(1f)] private float framesPerSecond = 15f;
     [SerializeField, Min(0f)] private float sampleStart;
     [SerializeField, Min(0.01f)] private float sampleEnd = 2f;
@@ -36,6 +38,12 @@ public sealed class AlembicVatBakerWindow : EditorWindow
 
     private void OnEnable()
     {
+        if (string.IsNullOrWhiteSpace(outputFolder)
+            || string.Equals(outputFolder, LegacyOutputFolder, StringComparison.Ordinal))
+        {
+            outputFolder = DefaultOutputFolder;
+        }
+
         if (sourceAlembic == null)
             TryUseCurrentSelection();
     }

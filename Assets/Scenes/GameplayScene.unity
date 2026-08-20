@@ -1211,10 +1211,22 @@ PrefabInstance:
       propertyPath: myCamera
       value: 
       objectReference: {fileID: 1613816022}
+    - target: {fileID: 4144052115794343000, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 768
+      objectReference: {fileID: 0}
+    - target: {fileID: 4144052115794343000, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 4348642207067692730, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
       propertyPath: onDied.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1713666894}
+    - target: {fileID: 8917648843820653840, guid: ae09293554b5d6f4ab3e867b2e6123d8, type: 3}
+      propertyPath: m_RenderingLayers
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3415,7 +3427,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 15607
+    m_Bits: 15863
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

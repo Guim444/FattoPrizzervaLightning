@@ -8,16 +8,10 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
 {
-    // ==================================================
-    // INPUT SYSTEM STATE
-    // ==================================================
     private Actions _actions;
     private Actions.PlayerActions _playerActions;
     private InputAction _punchAction;
 
-    // ==================================================
-    // RAW INPUT STATE
-    // ==================================================
     private Vector2 _moveInput;
 
     /// <summary>Normalized movement input for the current frame.</summary>
@@ -31,11 +25,6 @@ public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
 
     /// <summary>True only on the frame the punch was pressed (consumed at end of Update).</summary>
     public bool IsPunchInputPressed { get; private set; }
-
-    // ==================================================
-    // INITIALIZATION
-    // ==================================================
-
     void Awake()
     {
         _actions = new Actions();
@@ -83,11 +72,6 @@ public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
         _playerActions.RemoveCallbacks(this);
         _actions.Dispose();
     }
-
-    // ==================================================
-    // INPUT SYSTEM CALLBACKS (Actions.IPlayerActions)
-    // ==================================================
-
     public void OnMovement(InputAction.CallbackContext context)
     {
         _moveInput = context.ReadValue<Vector2>();
@@ -108,10 +92,6 @@ public class PlayerInputHandler : MonoBehaviour, Actions.IPlayerActions
     {
         IsPunchInputHeld = false;
     }
-
-    // ==================================================
-    // FRAME CLEANUP
-    // ==================================================
 
     /// <summary>
     /// Resets single-frame flags. Must be called at the end of PlayerController.Update().

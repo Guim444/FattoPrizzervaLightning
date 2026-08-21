@@ -9,22 +9,13 @@ using UnityEngine.Events;
 /// </summary>
 public class PlayerCombat : MonoBehaviour, IDamageable
 {
-    // ==================================================
-    // DAMAGE VALUES
-    // ==================================================
     [Header("Combat: Damage Values")]
     public float basicPunchDamage;
 
-    // ==================================================
-    // HP
-    // ==================================================
     [Header("HP")]
     [Tooltip("Player's maximum HP. Also the starting HP after each retry.")]
     public int maxHP = 10;
 
-   // ==================================================
-    // COMBAT STATE
-    // ==================================================
     [Header("Combat: State")]
     public int damageBoost = 0;
 
@@ -38,16 +29,9 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     /// </summary>
     public int EffectiveEndurance => _temporaryEnduranceOverride ?? endurance;
 
-    // ==================================================
-    // PUNCH COOLDOWN
-    // ==================================================
     [Header("Combat: Punch Cooldown")]
     public float normalPunchTimer = 0f;
 
-
-    // ==================================================
-    // STAMINA COSTS
-    // ==================================================
     [Header("Game Design: Stamina Costs")]
     public float punchStaminaCostPhase0 = 2f;
 
@@ -55,26 +39,12 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     public float punchRunningStaminaCostPhase2 = 4f;
     public float punchRunningStaminaCostPhase3 = 6f;
 
-    // ==================================================
-    // EVENTS
-    // ==================================================
     [Header("Events")]
     [Tooltip("Fired when HP reaches 0. Connect to TutorialRingManager.ShowRetry() in the Inspector.")]
     public UnityEvent onDied;
 
-    // ==================================================
-    // PRIVATE REFS
-    // ==================================================
     private PlayerController _player;
-
-    // ==================================================
-    // IDamageable
-    // ==================================================
     public float HP { get; set; }
-
-    // ==================================================
-    // INITIALIZATION
-    // ==================================================
 
     /// <summary>Initializes the reference to the orchestrator and sets the initial HP.</summary>
     public void Initialize(PlayerController player)
@@ -82,10 +52,6 @@ public class PlayerCombat : MonoBehaviour, IDamageable
         _player = player;
         HP = maxHP;
     }
-
-    // ==================================================
-    // PUBLIC API
-    // ==================================================
 
     /// <summary>
     /// Receives damage. Dies if HP reaches 0.

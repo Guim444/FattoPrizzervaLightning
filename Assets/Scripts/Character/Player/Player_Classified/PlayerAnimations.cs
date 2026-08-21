@@ -21,14 +21,14 @@ public class PlayerAnimations : MonoBehaviour
     [SerializeField] private float idleFrontCenterX = 0f;
     [SerializeField] private float defaultCenterX = -1f;
 
-    // ── BLEND TREE THRESHOLDS ────────────────────────────────────
+    // BLEND TREE THRESHOLDS 
     [Header("Blend Tree: Speed Thresholds")]
     public float walkThreshold   = 4.4f;
     public float runThreshold    = 9f;
     public float runMidThreshold = 11f;
     public float runMaxThreshold = 13.5f;
 
-    // ── ACCELERATION PER SEGMENT (units/second with Time.deltaTime) ──
+    // ACCELERATION PER SEGMENT (units/second with Time.deltaTime)
     [Header("Blend Tree: Acceleration per segment (u/s)")]
     public float accelToWalk     = 8f;
     public float accelWalkToRun  = 3.5f;

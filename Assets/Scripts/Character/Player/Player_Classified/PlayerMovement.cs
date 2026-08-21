@@ -11,9 +11,6 @@ public class PlayerMovement : MonoBehaviour
 {
     private static readonly int IdleFrontHash = Animator.StringToHash("IdleFront");
 
-    // ==================================================
-    // MOVEMENT SPEEDS
-    // ==================================================
     [Header("Game Design: Movement Speeds")]
     public float walkingSpeed = 3f;
 
@@ -26,9 +23,6 @@ public class PlayerMovement : MonoBehaviour
     [Header("Visuals")]
     [SerializeField] private Transform visualFlipRoot;
 
-    // ==================================================
-    // TURN SPEEDS
-    // ==================================================
     [Header("Game Design: Turn Speeds")]
     public float runningTurnSpeedNormal = 4f;
 
@@ -38,32 +32,19 @@ public class PlayerMovement : MonoBehaviour
     public float glidingTurnSpeed = 5f;
     public float punchRunningTurnSpeed = 4f;
 
-    // ==================================================
-    // RUNNING THRUST SYSTEM
-    // ==================================================
     [Header("Game Design: Running Thrust System")]
     public float thrustPhaseThreshold = 1.5f;
 
-    // ==================================================
-    // GRAVITY
-    // ==================================================
     [Header("Gravity")]
     public float gravity = -20f;
 
     public float groundCheckDistance = 0.2f;
     public LayerMask groundMask;
 
-    // ==================================================
-    // SPEED DEBUG DISPLAY
-    // ==================================================
     [Header("Debug")]
     public TextMeshProUGUI speedDisplay;
 
     private Vector3 _lastPosition;
-
-    // ==================================================
-    // RUNTIME STATE
-    // ==================================================
     public Vector3 CurrentSpeed { get; set; }
     public Vector3 LastDirection { get; set; } = Vector3.zero;
     public Vector3 LastFacingDirection { get; private set; } = Vector3.forward;
@@ -77,10 +58,6 @@ public class PlayerMovement : MonoBehaviour
     private RuntimeAnimatorController _cachedAnimatorController;
     private bool _cachedHasIdleFrontParameter;
 
-    // ==================================================
-    // INITIALIZATION
-    // ==================================================
-
     void Awake()
     {
         _cc = GetComponent<CharacterController>();
@@ -91,10 +68,6 @@ public class PlayerMovement : MonoBehaviour
 
         _verticalVelocity = -2f;
     }
-
-    // ==================================================
-    // PUBLIC API
-    // ==================================================
 
     /// <summary>
     /// Converts the player's 2D input into a normalized 3D direction.

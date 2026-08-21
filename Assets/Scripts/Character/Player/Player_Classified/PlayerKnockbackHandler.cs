@@ -15,10 +15,6 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
 {
-    // --------------------------------------------------------
-    //  CONFIGURATION
-    // --------------------------------------------------------
-
     [Header("Physics")]
     [Tooltip("If true, mass is automatically calculated from the player's endurance.")]
     public bool autoMassFromEndurance = true;
@@ -35,17 +31,9 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
     [Tooltip("Speed threshold below which knockback is considered finished.")]
     public float stopThreshold = 0.15f;
 
-    // --------------------------------------------------------
-    //  STATE (visible in Inspector for debug)
-    // --------------------------------------------------------
-
     [Header("Debug (read-only)")]
     [SerializeField] private bool _isKnockedBack;
     [SerializeField] private Vector3 _debugVelocity;
-
-    // --------------------------------------------------------
-    //  PRIVATE
-    // --------------------------------------------------------
 
     private CharacterController      _cc;
     private PlayerController         _player;
@@ -60,10 +48,6 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
     /// Read by PlayerAnimations to decide whether to show the animation.
     /// </summary>
     public bool ShowKnockbackAnim { get; private set; }
-
-    // --------------------------------------------------------
-    //  INIT
-    // --------------------------------------------------------
 
     void Awake()
     {
@@ -84,10 +68,6 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
         else
             _body.mass = manualMass;
     }
-
-    // --------------------------------------------------------
-    //  IKnockbackable
-    // --------------------------------------------------------
 
     /// <summary>
     /// Receives pre-resolved knockback (direct force).
@@ -124,10 +104,6 @@ public class PlayerKnockbackHandler : MonoBehaviour, IKnockbackable
         _body.Receive(direction, force);
         _player.stateMachineController.TransitionTo(State.Knockedback);
     }
-
-    // --------------------------------------------------------
-    //  UPDATE LOOP
-    // --------------------------------------------------------
 
     /// <summary>
     /// Called every frame from PlayerController.Update().

@@ -8,9 +8,6 @@ using UnityEngine;
 /// </summary>
 public class PlayerDepthScaler : MonoBehaviour
 {
-    // ==================================================
-    // Z BOUNDARIES (2.5D DEPTH)
-    // ==================================================
     [Header("Z Boundaries")]
     [Tooltip("Closest Z position to camera (maximum scale).")]
     public float minZ = 0f;
@@ -23,10 +20,6 @@ public class PlayerDepthScaler : MonoBehaviour
 
     [Tooltip("Maximum scale (front of the stage).")]
     public float maxScale = 1f;
-
-    // ==================================================
-    // PUBLIC API
-    // ==================================================
 
     /// <summary>
     /// Recalculates and applies the transform scale based on the current Z.

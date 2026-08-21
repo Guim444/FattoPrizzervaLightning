@@ -6,9 +6,6 @@ using UnityEngine;
 /// </summary>
 public class PlayerInteractor : MonoBehaviour
 {
-    // ==================================================
-    // INTERACTION CONFIG
-    // ==================================================
     [Header("Interaction")]
     [Tooltip("Layers the interaction raycast can collide with.")]
     public LayerMask interactMask;
@@ -18,10 +15,6 @@ public class PlayerInteractor : MonoBehaviour
 
     [Tooltip("Height from which the raycast is cast (relative to player pivot).")]
     public float raycastHeight = 1.5f;
-
-    // ==================================================
-    // PUBLIC API
-    // ==================================================
 
     /// <summary>
     /// Tries to interact with the object in front of the player.

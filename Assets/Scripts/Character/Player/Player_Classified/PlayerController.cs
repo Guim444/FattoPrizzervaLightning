@@ -17,9 +17,6 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerStateMachineController))]
 public class PlayerController : MonoBehaviour
 {
-    // ==================================================
-    // COMPONENT REFERENCES
-    // ==================================================
     [Header("Component References")]
     public CharacterController cc;
 
@@ -27,9 +24,6 @@ public class PlayerController : MonoBehaviour
     public Camera myCamera;
     public PlayerStaminaManager staminaManager;
 
-    // ==================================================
-    // SPECIALIZED COMPONENTS (auto-resolved in Awake)
-    // ==================================================
     [HideInInspector] public PlayerInputHandler inputHandler;
     [HideInInspector] public PlayerMovement movement;
     [HideInInspector] public PlayerCombat combat;
@@ -39,9 +33,6 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public PlayerStateMachineController stateMachineController;
     [HideInInspector] public CombatAttackHandler combatAttackHandler;
 
-    // ==================================================
-    // SHARED STATE (read by multiple components)
-    // ==================================================
     public State currentState =>
         stateMachineController != null
             ? stateMachineController.CurrentState
@@ -53,9 +44,6 @@ public class PlayerController : MonoBehaviour
     public bool isInRun;
     public bool canAttack = true;
 
-    // ==================================================
-    // RING SYSTEM
-    // ==================================================
     [Header("Ring System")]
     public bool isInsideRing = false;
 
@@ -72,10 +60,6 @@ public class PlayerController : MonoBehaviour
     }
 
     public Vector3 RestrictToSlopeDirection(Vector3 inputDirection) => inputDirection;
-
-    // ==================================================
-    // INITIALIZATION
-    // ==================================================
 
     void Awake()
     {
@@ -94,10 +78,6 @@ public class PlayerController : MonoBehaviour
         combat.Initialize(this);
         stateMachineController.Initialize(this);
     }
-
-    // ==================================================
-    // UPDATE LOOP
-    // ==================================================
 
     void Update()
     {

@@ -13,17 +13,9 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerController))]
 public class CombatAttackHandler : MonoBehaviour
 {
-    // --------------------------------------------------------
-    //  REFERENCES
-    // --------------------------------------------------------
-
     [Header("References")]
     [Tooltip("Optional. If null, KnockbackResolver default values are used.")]
     public KnockbackResolverConfig resolverConfig;
-
-    // --------------------------------------------------------
-    //  DESIGN PARAMETERS
-    // --------------------------------------------------------
 
     [Header("Game Design: Attack Detection")]
     public float punchRange = 1.8f;
@@ -43,23 +35,11 @@ public class CombatAttackHandler : MonoBehaviour
              "Example: if ClashHandler gives 8, attacking gives 8 * attackKnockbackMultiplier")]
     public float attackKnockbackMultiplier = 1.5f;
 
-    // --------------------------------------------------------
-    //  PRIVATE
-    // --------------------------------------------------------
-
     private PlayerController _player;
     private AttackType _preparedAttackType;
     private bool _hasPreparedAttack;
 
-    // --------------------------------------------------------
-    //  INIT
-    // --------------------------------------------------------
-
     void Awake() => _player = GetComponent<PlayerController>();
-
-    // --------------------------------------------------------
-    //  PUBLIC API
-    // --------------------------------------------------------
 
     /// <summary>
     /// Stores the attack type selected by the state before the animation starts.
@@ -157,11 +137,6 @@ public class CombatAttackHandler : MonoBehaviour
 
         return closest;
     }
-
-    // --------------------------------------------------------
-    //  HELPERS
-    // --------------------------------------------------------
-
     private Vector3 GetAttackDirection()
     {
         Vector3 last = _player.movement.LastDirection;

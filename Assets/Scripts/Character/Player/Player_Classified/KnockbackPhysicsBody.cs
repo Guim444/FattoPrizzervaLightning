@@ -21,9 +21,6 @@ using UnityEngine;
 [System.Serializable]
 public struct KnockbackPhysicsBody
 {
-    // --------------------------------------------------------
-    //  CONFIGURATION (editable via Inspector in the handler)
-    // --------------------------------------------------------
 
     [Tooltip("Higher mass → less displacement when receiving the same impulse.\n" +
              "Suggested value: 1 + endurance * 0.4")]
@@ -38,19 +35,13 @@ public struct KnockbackPhysicsBody
     [Tooltip("Minimum speed before stopping the knockback (avoids micro-vibrations).")]
     public float stopThreshold;
 
-    // --------------------------------------------------------
     //  RUNTIME STATE (do not touch from Inspector)
-    // --------------------------------------------------------
 
     /// <summary>Horizontal knockback velocity in world space.</summary>
     public Vector3 Velocity { get; private set; }
 
     /// <summary>True while knockback is active.</summary>
     public bool IsActive { get; private set; }
-
-    // --------------------------------------------------------
-    //  DEFAULT VALUES CONSTRUCTOR
-    // --------------------------------------------------------
 
     public static KnockbackPhysicsBody Default => new KnockbackPhysicsBody
     {
@@ -59,10 +50,6 @@ public struct KnockbackPhysicsBody
         airFriction   = 1.5f,
         stopThreshold = 0.15f,
     };
-
-    // --------------------------------------------------------
-    //  PUBLIC API
-    // --------------------------------------------------------
 
     /// <summary>
     /// Receives a knockback impulse.

@@ -64,10 +64,6 @@ public class KnockbackResolverConfig : ScriptableObject
         new TriggerRow("",             "",             ""),             // +3
     };
 
-    // --------------------------------------------------------
-    //  ACCESSORS (called by KnockbackResolver)
-    // --------------------------------------------------------
-
     public float GetTargetForce(int rowIndex, int colIndex)
         => targetForces[rowIndex][colIndex];
 
@@ -79,10 +75,6 @@ public class KnockbackResolverConfig : ScriptableObject
         string t = animTriggers[rowIndex][colIndex];
         return string.IsNullOrEmpty(t) ? null : t;
     }
-
-    // --------------------------------------------------------
-    //  AUXILIARY TYPES (serializable by Unity)
-    // --------------------------------------------------------
 
     [System.Serializable]
     public class Row
